@@ -1,0 +1,52 @@
+\name{residuals.clme}
+
+\alias{residuals.clme}
+
+
+\title{ Various types of residuals }
+\description{
+Computes several types of residuals for objects of class \code{clme}. 
+}
+
+\usage{
+\method{residuals}{clme}(object, type='FM', ... )
+}
+
+\arguments{
+  \item{object}{ object of class \code{\link{clme}}. }
+  \item{type}{type of residual (for mixed-effects models only).}
+  \item{...}{space for additional arguments.}  
+}
+
+\details{
+For fixed-effects models \eqn{Y = X\beta + \epsilon}{Y = X*b + e}, residuals are given as \deqn{\hat{e} = Y - X\hat{\beta}}{ ehat = Y - X*betahat}.
+
+For mixed-effects models \eqn{Y = X\beta + + U\xi + \epsilon}{Y = X*b + U*xi + e}, three types of residuals are available.
+\eqn{PA = Y - X\hat{\beta}}{ PA = Y - X*betahat}\\
+\eqn{SS = U\hat{\xi}}{ SS = U*xihat}\\
+\eqn{FM = Y - X\hat{\beta} - U\hat{\xi}}{ FM = Y - X*betahat - U*xihat}
+}
+
+\value{
+Numeric matrix.
+}
+
+
+\author{ Casey M. Jelsema <casey.jelsema@nih.gov> }
+
+\seealso{
+\code{\link{CLME-package}}, \code{\link{clme}}
+}
+
+\examples{
+
+\dontrun{
+data( rat.blood )
+cons <- list(order = "simple", decreasing = FALSE, node = 1 )
+clme.out <- clme(mcv ~ time + temp + sex + (1|id), data = rat.blood , 
+                 constraints = cons, seed = 42, nsim = 0)
+residuals.clme( clme.out, type='PA' )
+}
+
+}
+

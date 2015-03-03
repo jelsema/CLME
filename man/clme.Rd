@@ -1,0 +1,97 @@
+\name{clme}
+\alias{clme}
+
+\title{ Constrained Inference for Linear Mixed Effects Models}
+\description{ Constrained inference for linear fixed or mixed effects models using distribution-free bootstrap methodology }
+
+\usage{
+clme(formula, data, gfix=NULL, constraints=list(), nsim=1000,
+     tsf=lrt.stat, tsf.ind=w.stat.ind, mySolver="LS", 
+     verbose=c(FALSE,FALSE,FALSE), seed=NULL, levels=NULL, ncon=1, ... )
+}
+
+\arguments{
+  \item{formula}{ a formula expression. The constrained effect(s) must come before any unconstrained covariates on the right-hand side of the expression. The first \code{ncon} terms will be assumed to be constrained.}
+  \item{data}{ data frame containing the variables in the model. }
+  \item{gfix}{ optional vector of group levels for residual variances. Data should be sorted by this value.}
+  \item{constraints}{optional list containing the constraints. See Details for further information. }
+  \item{nsim}{ optional number of bootstrap samples to use for significance testing. }
+  \item{tsf}{ function to calculate the test statistic. }
+  \item{tsf.ind}{ function to calculate the test statistic for individual constrats. See Details for further information. }
+  \item{mySolver}{ solver to use in isotonization (passed to \code{activeSet}). }
+  \item{verbose}{ optional. Vector of 3 logicals. The first causes printing of iteration step, the second two are passed as the \code{verbose} argument
+  to the functions \code{\link{minque}} and \code{\link{clme_em}}, respectively. }
+  \item{seed}{ set the seed for the RNG.}
+  \item{levels}{ optional list to manually specify names for constrained coefficients. See Details.}
+  \item{ncon}{ the number of variables in \code{formula} that are constrained.}
+  \item{...}{space for additional arguments.}
+}
+
+\details{
+If any random effects are included, the function computes MINQUE estimates of variance components. After, \code{\link{clme_em}} is run to obtain the observed values. If \code{nsim}>0, a bootstrap test is performed using \code{\link{resid_boot}}.
+
+For the argument \code{levels} the first list element should be the column index (in \code{data}) of the constrained effect. The second element should be the true order of the levels.
+
+}
+
+\value{
+The output of \code{clme} is an object of the class \code{clme}, which is list with elements:
+
+\item{\code{theta}}{ estimates of \eqn{\theta}{theta} coefficients}
+\item{\code{theta}}{ estimates of \eqn{\theta_0}{theta_0} coefficients under the null hypothesis}
+\item{\code{ssq}}{ estimate of residual variance(s), \eqn{\sigma^{2}_{i}}{sigma.i^2}.}
+\item{\code{tsq}}{ estimate of random effects variance component(s), \eqn{\tau^{2}_{i}}{tau.i^2}.}
+\item{\code{cov.theta}}{ the unconstrained covariance matrix of \eqn{\theta}{theta}}
+\item{\code{ts.glb}}{ test statistic for the global hypothesis.}
+\item{\code{ts.ind}}{ test statistics for each of the constraints.}
+\item{\code{mySolver}}{ the solver used for isotonization.}
+\item{\code{p.value}}{ p-value for the global hypothesis}
+\item{\code{p.value.ind}}{ p-values for each of the constraints}
+\item{\code{constraints}}{ list containing the constraints (\code{A}) and the contrast for the global test (\code{B}).}
+\item{\code{dframe}}{ data frame containing the variables in the model.}
+\item{\code{residuals}}{ matrix containing residuals. For mixed models three types of residuals are given. }
+\item{\code{random.effects}}{ estimates of random effects. }
+\item{\code{gfix}}{ group sample sizes for residual variances. }
+\item{\code{gran}}{ group sizes for random effect variance components. }
+\item{\code{formula}}{ the formula used in the model. }
+\item{\code{call}}{ the function call. }
+\item{\code{order}}{ list describing the specified constraints.}
+\item{\code{P1}}{ the number of constrained parameters.}
+}
+
+
+\references{
+
+Farnan, L., Ivanova, A., and Peddada, S. D. (2014).
+  Linear Mixed Efects Models under Inequality Constraints with Applications.
+  \emph{PLOS ONE}, 9(1). e84778. doi: 10.1371/journal.pone.0084778
+  \url{http://www.plosone.org/article/info:doi/10.1371/journal.pone.0084778}
+
+}
+\author{ Casey M. Jelsema <casey.jelsema@nih.gov> }
+
+\note{
+
+The argument \code{constraints} is a list containing the order restrictions. The elements are \code{order}, \code{node}, \code{decreasing}, \code{A}, and \code{B}, though not all are necessary. The function can calculate the last two for default orders (simple, umbrella, or simple tree). For default orders, \code{constraints} should be a list containing any subset of \code{order}, \code{node}, and \code{descending}. See the figure below for a depiction of these values; the pictured \code{node} of the simple tree orders (middle column) is 1, and the \code{node} for the umbrella orders (right column) is 3. These may be vectors (e.g. order=('simple','umbrella') ). If any of these three are missing, the function will test for all possible values of the missing element(s), excluding simple tree.
+
+For non-default orders, the elements \code{A} and \code{B} should be provided. \code{A} is an \eqn{r \times2}{r x 2} matrix (where r is the number of linear constraints, \eqn{0 < r}{0 < r}. Each row should contain two indices, the first element is the index of the lesser coefficient, the second element is the index of the greater coefficient. So a row of \eqn{(1,2)}{(1,2)} corresponds to the constraint \eqn{\theta_1 \leq \theta_2}{theta_1 <= theta_2}, and a row \eqn{(4,3)}{(4,3)} corresponds to the constraint \eqn{\theta_4 \leq \theta_3}{theta_4 <= theta_3}, etc. Element \code{B} should hold similar contrasts, specifically those needed for calculating the Williams' type test statistic (\code{B} is only needed if \code{tsf=w.stat})
+
+The argument \code{tsf} is a function to calculate the desired test statistic. The default function calculates likelihood ratio type test statistic. A Williams type test statistic, which is the maximum of the test statistic over the constraints in \code{constraints\$B}, is also available, and custom functions may be defined. See \code{\link{w.stat}} for details.
+
+By default, homogeneity of variances is assumed for residuals (e.g., \code{gfix} does not define groups) and for each random effect.
+
+\figure{OrderPlot.jpg}{Plot of Orders.}
+
+}
+
+
+\examples{
+data( rat.blood )
+cons <- list(order="simple", decreasing=FALSE, node=1 )
+
+clme.out <- clme(mcv ~ time + temp + sex + (1|id), data=rat.blood , 
+                 constraints=cons, seed=42, nsim=10, ncon=1)
+
+}
+
+

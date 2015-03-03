@@ -1,0 +1,665 @@
+\documentclass[article,shortnames,nojss]{jss}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% declarations for jss.cls %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{latexsym}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{psfrag}
+\usepackage{epstopdf}
+\usepackage{tabularx}
+
+%\VignetteIndexEntry{CLME introduction}
+
+%% need no \usepackage{Sweave.sty}
+
+%% almost as usual
+\author{Casey M. Jelsema   \\ National Institute of Environmental \\Health Sciences\\ (NIEHS) \And 
+        Shyamal D. Peddada \\ National Institute of Environmental \\Health Sciences\\ (NIEHS) }
+\title{ \pkg{CLME}: An \proglang{R} Package for Linear Mixed Effects Models under Inequality Constraints}
+
+%% for pretty printing and a nice hypersummary also set:
+\Plainauthor{Casey M. Jelsema, Shyamal Peddada} %% comma-separated
+\Plaintitle{CLME: An R package for linear mixed effects models under inequality constraints} %% without formatting
+\Shorttitle{\pkg{CLME}: An R package for constrained LME models} %% a short title (if necessary)
+
+%% an abstract and keywords
+\Abstract{
+In many applications researchers are typically interested in testing for inequality constraints in the context of linear fixed effects and mixed effects models. Although there exists a large body of literature for performing statistical inference under inequality constraints, user friendly statistical software for implementing such methods is lacking, especially in the context of linear fixed and mixed effects models. In this article we introduce \pkg{CLME}, a package in the \proglang{R} language that can be used for testing a broad collection of inequality constraints. It uses residual bootstrap based methodology which is reasonably robust to non-normality as well as heteroscedasticity. The package is illustrated using two data sets. The package also contains a graphical interface built using the \pkg{shiny} package.
+}
+\Keywords{distribution free, linear inequality constraints, linear fixed effects models, linear mixed effects models, order restricted inference, residual bootstrap, \proglang{R}}
+
+\Plainkeywords{distribution free, linear inequality constraints, linear fixed effects models, linear mixed effects models, order restricted inference, residual bootstrap, R}
+%% at least one keyword must be supplied
+
+%% publication information
+%% NOTE: Typically, this can be left commented and will be filled out by the technical editor
+%% \Volume{50}
+%% \Issue{9}
+%% \Month{June}
+%% \Year{2012}
+%% \Submitdate{2012-06-04}
+%% \Acceptdate{2012-06-04}
+
+%% The address of (at least) one author should be given
+%% in the following format:
+\Address{
+  Casey M. Jelsema \\
+  Biostatistics Branch\\
+  National Institute of Environmental Health Sciences\\
+  111 TW Alexander Dr, RTP, NC, USA\\
+  E-mail: \email{casey.jelsema@nih.gov}\\
+  URL: \url{http://www.niehs.nih.gov/research/atniehs/labs/bb/staff/jelsema/}\\
+
+  Shyamal D. Peddada \\
+  Biostatistics Branch\\
+  National Institute of Environmental Health Sciences\\
+  111 TW Alexander Dr, RTP, NC, USA\\
+  E-mail: \email{peddada@niehs.nih.gov }\\
+  URL: \url{http://www.niehs.nih.gov/research/atniehs/labs/bb/staff/peddada/}
+}
+
+%% It is also possible to add a telephone and fax number
+%% before the e-mail in the following format:
+%% Telephone: +43/512/507-7103
+%% Fax: +43/512/507-2851
+
+%% for those who use Sweave please include the following line (with % symbols):
+%% need no \usepackage{Sweave.sty}
+
+\newcommand{\bfa}{{\bf a}}
+\newcommand{\bfb}{{\bf b}}
+\newcommand{\bfc}{{\bf c}}
+\newcommand{\bfd}{{\bf d}}
+\newcommand{\bfe}{{\bf e}}
+\newcommand{\bff}{{\bf f}}
+\newcommand{\bfg}{{\bf g}}
+\newcommand{\bfh}{{\bf h}}
+\newcommand{\bfj}{{\bf j}}
+\newcommand{\bfp}{{\bf p}}
+\newcommand{\bfs}{{\bf s}}
+\newcommand{\bfu}{{\bf u}} 
+\newcommand{\bfv}{{\bf v}}
+\newcommand{\bfw}{{\bf w}}
+\newcommand{\bfx}{{\bf x}}
+\newcommand{\bfy}{{\bf y}}
+\newcommand{\bfz}{{\bf z}} 
+
+\newcommand{\bfA}{{\bf A}}
+\newcommand{\bfB}{{\bf B}}
+\newcommand{\bfC}{{\bf C}}
+\newcommand{\bfD}{{\bf D}}
+\newcommand{\bfE}{{\bf E}}
+\newcommand{\bfF}{{\bf F}}
+\newcommand{\bfG}{{\bf G}}
+\newcommand{\bfH}{{\bf H}}
+\newcommand{\bfI}{{\bf I}}
+\newcommand{\bfJ}{{\bf J}}
+\newcommand{\bfK}{{\bf K}}
+\newcommand{\bfL}{{\bf L}}
+\newcommand{\bfM}{{\bf M}}
+\newcommand{\bfN}{{\bf N}}
+\newcommand{\bfO}{{\bf O}}
+\newcommand{\bfP}{{\bf P}}
+\newcommand{\bfQ}{{\bf Q}}
+\newcommand{\bfR}{{\bf R}}
+\newcommand{\bfS}{{\bf S}}
+\newcommand{\bfT}{{\bf T}}
+\newcommand{\bfU}{{\bf U}} 
+\newcommand{\bfV}{{\bf V}}
+\newcommand{\bfW}{{\bf W}}
+\newcommand{\bfX}{{\bf X}}
+\newcommand{\bfY}{{\bf Y}}
+\newcommand{\bfZ}{{\bf Z}}
+
+\newcommand{\bfone}{{\bf 1}}
+\newcommand{\bfzero}{{\bf 0}}
+
+\newcommand{\bfalpha}{\mbox{\boldmath $\alpha$}}
+\newcommand{\bfbeta}{\mbox{\boldmath $\beta$}}
+\newcommand{\bfdelta}{\mbox{\boldmath $\delta$}}
+\newcommand{\bfepsilon}{\mbox{\boldmath $\epsilon$}}
+\newcommand{\bfeta}{\mbox{\boldmath $\eta$}}
+\newcommand{\bfgamma}{\mbox{\boldmath $\gamma$}}
+\newcommand{\bfmu}{\mbox{\boldmath $\mu$}}
+\newcommand{\bfphi}{\mbox{\boldmath $\phi$}}
+\newcommand{\bfsigma}{\mbox{\boldmath $\sigma$}}
+\newcommand{\bftau}{\mbox{\boldmath $\tau$}}
+\newcommand{\bftheta}{\mbox{\boldmath $\theta$}}
+\newcommand{\bfrho}{\mbox{\boldmath $\rho$}}
+\newcommand{\bfvarepsilon}{\mbox{\boldmath $\varepsilon$}}
+
+\newcommand{\bfPhi}{\mbox{\boldmath $\Phi$}}
+\newcommand{\bfSigma}{\mbox{\boldmath $\Sigma$}}
+\newcommand{\bfGamma}{\mbox{\boldmath $\Gamma$}}
+\newcommand{\bfPsi}{\mbox{\boldmath $\Psi$}}
+\newcommand{\bfOmega}{\mbox{\boldmath $\Omega$}}
+\newcommand{\bfTheta}{\mbox{\boldmath $\Theta$}}
+
+\newcommand{\calB}{{\cal B}}
+\newcommand{\calC}{{\cal C}}
+\newcommand{\calD}{{\cal D}}
+\newcommand{\calF}{{\cal F}}
+\newcommand{\calN}{{\cal N}}
+\newcommand{\calS}{{\cal S}}
+\newcommand{\calR}{{\cal R}}
+\newcommand{\calX}{{\cal X}}
+\newcommand{\calY}{{\cal Y}}
+\newcommand{\calZ}{{\cal Z}}
+
+\newcommand{\DD}{\mathbb {D}}
+\newcommand{\FF}{\mathbb {F}}
+\newcommand{\GG}{\mathbb {G}}
+\newcommand{\RR}{\mathbb {R}}
+\newcommand{\MM}{\mathbb {M}}
+\newcommand{\NN}{\mathbb {N}}
+\newcommand{\PP}{\mathbb {P}}
+\newcommand{\QQ}{\mathbb {Q}}
+\newcommand{\ZZ}{\mathbb {Z}}
+
+\newcommand{\diag}{\mbox{diag}}
+\newcommand{\circledot}{ \odot }
+
+%% end of declarations %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Note that you should use the \pkg{}, \proglang{} and \code{} commands.
+
+\begin{document}
+\SweaveOpts{concordance=FALSE}
+
+\section{Introduction}
+\label{sec:intro}
+
+Inequality constraints arise naturally in many applications. For example, to evaluate if a chemical is a toxin, a toxicologist may conduct a dose-response study to determine if the mean response is monotonic in dose. More precisely, suppose $\theta_i$, $i \ge 2$, are the mean responses of a chemical corresponding to $p$ dose groups. In this case the null and alternative hypotheses of interest are $H_0: \theta_1 = \theta_2 = \ldots = \theta_p$, and $H_a: \theta_1 \le \theta_2 \le \ldots \theta_p$, with at least one strict inequality (known as the \textit{simple order} constraint), respectively. Sometimes, when the doses exceed the maximum tolerated dose (MTD), it may result in a dose-related toxicity and the monotonicity is violated causing down-turn at some (unknown) dose $i$ \citep{SM:86}. In such cases, researchers are interested in testing for an umbrella alternative $H_{ai}: \theta_1 \le \theta_2 \ldots \le \theta_{i-1} \le \theta_i \le \theta_{i+1} \ge \ldots \ge \theta_p$, with at least one strict inequality. 
+
+In a multi-center rat uterotophic assay conducted by the OECD (Organization for Economic Cooperation and Development), researchers were interested in studying the effect of exposure to estrogen like compounds in the uterine weights of pre-pubertal rats. They were interested in testing if the mean uterine weights of animals exposed to estrogen like compounds increased in comparison to the uterine weights of control animals \citep{KOPAJO:03}. Thus the alternative hypothesis of interest is $H_a: \theta_1 \le \theta_i$, $i \ge 2$, with at least one strict inequality, known as the \textit{simple tree order}. Here $\theta_1$ is the mean of the control group and $\theta_i$, $i \ge 2$, are the means of the treatment groups. 
+
+In cancer trials, it is common for researchers to be interested in evaluating a cocktail of two or more experimental drugs in combination, each tried at low, medium and high doses. In such cases, the typical order restriction of interest is the {\textit{loop order} denoted by $\{ \theta_{control,control} \le \theta_{control,low} \le \theta_{control,medium} \le \theta_{high,high} \} \bigcup \{ 
+\theta_{control,control} \le \theta_{low,control} \le \theta_{medium, control} \le \theta_{high,high} \}$, where $\theta_{a,b}$ denotes the mean response corresponding to $a^{th}$ dose of the first treatment and $b^{th}$ dose of the second treatment.  The above null and alternative hypotheses can in general be expressed as $H_0: \calC \theta = \bfc$ and $H_a: \calC \theta \ge \bfc$, respectively, where ${\bf A}$ is a suitable matrix of zeros, ones and negative ones of appropriate order, $\theta = (\theta_1, \theta_2, \ldots, \theta_p)^\top$ and $\bfc$ is a suitable vector of known scalars, for example a vector of zero's. Some examples of $\calC$ and $\bfc$ are provided later, and an illustration of some common orders is given in Figure~\ref{fig:order}.
+
+\begin{figure}[ht]
+\centering
+\includegraphics{orders.eps}
+\caption{Illustration of order restrictions. Each circle represents a parameter of interest. Inequalities between two parameters (i.e., circles) are provided by the lines. The vertical axis denotes relative magnitude of connected parameters. No relationship (either <, =, or >) is known among parameters that are not connected. A nodal parameter is a parameter whose order relationship with every other parameter is known a priori or given by the hypothesis that is is being tested. For example, $\theta_3$ is the nodal parameter in the umbrella orders.}
+\label{fig:order}
+\end{figure}
+
+It is of common interest to perform statistical inference under inequality constraints, such as those described above, in a linear mixed effects model setting, especially in the context of repeated measures design where a researcher may be interested in detecting trends. However, despite the existence of a large body of literature on constrained inference spanning over five decades and three books on testing for order restrictions \citep{BBBB:72,RWD:88,SS:05}, it was only recently that researchers developed methods for performing constrained inference in linear mixed effects models \citep{DR:11,RD:12,FIP:14}. While \citet{DR:11} and \citet{RD:12} developed likelihood ratio based methods, \citet{FIP:14} developed a residual bootstrap based method that is designed to be robust to non-normality as well as to heteroscedasticity.  Furthermore, Farnan's methodology allows for modeling categorical as well as continuous covariates. 
+
+Surprisingly, not even the popular statistical analysis program \proglang{SAS} \citep{SAS11} has the capability to perform tests under general inequality constraints in a linear fixed effects model, let alone in the context of mixed effects models. As demonstrated in \citet{FIP:14}, statistical methods that are specifically designed for testing inequality constraints are expected to enjoy substantially higher power than the usual omnibus procedures (e.g., ANOVA) which are designed for two-sided alternatives.  This observation, together with the fact that there does not exist a general software for performing statistical tests under linear inequality constraints in linear mixed effects models, motivates the current work. In this paper we introduce an \proglang{R} package, called \pkg{CLME} (`\textbf{C}onstrainted \textbf{L}inear \textbf{M}ixed \textbf{E}ffects') based on the distribution-free residual bootstrap methodology developed in \citet{FIP:14}. There are several packages in \proglang{R} which offer constrained fixed effects models, including \pkg{glmc} \citep{CHR:06} and \pkg{ic.infer} \citep{G:10}, but neither of these appear to offer support for mixed models; the present work fills this void. Furthermore, since the methodology is based on residual bootstrap, \pkg{CLME} does not depend on normality or homogeneity of variances for the residuals or random effects.  
+
+The rest of the paper is organized as follows: Section~\ref{sec:over} provides a brief description of the constrained inference for linear mixed effects (LME) models presented by \citet{FIP:14}. Section~\ref{sec:clme} describes the contents of the package CLME along with implementation details. Section~\ref{sec:imp} provides some illustrative examples using the package, and Section~\ref{sec:sum} concludes the paper with a summary and some comments on planned developments of \pkg{CLME}.
+
+
+\section{Linear mixed effect models under inequality constraints}
+\label{sec:over}
+
+Let
+\begin{equation} \label{eq:lme}
+Y = \bfX_{1}\theta_{1} + \bfX_{2}\theta_{2} + \bfU\xi + \epsilon
+\end{equation}
+
+denote a linear mixed effects (LME) model where $Y$ is the $N \times 1$ response vector, $\bfX_{1}$ is a design matrix of order $N\times p_{1}$ and $\theta_{1}$ is the corresponding $p_{1} \times 1$ vector of coefficients (often treatment effects). $\bfX_{2}$ is an  $N\times p_{2}$ a known matrix of covariates, $\theta_{2}$ is the $p_{2} \times 1$ vector of regression coefficients, and $\bfU$ is a $N \times c$ matrix of known constants (random effects). For simplicity we write $\bfX = \left( \bfX_{1} : \bfX_{2} \right)$ and $\bfU = \left( \bfU_{1} : \bfU_{2}: \ldots, : \bfU_{c_{q}} \right),$  where $:$ denotes column-binding and $\bfU_{i}$ is an $N \times c_i$ matrix, with $\sum_{i=1}^{q} c_{i} = c .$ We also denote $\theta = \left( \theta_{1}^\top , \theta_{2}^\top \right)^\top$ and $p=p_{1} +p_{2}.$
+
+The random vector $\xi = \left( \xi_{1}^\top , \xi_{2}^\top , \ldots, \xi_{q}^\top \right)^\top$ is $c \times 1,$ where each $\xi_{i}$ is a $c_{i} \times 1$ vector corresponding to $\bfU_{i},$ for $i=1,\ldots,q.$ The elements of $\xi$ are independently distributed with mean $\bfzero$ and covariance matrix $\bfT = \diag\left( \tau^{2}_{1}\bfI_{c_{1}}, \tau^{2}_{2}\bfI_{c_{2}}  , \ldots , \tau^{2}_{q}\bfI_{c_{q}} \right).$ The residual term $\epsilon$ is similarly defined with mean $\bfzero$ and covariance matrix $\bfSigma = \diag\left( \sigma^{2}_{1}\bfI_{n_{1}},\sigma^{2}_{2}\bfI_{n_{2}}, \ldots , \sigma^{2}_{k}\bfI_{n_{k}} \right),$ where $i=1,\ldots,k$ and $\sum_{i=1}^{k} n_{i} = N.$
+
+Although the above model description and the methodology implemented in \pkg{CLME} allows for fairly general settings, in many applications one may not require the full available flexibility. For example, in most applications it may be sufficient to assume that $T = \tau^2 \bfI,$ instead of the general heteroscedastic structure for $T$ described above. 
+
+Let $\calC$ be an $ r \times p$ matrix so that $\calC\theta$ represents the linear combinations which are subject to inequality constraints specified by the alternative hypothesis. Thus the hypotheses of interest are given by: 
+\begin{equation}\label{eq:hyp}
+H_{o}: \calC\theta = \bfzero \mbox{ versus } H_{a}: \calC\theta \geq \bfzero,
+\end{equation}
+such that at least one of the $r$ inequalities is strict. \citet{FIP:14} suggested the pool adjacent violators algorithm (`PAVA') to implement the order constraints (isotonization). We depart from their methodology in that we use the package \pkg{isotone} \citep{DHM:09} for isotonization, and in particular the function \code{activeSet}. In some cases using active set methodology leads to the same results as using PAVA; though using active sets is a more general approach and enables easy specification of complex order restrictions. This also enables access to a number of \textit{solvers} for \code{activeSet}, including least squares, least absolute deviation, and others.
+
+\pkg{CLME} is designed to implement two general classes of statistical tests. The likelihood ratio type (LRT) statistic \citep{DR:11} is the default setting, but the user may instead choose the Williams' type test statistic \citep{W:71,W:77,PPC:01}. In both cases, to keep the methodology robust to non-normality and potential heteroscedasticity, the $p$~values are evaluated using the residual bootstrap methodology developed in \citet{FIP:14}. Thus, although the likelihood ratio type statistic is motivated by the likelihood ratio principle under the normality assumption, it does not use the normal theory based asymptotic distribution for the test statistic. Hence we use the phrase `likelihood ratio \textit{type} test' rather than `likelihood ratio test'. 
+
+Using simulations, \citet{FIP:14} demonstrated that the Williams' type test enjoys higher power than the likelihood ratio type statistic for simple alternative hypothesis; hence it may be preferred over the likelihood ratio type statistic in such cases. In general the Williams' type test statistic is of the form: 
+
+\begin{equation}\label{eq:w4}
+W = \max\left\{ \left[ \calB \tilde{\theta}_{1}\right] \circledot \left[\sqrt{ \diag\left\{\calB \mbox{Var}(\hat{\theta}) \calB^\top \right\}}\right]^{-1} \right\},
+\end{equation}
+
+where $\circledot$ denote the Schur-product of vectors, i.e., $\bfa \circledot \bfb = (a_1b_1, a_2b_2, \ldots, a_rb_r)^\top$, $\tilde{\theta}_1$ denotes the estimator of $\theta_1$ under the inequality constraint of interest, and $\hat{\theta}_1$ denotes the unconstrained estimator of $\theta_1$ (e.g., the MLE). For a given order restriction specified by $\calC$, the contrast matrix $\calB$ is derived from the largest hypothesized difference(s); in the simple order this is the difference between $\theta_1$ and $\theta_{p_1}.$ 
+
+
+\section[Contents of CLME]{ Contents of \pkg{CLME} }
+\label{sec:clme}
+In this section we describe the functions included in \pkg{CLME} and some notes on their implementation. We start by describing the main function of the package, \code{clme}. Afterwards, we detail some of the secondary functions which users may find useful.
+
+
+\subsection{Main function}
+\label{ssec:main}
+The main function of \pkg{CLME} is \code{clme}. This function implements the order restricted residual bootstrap test described in \citet{FIP:14}. Among the arguments listed below, only the formula and the dataset are required. A series of flowcharts are provided in the appendix (Figures~\ref{fig:fc01}-\ref{fig:fc03}) to guide a user through specification of the arguments for \code{clme}.
+
+
+\begin{description}
+\item[ \code{formula}] a formula expression; the constrained effect(s) must come before any unconstrained effects.
+\item[ \code{data}] data frame containing the variables in the model.  
+\item[ \code{gfix}] optional vector of group levels for residual variances. Data should be sorted by this value. 
+\item[ \code{constraints}] list containing the constraints. 
+\item[ \code{nsim}] optional number of bootstrap samples to use for significance testing.  
+\item[ \code{tsf}] function to calculate the test statistic.  
+\item[ \code{tsf.ind} ] function to calculate the test statistic for individual contrasts.  \\
+\item[ \code{mySolver}] solver to use in isotonization (passed to \code{activeSet}).  
+\item[ \code{verbose}] logical, prints iteration step. Argument can be vector of multiple logicals; successive elements are passed to further functions.  
+\item[ \code{seed}] set the seed for the random number generator (RNG). 
+\item[ \code{levels}] list to manually specify labels for constrained coefficients. 
+\item[ \code{ncon}] the number of constrained terms in the \code{formula}; the first \code{ncon} terms are constrained. 
+\item[ \code{...}] space for additional arguments. 
+\end{description}
+
+
+Several of the arguments to \code{clme} require further explanation.
+
+\paragraph{Constraints} The argument \code{constraints} is a list describing the order restrictions using the following elements:
+
+\begin{description}
+\item[ \code{order} ] text string specifying the type of order. Allowed values are `simple', `umbrella', and `simple.tree'.
+\item[ \code{node} ]  numeric indicating which element of $\theta_{1}$ is the node.
+\item[ \code{decreasing} ] logical indicating decreasing order. For simple orders, a decreasing order implies a downward trend. For umbrella or simple tree orders, a decreasing order implies a decrease from the node. See Figure~\ref{fig:order} for an illustration.
+\item[ \code{A} ] matrix describing the order restrictions in $\calC.$
+\item[ \code{B} ] matrix of coefficients defining the Williams type statistic (only necessary if Williams' type test is desired).
+\end{description}
+
+The values of \code{A} and \code{B} use the same format as the argument \code{isomat} from the function \code{activeSet} in package \pkg{isotone}: each is a matrix with two columns where the rows define a specific constraints. For example, \code{A} and \code{B} are shown below for the decreasing umbrella order with $p_{1}=5$ and a node at $\theta_{1,3}$ (the third element of $\theta_1$).
+
+\begin{equation} 
+  \mbox{\code{A}} = \left[ \begin{array}{cc}
+  1 & 2 \\
+  2 & 3 \\
+  4 & 3 \\
+  5 & 4 \\
+  \end{array}\right] \nonumber
+\end{equation} 
+and,
+\begin{equation} 
+  \mbox{\code{B}} = \left[ \begin{array}{cc}
+  1 & 3 \\
+  5 & 3 \\
+  \end{array}\right] \nonumber
+\end{equation}
+
+The alternative hypothesis is $H_{a}: \theta_1 \le \theta_2 \le \theta_{3} \ge \theta_4 \ge \theta_{5}.$ The first row of $\bfA$ defines the constraint $\theta_1 \le \theta_2,$ the second row defines the constraint $\theta_2 \le \theta_3,$ and so on. The entries of the rows are the coefficient indices, and the parameter indexed in the left column is hypothesized to be less than or equal to that indexed by the right column. The \code{B} matrix is similarly structured, but defines only the contrasts for the largest hypothesized difference(s). Under the umbrella order, this will be the node compared to the first an last values; the specific form of the Williams' type statistic from Equation~\ref{eq:w4} is:
+
+\begin{equation*}
+W = \max\left\{  \frac{ \tilde{\theta}_3 - \tilde{\theta}_1}{ \sqrt{\mbox{Var}\left(\hat{\theta}_3 - \hat{\theta}_1\right)} }, \frac{ \tilde{\theta}_3 - \tilde{\theta}_5}{ \sqrt{\mbox{Var}\left(\hat{\theta}_3 - \hat{\theta}_5\right)} } \right\},
+\end{equation*}
+
+hence the $\bfB$ matrix holds the contrasts $\tilde{\theta}_3 - \tilde{\theta}_1$ and $\tilde{\theta}_3 - \tilde{\theta}_5.$
+
+Not all of the elements of \code{constraints} are necessary. There are three general formats by which to pass the constraints to \code{clme}.
+
+\begin{description}
+\item[ Specific Defaults] One may specify only the elements \code{order}, \code{node}, and \code{decreasing}. In this case the program will call an internal function to generate the values of \code{A} and \code{B}. Allowed values for \code{order} are `simple', `umbrella',  and `simple.tree'; also, the node may be omitted for simple orders. Each of the three elements may also be vector-valued (e.g., \code{order=c(`simple',`umbrella')}) to test multiple orders. 
+\item[ Custom constraints] Alternatively, the list of constraints may contain \code{A} directly. This is particularly useful for specifying custom order restrictions such as loop orders or block orders. When a custom \code{A} is passed, the program will ignore any values of \code{order}, \code{node}, and \code{decreasing}. If the Williams' type test is selected, a custom \code{B} is also needed.
+\item[ Unspecified ] Finally, \code{constraints} may be left unspecified. In this case the program will search for both simple and umbrella orders with all possible nodes, both increasing and decreasing orders. As with the first case, the program will estimate the order using the maximum test statistic of all the tested orders.
+\end{description}
+
+When testing multiple orders the test statistic is taken as the maximum of all the tested orders, and the program will note the order which produced this value as the estimated order. The bootstrap null distribution of the test statistic is constructed from all the order patterns under consideration, not just the estimated order (that is, for each bootstrap sample, the test statistic is computed for all candidate orders, and the maximum is taken). For reproducibility, one may use \code{seed} argument to set the seed for the pseudo-random number generator.
+
+\paragraph{Test statistic: \code{tsf} and \code{tsf.ind}} The argument \code{tsf} is a function which computes the desired global test statistic. This defaults to \code{lrt.stat}, the LRT statistic. Alternatively one may select the Williams' type statistic from Equation~\ref{eq:w4} by setting \code{tsf=w.stat}. The related argument \code{tsf.ind} computes the test statistic to test the individual constraints. The Williams type test, \code{w.stat.ind}, is default. These two arguments are analogous to the global $F$ test and pairwise $t$ tests in the context of analysis of variance. For other test statistics, the user may submit a custom function function for \code{tsf} and/or \code{tsf.ind}. We refer to the documentation of \code{lrt.stat} for more details on the format of custom test statistic functions.
+
+The output from any custom \code{tsf} should be numeric. Output with length greater than 1 corresponds to multiple global hypotheses being tested. This should not be used for testing each individual constraint from the $\bfA$ matrix, as these are calculated separately using the \code{tsf.ind} argument. If desired, the test statistic function should also specify the names attribute of the test statistic, for example naming the contrast. An example of testing multiple global hypotheses is shown in Section~\ref{ssec:fibroid}, a reanalysis of data from the Fibroid Growth Study \citep{PedBaird:08}. 
+
+\paragraph{Homogeneity of variances: \code{gfix} } The model described in Section~\ref{sec:over} permits a large degree of flexibility. In particular, both $\xi$ (if random effects are included) and $\epsilon$ may be modeled under the assumption of homogeneity or heterogeneity of variances. Currently, each random effect term is modeled with a separate variance component. The argument \code{gfix} defines groups for the residual variance(s). By default, the data are modeled with a single residual variance. If \code{gfix} is supplied, then each group of \code{gfix} is modeled with a separate residual variance. For example if the constrained effect is the variable \code{x1}, defined as treatment groups, then \code{gfix=x1} will produce a residual variance for each treatment group.
+
+The output of \code{clme} is a list with elements:
+\begin{description}
+\item[\code{theta}] vector of estimates of fixed-effects coefficients, $\theta.$
+\item[\code{theta.null}] vector of estimates of $\theta$ under the null hypothesis.
+\item[\code{ssq}] estimate of the residual variance(s), $\sigma^{2}_{i}, \: i=1,\ldots,k.$
+\item[\code{tsq}] estimate of the random effect variance component(s),  $\tau^{2}_{i}, \: i=1,\ldots,q.$
+\item[\code{cov.theta}] the covariance matrix of the unconstrained estimates of $\theta.$
+\item[\code{ts.glb}] test statistic for the global hypothesis.
+\item[\code{ts.ind}] vector of test statistics for each of the constraints (each row of $\bfA$).
+\item[\code{mySolver}] the solver used in \code{activeSet}.
+\item[\code{p.value}] $p$~value for the global hypothesis.
+\item[\code{p.value.ind}] Vector of $p$~values for each of the constraints.
+\item[\code{constraints}] List containing the constraints (\code{A}) and the contrast for the global test (\code{B}).
+\item[\code{dframe}] data frame containing the variables in the model.
+\item[\code{residuals}] matrix containing residuals. For mixed models three types of residuals are given.
+\item[\code{random.effects}] predicted values of the random effects. 
+\item[\code{gfix}] group sample sizes for residual variances. 
+\item[\code{gran}] group sizes for random effect variance components. 
+\item[\code{formula}] the formula used in the model. 
+\item[\code{call}] the function call. 
+\item[\code{order}] list describing the specified constraints.
+\item[\code{P1}] the number of constrained parameters.
+\end{description}
+
+
+
+\subsection{Secondary functions}
+\label{ssec:sf}
+
+The function \code{clme} calls several other functions in the course of its evaluation. The three primary ones are: \code{clme_em}, \code{clme_resids}, and \code{resid_boot}. These three functions perform an integral role for \code{clme} and may be of use as independent functions outside of normal use, such as bootstrapping the residuals but not necessarily running the EM algorithm and obtaining the test statistic. Only \code{resid_boot} is described here; all output from \code{clme_em} and most of the output from \code{clme_resids} can be obtained simply by running \code{clme} with \code{nsim=0}.
+
+
+\paragraph{Residual bootstrap} The function \code{resid_boot} obtains the bootstrap samples $\bfY^{*}$ of the data response vector. The arguments to this function are:
+
+\begin{description}
+\item[ \code{formula}] a formula expression, the constrained effect should be the first term on the right-hand side. 
+\item[ \code{data}] data frame containing the variables in the model.  
+\item[ \code{gfix}] optional vector of group levels for residual variances.
+\item[ null.resids ] logical, whether to generate bootstrap samples under the null hypothesis. Defaults to \code{TRUE}.
+\item[ eps ] estimates of residuals.
+\item[ xi ] predicted values of the random effects.
+\item[ theta ] vector of fixed-effects coefficients.
+\item[ ssq ] vector of residual variance estimate(s).
+\item[ tsq ] vector of random effect variance component(s).
+\item[ cov.theta ] covariance matrix of the unconstrained fixed effects estimates.
+\item[ seed ] set the seed for the RNG
+\item[ nsim ] number of bootstrap samples to generate ($M$).
+\item[ mySolver ] the solver to pass to \code{activeSet}.
+\item[ ... ] space for additional arguments.
+\end{description}
+
+The required arguments are \code{formula} and \code{data}, these are used to obtain the model matrices. If provided, the values of \code{theta}, \code{ssq}, \code{tsq}, \code{eps} and \code{xi} will be used for bootstrapping; any of these that are missing will be estimated. Regardless of whether \code{theta} is provided or estimated, if \code{null.resids=TRUE}, then \code{theta} will be projected onto the space of the null hypothesis. To generate bootstraps with a specific \code{theta}, set \code{null.resids=FALSE}. The output of \code{resid_boot} is a matrix of size $N \times M$, where each column is a bootstrap sample $\bfY^{*}$ of the data vector $\bfY.$
+
+
+\subsection{Other package contents}
+\paragraph{Shiny application} 
+The \pkg{shiny} package \citep{Shny} offers the ability to develop a graphical user interface (GUI) which implements \pkg{CLME}. A GUI developed in \pkg{shiny} can be run locally or deployed online. This is particularly beneficial to researchers who are not as familiar with \proglang{R}, or programming in general, but wish to use the methods described here. The package \pkg{CLME} includes a \pkg{shiny} application to run \code{clme}. After installing the package, a user may run the command \code{shiny_clme()} to call the GUI and begin using \pkg{CLME} without any need for further programming.
+
+The data should be a CSV file with the first row being a header. Variables are identified using their column letter or number (e.g., 1 or A). Multiple variables may be separated by a comma (e.g., 1,2,4 or A,B,D), a range of variables may be defined with a dash (e.g., 1-4 or A-D), or a combination of the two can be used. These values should be set to `None' to indicate no covariates or random effects. Group levels for the constrained effect may not be read into \proglang{R} with the correct order; an extra column may contain the ordered group levels (it may therefore have different length than the rest of the dataset).
+
+
+\paragraph{Methods}
+The function \code{clme} outputs an object of the S3 class \code{clme}. The methods available for this class are briefly described in Table~\ref{tb:methods}.
+
+\begin{table}
+\begin{tabularx}{\textwidth}{lX}
+\hline
+Generic name & Description \\ 
+\hline
+\code{AIC}          & Computes Akaike information criterion. \\
+\code{as}           & Coerces an object to class \code{clme}. \\
+\code{confint}      & Computes individual confidence intervals for fixed effects parameters. Intervals are centered at the constrained estimates, but use standard errors of the unconstrained estimates. \\
+\code{fixef}        & Extracts estimates fixed-effects coefficients, $\theta$. \\
+\code{formula}      & Extracts the formula for the model.  \\
+\code{is}           & Tests if an object is of class \code{clme} \\
+\code{logLik}       & Computes the log-likelihood under the assumption of Normality.  \\
+\code{model.frame}  & Data frame with the variables in the model.  \\
+\code{model.matrix} & The fixed-effects design matrix.  \\
+\code{nobs}         & Number of observations.  \\
+\code{plot}         & Produces a plot of the constrained coefficients and denotes statistical significance. \\
+\code{print}        & A basic printout of the model results.  \\
+\code{ranef}        & Extracts predictions of the random effects.  \\
+\code{residuals}    & Extract various types of residuals.  \\
+\code{sigma}        & The residual variance(s).  \\
+\code{summary}      & A more detailed printout of model results. \\
+\code{VarCorr}      & Estimates of variance components.  \\
+\code{vcov}         & The variance-covariance matrix of the fixed-effects estimates.  \\
+\hline
+\end{tabularx}
+\caption{List of methods currently defined for objects of class \code{clme}.}
+\label{tb:methods}
+\end{table}
+
+
+
+\section{Sample implementation}
+\label{sec:imp}
+In this section we demonstrate the use of \pkg{CLME} by applying it to two real-world data sets. Some of the analyses mimic those performed in the original papers but in the context of order-restricted inference. Other analyses are intended to exhibit certain features of the package or compare the available options. We emphasize that these analyses are intended not as a scientific reanalysis, but as an illustration. Consequently some modeling choices, the assumption of homogeneity of variances in particular, are not thoroughly investigated. The data analyzed are included in the package as the datasets \code{rat.blood} and \code{fibroid}.
+
+\subsection{Hematologic parameters from Sprague-Dawley rats}
+\label{ssec:rats}
+In a recent study on the effect the amount of time a sample is stored has on various hematological parameters, \citet{CKBWT:12} conducted a time course study using blood samples drawn from Sprague-Dawley rats. Blood samples from 11 female and 11 male rats were kept at either room temperature 21 $^{\circ}$C (the control group) or refrigerated at 3 $^{\circ}$C for 6, 24, 48 or 72 hours (see \citet{CKBWT:12} for more details). Although the authors obtained data on a variety of hematological variables in this repeated measure time course study, we shall focus on hematocrit (HCT) and the white blood cell (WBC) count over time. In the case of HCT we shall illustrate some of the options of \pkg{CLME} while testing for simple order with an increasing trend in time. In the case of WBC we test for simple tree order the mean WBC count in the freezer group was at least as high as that of the 0 hour.
+
+First, we load the package and the data.
+
+<< echo=FALSE >>= 
+options( prompt="R> ") 
+@
+
+<<  >>= 
+library("CLME")
+data("rat.blood") 
+@
+
+\paragraph{Hematocrit}
+We illustrate \pkg{CLME} using three different settings. In the first case (Case A) we test the following hypotheses:
+
+$$H_0:\theta_{1} = \theta_{2} = \theta_{3} = \theta_{4} =\theta_{5}$$
+Vs.
+$$H_{aA}: \theta_{1} \le \theta_{2} \le \theta_{3} \le \theta_{4} \le \theta_{5}, \ \ \ (A) $$
+
+with at least one strict inequality, here $\theta_i$ is the mean corresponding to either $0$, $6$, $24$, $48$ or $72$ hours. In the second case (Case B), we test for a union of umbrella alternatives. If the null hypothesis is rejected then the algorithm selects the pattern that has largest value of test statistic:
+$$H_0: \theta_{1} = \theta_{2} = \theta_{3} = \theta_{4} =\theta_{5}$$
+Vs.
+\begin{align*}
+H_{aB}: & \left\{ \bigcup_{i=1}^{^5} \theta_{1} \le \theta_{2} \le \ldots \le \theta_{i} \ge  \ldots \ge \theta_{5} \ \ \cup 
+\ \ \bigcup_{i=1}^{^5} \theta_{1} \ge \theta_{2} \ge \ldots \ge \theta_{i} \le  \ldots \le \theta_{5}.\right\} \ \ \  (B)
+\end{align*}
+
+Thus in (B) the order is unspecified but limited to either umbrella or inverted umbrella orders. Note that simple orders (increasing or decreasing) are a special case of umbrella orders, where the peak is the first or last parameter. The peak or the trough of each umbrella is specified using the specification of \code{node}. Case (C) is a repeat of case (A), but there we will assume heteroscedasticity of variances between the time groups.
+
+We initially use the default arguments as far as possible. We use the gender of the rat and the storage temperature of the sample as covariates. The \proglang{R} code to test case (A) is provided below along with the results.
+
+% <<label=rats1 , fig=TRUE , results=hide , include=FALSE , eps=TRUE , pdf=FALSE >>= 
+<< fig=false , include=FALSE , eps=FALSE >>= 
+const <- list(order = "simple", node = 1, decreasing = FALSE)
+hct1 <- clme(hct ~ time + temp + sex + (1|id), data = rat.blood, seed = 42, nsim = 1,
+   constraints = const, levels = list(2, levels(rat.blood$time)))
+summary(hct1)
+plot( hct1, ci = TRUE, legendx = "bottomright", inset = 0.08)
+@
+
+We find strong evidence ($p=0.002$) of an increasing pattern in mean HCT. The coefficients are plotted in Figure~\ref{fig:rats1} with indications of significance for the individual contrasts.
+
+\begin{figure}[ht!]
+\begin{center}
+<< fig=TRUE , echo=FALSE , height=5>>=
+plot( hct1, ci = TRUE, legendx = "bottomright", inset = 0.08)
+@
+\end{center}
+\caption{Plot of estimated coefficients of mean hematocrit (HCT) from Case (A). The model assumed an increasing simple order and homogeneity of variances across treatment groups. Solid lines denote no significant difference, while dashed lines denote statistical significance.}
+\label{fig:rats1}
+\end{figure}
+
+To test case (B) we simply need to omit the constraints from the call to \code{clme}. The code and results are given below. 
+
+<<  >>= 
+hct2 <- clme(hct ~ time + temp + sex + (1|id), data = rat.blood, seed = 42, nsim = 1, 
+   levels = list(2, levels(rat.blood$time)))
+summary(hct2)
+@
+
+Observe that the alternative hypothesis in (B) is much larger than the alternative hypothesis in (A). Thus, while the conclusions of tests for (A) and (B) are the same: that the parameters satisfy an increasing simple order, the $p$~value associated with (B) is larger because the alternative hypothesis in (B) is larger than the alternative in (A).
+
+<< echo=FALSE, include=FALSE>>=
+invisible( dev.off() )
+@
+
+Accounting for heteroscedasticity is simple in \pkg{CLME}. For example, suppose we wish to model each of the time points with a different residual variance. To do this we pass the time groups as the argument \code{gfix}, as shown below. We will call this case (C).
+
+<<  >>= 
+hct3 <- clme(hct ~ time + temp + sex + (1|id), data = rat.blood, seed = 42, nsim = 1, 
+   gfix = rat.blood$time, constraints = const, 
+   levels = list(2, levels(rat.blood$time)))
+summary( hct3 )
+@
+
+\paragraph{White blood cell count}
+
+Using the white blood cell count data of \citet{CKBWT:12}, we now illustrate our package for testing a simple tree order. Here the nodal parameter is taken to be the population mean corresponding to the 0 hour group. Since boxplots of the residuals (not shown) suggested the variances were potentially equal across the groups, we assume homogeneity of variances. For illustration, in this example we use the Williams' type test statistic. The code and results are below, and the coefficients are plotted in Figure~\ref{fig:rats2}.
+
+<< fig=FALSE >>= 
+const <- list( order = "simple.tree" , node = 1 , decreasing = FALSE)
+wbc <- clme(wbc ~ time + temp + sex + (1|id), data = rat.blood, seed = 42, nsim = 1,
+   constraints = const, levels = list(2, levels(rat.blood$time)),
+   tsf = w.stat )
+summary(wbc)
+plot(wbc, legend = "topleft", inset = 0.08)
+@
+
+\begin{figure}[ht]
+\centering
+<<fig=TRUE , include=TRUE, echo=FALSE , eps=FALSE , height=5>>=
+plot(wbc, legend = "topleft", inset = 0.08)
+@
+\caption{Plot of estimated coefficients of white blood cell (WBC) count. Solid lines denote no significant difference, while dashed lines denote statistical significance.}
+\label{fig:rats2}
+\end{figure}
+
+Our results are consistent with those of \citet{CKBWT:12}, but we have in addition detected the 0 hour - 48 hour and 0 hour - 24 hour contrasts as being significant, which were not identified by \citet{CKBWT:12}. There does appear to be an increasing pattern over time, but the differences from control are not statistically significant until sufficient time has passed.
+
+As an alternative to Williams' type test, we repeated the analysis using the LRT (results not provided) and discovered that the LRT did not reject the null hypothesis at the $5\%$ level of significance ($p=0.252$). This discrepancy between Williams' type and LRT is not surprising in view of the simulation study reported in \citet{FIP:14}, which indicated that Williams' type test can be more powerful than LRT in some cases.
+
+
+\subsection{Fibroid growth rates}
+\label{ssec:fibroid}
+\citet{PedBaird:08} investigated growth rate of of uterine leiomyomata (fibroids) in black and white women. Since fibroids are hormonally mediated and there is a drop in estrogen levels as women age, it may be reasonable to hypothesize a reduction in fibroid growth rates. Interestingly, \citet{PedBaird:08} reported that for white women the rate of growth of fibroids decreased with age (i.e., simple order with decreasing pattern), whereas they did not find any reduction in the average growth rate of fibroids with age for black women. They defined the three age groups as follows: Young ($<35$), Middle ($35-44$), and Old ($\geq 45$). We shall now re-analyze their data using the methodology available in our package \pkg{CLME} where the alternative hypothesis for women of each race group is a decreasing simple order. Note that for confidentiality, we use a subset of the data from the Fibroid Growth Study, excluding cases which may be personally identifiable, particularly those with only one fibroid analyzed in the study. This subset of the data represents 240 fibroids on 54 women. The original analysis in \citet{PedBaird:08} represented 262 fibroids on 72 women.
+
+The interest in this case is to test for a simple order for \textit{each} race using a linear mixed effects model. This analysis serves as a useful illustration of customizing the order restrictions, because it cannot be performed with the default settings of \pkg{CLME}. First we load the data and perform some manipulations to get a factor that we can use. We define the variable \code{race.age} to encode the interaction of the race and age variables; with six levels ordered as: young black, middle-age black, older black, young white, middle-age white, and older white.
+
+
+<<>>= 
+data("fibroid")
+race.age <- factor(paste0( fibroid$race, ".", fibroid$age ) , 
+   levels = c("Black.Yng", "Black.Mid", "Black.Old", 
+   "White.Yng", "White.Mid", "White.Old") )
+fibroid$race.age <- race.age
+@
+
+We performed our analysis adjusting for the initial fibroid volume as a covariate, which was grouped into three categories: $ <14, 14-65 \mbox{cm}^{3}$, $\geq 65 \mbox{cm}^{3}$ with the $<14$ category taken to be the baseline. To deal with repeated measurements, we took subject ID as the random effect.
+
+<<>>=
+initVol <- rep("small", nrow(fibroid))
+idx1 <- (14000 <= fibroid$vol & fibroid$vol < 65000)
+idx2 <- (65000 <= fibroid$vol)
+initVol[idx1] <- "medium"
+initVol[idx2] <- "large"
+fibroid$initVol <- factor(initVol, levels = c("small", "medium", "large"))
+@
+
+For the interaction between the Age and Race terms, we require constraints which define a decreasing simple order over age for both blacks and whites, but do not impose any order restriction \textit{between} blacks and whites. We do this as follows:
+
+<<>>= 
+const <- list()
+const$A <- cbind( 2:6 , 1:5 )[-3, ]
+const$B <- rbind( c(3, 1), c(6, 4) )
+const
+@
+
+To understand the construction of these matrices, recall the parameter vector $\theta_1$ is ordered as: young black, middle-age black, older black, young white, middle-age white, and older white. The groups of the constrained effect are transformed into column indicators, meaning there will be six parameters: $\left( \theta_{YB}, \theta_{MB}, \theta_{OB}, \theta_{YW}, \theta_{MW}, \theta_{OW}  \right),$ where YB denotes "young black," MB denotes "middle-aged black," and so on. Hence, the first three elements of $\theta$ correspond to the blacks, and the last three elements correspond to the whites. 
+
+The \code{A} matrix must define the proper order restriction on these elements. The first row defines the constraint $\theta_{MB} \leq \theta_{YB},$ the first row defines the constraint $\theta_{OB} \leq \theta_{MB}$. The second two rows define similar constraints for the white women. None of the rows define a restriction between any of the first three elements (blacks) and any of the last three elements (whites); hence there is no order restriction imposed between the two races.
+
+To test for a decreasing simple order for both blacks and whites, we must also define a function to compute the Williams' type test statistic of \citet{FIP:14} for both blacks and whites separately. While the matrix of contrasts is provided above, by default the Williams' type test will take the maximum and report a single test statistic. We require a test statistic for each of these contrasts. This is similar to the function \code{w.stat.ind} which calculates the test statistics for the individual constraints. However, submitting \code{tsf=w.stat.ind} will test all of the constraints in the matrix \code{constA} instead of the contrasts in \code{constB}. To correct this, we make a small modification to \code{w.stat.ind}.
+
+<<>>=
+w.blk.wht <- function (theta, cov.theta, B, A, ...) {
+   stats <- vector("numeric", length = nrow(B))
+   ctd   <- diag(cov.theta)
+   stats <- apply(B, 1, FUN = function(a, theta, cov, ctd) {
+     std <- sqrt(ctd[a[1]] + ctd[a[2]] - 2 * cov.theta[a[1], a[2]])
+     (theta[a[2]] - theta[a[1]])/std
+   }, theta = theta, cov = cov.theta, ctd = ctd)
+   names(stats) <- c("Black.Yng - Black.Old", "White.Yng - White.Old" )
+   return(stats)
+ }
+@
+
+All we have done is replace calls to \code{A} with calls to \code{B}; this will accomplish our goal of producing a global test for both blacks and whites individually.
+
+We are then ready to run the analysis. For simplicity, we assume homogeneity of variances. Results of the analysis are shown in Figure~\ref{fig:fibroid}. The code for this figure is given below, since it cannot be produced through \pkg{CLME}.
+
+<<  >>= 
+fib <- clme(lfgr ~ race.age + initVol + (1|id), data = fibroid, seed = 42, nsim = 1,
+   constraints = const, tsf = w.blk.wht, levels = list(10, levels(race.age)))
+summary( fib )
+@
+
+<< echo=FALSE, include=FALSE>>=
+invisible( dev.off() )
+@
+
+<< label=fibroidfig, include=FALSE , fig=TRUE , eps=FALSE , echo=TRUE, height=5 >>= 
+plot(x = 1, y = 0, col = 0, ylim = c(-6, 22), xlim = c(0.9, 3.1), 
+   xlab = "", ylab = "Estimated Coefficient", xaxt = "n")
+axis(side=1, at=1:3, 
+   labels = c("Young (<35)", "Middle aged (35-44)", "Older (>45)") )
+for( y1 in seq(-15, 25, 5) ){
+   lines( x = c(0, 7), y = c(y1, y1), col = "grey", lty = 2 )
+}
+lty1 <- 1 + (fib$p.value.ind[1]<0.05)
+lty2 <- 1 + (fib$p.value.ind[2]<0.05)
+lty3 <- 1 + (fib$p.value.ind[3]<0.05)
+lty4 <- 1 + (fib$p.value.ind[4]<0.05)
+points(c(1, 2), fib$theta[1:2], col = 1, type = "l", lwd = 2 , lty = lty1)
+points(c(2, 3), fib$theta[2:3], col = 1, type = "l", lwd = 2 , lty = lty2)
+points(c(1, 2), fib$theta[4:5], col = 3, type = "l", lwd = 2 , lty = lty3)
+points(c(2, 3), fib$theta[5:6], col = 3, type = "l", lwd = 2 , lty = lty4)
+points(1:3, fib$theta[1:3], col = 1, cex = 1.5, pch = 21, bg = "white")
+points(1:3, fib$theta[4:6], col = 3, cex = 1.5, pch = 24, bg = "white")
+legend("bottom", lty = c(1, 1), pch = c(21, 24), col = c(1, 3), pt.bg = 0,
+   pt.cex = 1.1, lwd = 2, inset = 0.03, cex = 0.9,
+   legend = c("Blacks    ", "Whites"))
+@
+
+The global tests found significant evidence of a decreasing simple order for white women ($p=0.0150$) but not for black women ($p=0.1880$). In particular, fibroid growth in older white women was found to be less than that of younger women. Neither of the individual constrasts for the white women (Young-Middle and Middle-Old) were significant at the $\alpha=0.05$ level. The significant decreasing trend confirms the conclusions of \citet{PedBaird:08}.
+
+\begin{figure}[ht]
+\centering
+<< fig=TRUE, eps=FALSE, echo=FALSE, height=5 >>=
+<<fibroidfig>>
+@
+\caption{Plot of estimated coefficients of 6-month mean fibroid growth by race and age group. Black lines with circles correspond to Blacks, green lines with triangles correspond to Whites. Growth rates for each fibroid were averaged over the 2-4 time points. None of the individual constraints were significant. The global tests found a significant decreasing trend for white women, but not for black women.}
+\label{fig:fibroid}
+\end{figure}
+
+
+\section{Summary}
+\label{sec:sum}
+In this paper we have introduced the \proglang{R} package \pkg{CLME} for performing statistical tests under linear inequality constraints. It allows the user to choose either the likelihood ratio type statistic or Williams' type statistic. Since it is based on the residual bootstrap methodology it is not dependant on any Normality assumption. As demonstrated in the paper, the package is simple to implement with default settings (Section~\ref{ssec:rats}), and more complex hypotheses (Section~\ref{ssec:fibroid}) can be accommodated with relatively little effort. 
+
+Due to the flexibility and distribution-free nature of the model, as well as the ease of use, we anticipate that many researchers may benefit from using the order-restricted model implemented in \pkg{CLME} instead of standard ANOVA models. Other than this package, there does not appear to be any software which offers constrained inference for linear mixed effects models.
+
+While the current release is stable, the authors have an interest in further developing the functionality of \pkg{CLME}. There are many potential improvements that we foresee. On the methodological side these include: adding more models, such as logistic models; implementing an automated choice of the number of bootstrap samples \citep[see][]{JS:12}; allowing for correlated random effects; and adding the ability to perform power or sample size calculations. Furthermore, the software does not currently allow for complex covariance structures for the variance components, such as the AR(1) process, although it may be extended to accommodate such structures. Other projected developments include enabling the program to take advantage of parallel processing to speed up the repetitive calculations for each bootstrap sample. Finally, as noted, the \pkg{shiny} offers the ability to create apps, making complex models easily available to researchers without the need to write \proglang{R} codes. The included app can be run locally, but \pkg{shiny} apps can be hosted on a server and deployed online. A well-designed and web-based application could put the power and flexibility of \pkg{CLME} at a researcher's fingertips. Future developments include improving the app and deploying it online.
+
+\section*{Acknowledgments}
+This research is supported (in part) by the Intramural Research Program of the NIH, National Institute of Environmental Health Sciences (Z01 ES101744). The authors thank the following individuals: Drs. Katie O'Brien, Keith Shockley, and Bahjat Qaqish for carefully reading the manuscript and making numerous suggestions which substantially improved the presentation; Dr. Michelle Cora for providing the data on Sprague-Dawley rats analyzed in Section~\ref{ssec:rats}; and the editors of the Journal of Statistical Software for providing suggestions on streamlining and improving the interface of \pkg{CLME}.
+
+\clearpage 
+
+\appendix
+
+\section{Flowcharts to determine arguments}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[height=15cm]{FC01.pdf}
+\caption{Main flowchart to determine arguments (left) and flowchart to determine groups for residual variance (right).}
+\label{fig:fc01}
+\end{figure}
+
+
+\begin{figure}[ht]
+\centering
+\includegraphics[height=15cm]{FC02.pdf}\\
+\caption{Flowchart to determine constraints.}
+\label{fig:fc02}
+\end{figure}
+
+
+\begin{figure}[ht]
+\centering
+\includegraphics[height=12cm]{FC03.pdf}
+\caption{Flowcharts to determine arguments defining the test statistic.}
+\label{fig:fc03}
+\end{figure}
+
+
+
+
+
+\clearpage 
+
+% \bibliographystyle{jss}
+\bibliography{CLME_ref}
+
+
+\end{document}
