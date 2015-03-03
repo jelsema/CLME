@@ -23,7 +23,8 @@ install_github("jelsema/CLME")
 
 ## Usage
 
-Some basic examples may be added here. Alternatively, see the vignette. In the vignette, note that the number of simulations (argument `nsim`) needed to be reduced to speed up compilation.
+Some basic examples may be added here. 
+Alternatively, see the vignette. In the vignette, note that the number of simulations (argument nsim) needed to be reduced to speed up compilation.
 
 ## License
 
