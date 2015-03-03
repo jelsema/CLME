@@ -1,0 +1,47 @@
+# Import all packages listed as Imports or Depends
+import( methods, shiny, stringr, prettyR )
+
+
+importFrom( "MASS" , ginv )
+
+importFrom( "isotone" , activeSet )
+
+importFrom( "lme4"    , 
+	lFormula,
+	fixef,
+	ranef,
+	VarCorr,
+	sigma )
+
+importFrom("stats",
+	confint, 
+	formula,
+	logLik, 
+	model.matrix, 
+	nobs, 
+	residuals, 
+	vcov )
+
+S3method( AIC            , clme ) 
+S3method( as             , clme )
+S3method( confint        , clme )
+S3method( fixef          , clme )
+S3method( formula        , clme )
+S3method( is             , clme )
+S3method( logLik         , clme )
+S3method( model.frame    , clme )
+S3method( model.matrix   , clme )
+S3method( nobs           , clme )
+S3method( plot           , clme )
+S3method( print          , clme )
+S3method( ranef          , clme )
+S3method( residuals      , clme )
+S3method( sigma          , clme )
+S3method( summary        , clme )
+S3method( VarCorr        , clme )
+S3method( print          , varcorr_clme )
+S3method( vcov           , clme )
+
+
+# Export all names
+exportPattern("^[^\\.]")

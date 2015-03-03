@@ -1,0 +1,38 @@
+===========================
+PROJECTED DEVELOPMENT:
+- Better handling of environments (currently non-existant)
+- Improvements to GUI in shiny_clme(), particularly:
+  - Plots/summary for data when main response variable is not a factor
+    or when there are multiple variables instead of a single factor
+- Better formula parsing
+
+===========================
+VERSION HISTORY:
+
+Version 2.0-2, 2015-01-20
+- Fixed typo in printing of log-likelihood, AIC, BIC
+- Added ellipses to MINQUE function to prevent errors from arguments em.eps and em.iter
+- Improvements to shiny_clme() application
+
+
+Version 2.0-1, 2014-12-05
+- Minor updates to several functions
+
+
+Version 2.0-0, 2014-12-01
+- Major changes to arguments, particularly:
+  - Formula interface implemented
+  - Removed necessity for custom PAVA algorithms (implemented function 'activeSet' from package isotone)
+  - Nks replaced with group vector input
+  - Qs removed, each random term now gets individual variance
+- Provided more common methods for fitted objects
+
+Version 1.0-0, 2014-09-09
+- Initial release of package
+
+===========================
+Author / Maintainer:
+Casey M. Jelsema
+Biostatistics Branch
+National Intitute of Environmental Health Sciences
+<casey.jelsema@nih.gov>
