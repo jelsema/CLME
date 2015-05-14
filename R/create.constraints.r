@@ -89,7 +89,12 @@ create.constraints <- function( P1, constraints ){
     Anull[idx1:idx2,2] <- (1:P1)[-ii]
   }
   
-    
+  ## If A has only one row, activeSet() from package "isotone" causes error.
+  ## Placing same constraint twice alleviates this problem.
+  if( nrow(A)==1 ){
+    A     <- rbind( A    , A     )
+    Anull <- rbind( Anull, Anull )
+  }
   
   # Return the constraints object
   new_constraints <- list( A = A, B = B, Anull = Anull, order=order, node=node, decreasing=decreasing )

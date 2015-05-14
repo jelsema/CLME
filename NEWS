@@ -1,10 +1,13 @@
 ===========================
 PROJECTED DEVELOPMENT:
 - Better handling of environments (currently non-existant)
+- Better formula parsing
 - Improvements to GUI in shiny_clme(), particularly:
   - Plots/summary for data when main response variable is not a factor
     or when there are multiple variables instead of a single factor
-- Better formula parsing
+  - Add a "model running" indicator.
+  - Allow more flexibility in file input (e.g. xlsx)
+
 
 ===========================
 VERSION HISTORY:
@@ -14,6 +17,7 @@ Version 2.0-3, 2015-05-14
 - Fixed error with method VarCorr() (failed unless "lme4" or "nlme" was loaded, redefined method VarCorr)
 - Replaced vignette with static document.
 - Enabled parallel processing for bootstrap simulations, specify argument 'ncore'.
+- Implemented work-around to prevent error (stemming from package isotone) when there was only 1 constraint.
 
 
 Version 2.0-2, 2015-01-20
