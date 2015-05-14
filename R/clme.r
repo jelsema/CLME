@@ -3,7 +3,7 @@
 clme <-
 function( formula, data, gfix=NULL, constraints=list(),
           nsim=1000, tsf=lrt.stat, tsf.ind=w.stat.ind, mySolver="LS", 
-          verbose=c(FALSE,FALSE,FALSE), seed=NULL, levels=NULL, ncon=1, ...
+          verbose=c(FALSE,FALSE,FALSE), seed=NULL, levels=NULL, ncon=1, ncore=1, ...
           ){
   
   cc       <- match.call( expand.dots=TRUE )  
@@ -208,58 +208,125 @@ function( formula, data, gfix=NULL, constraints=list(),
   ## Calculate the residuals from unconstrained model
   mr <- clme_resids( formula=formula, data=data, gfix=gfix, ncon=ncon )
   
+  ## This is the loop for the bootstrap simulations
   if( nsim > 0 ){
-    ## Obtain bootstrap samples      
-    Y.boot <- resid_boot( formula=formula, data=data, gfix=gfix, 
-                          eps=mr$PA, xi=mr$xi, ssq=mr$ssq, tsq=mr$tsq, 
-                          cov.theta=mr$cov.theta, nsim=nsim, 
-                          theta=clme.out$theta.null, mySolver=mySolver,
-                          seed=seed, null.resids=FALSE, ncon=ncon, ...  )
-        
-    ## EM for the bootstrap samples    
-    p.value  <- rep( 0 , length(clme.out$ts.glb) )
-    pval.ind <- rep( 0 , dim(est.const$A)[1] )
-    
-    mprint <- round( seq( 1 , round(nsim*0.9), length.out=10 ) )
-    
-    for( m in 1:nsim ){
+    if( round(ncore)==ncore & ncore > 1   ){
       
-      if( verbose[1]==TRUE & (m %in% mprint) ){
-        print( paste( "Bootstrap Iteration " , m , " of " , nsim , sep=""))
+      registerDoParallel( cores=ncore )
+      
+      ## Use PARALLEL processing for the bootstrap simulations
+      ## Use SEQUENTIAL processing for the bootstrap simulations
+      ## Obtain bootstrap samples      
+      Y.boot <- resid_boot( formula=formula, data=data, gfix=gfix, 
+                            eps=mr$PA, xi=mr$xi, ssq=mr$ssq, tsq=mr$tsq, 
+                            cov.theta=mr$cov.theta, nsim=nsim, 
+                            theta=clme.out$theta.null, mySolver=mySolver,
+                            seed=seed, null.resids=FALSE, ncon=ncon, ...  )
+      
+      ## EM for the bootstrap samples    
+      #p.value  <- rep( 0 , length(clme.out$ts.glb) )
+      #pval.ind <- rep( 0 , dim(est.const$A)[1] )
+      p.value  <- matrix( 0, nrow=nsim , ncol= )
+      pval.ind <- matrix( 0, nrow=nsim , ncol=dim(est.const$A)[1]     )
+      
+      mprint <- round( seq( 1 , round(nsim*0.9), length.out=10 ) )
+      
+      
+      pvals <- foreach( m = 1:nsim , .combine='rbind' ) %dopar% {
+        
+        if( verbose[1]==TRUE & (m %in% mprint) ){
+          print( paste( "Bootstrap Iteration " , m , " of " , nsim , sep=""))
+        }
+        
+        ## Loop through the search grid
+        ts.boot <- -Inf
+        
+        for( mnk in 1:MNK ){
+          if( cust.const==FALSE ){
+            grid.row <- list( order=search.grid[mnk,1], node=search.grid[mnk,3],
+                              decreasing=search.grid[mnk,2] )
+            loop.const <- create.constraints( P1=ncol(X1), constraints=grid.row )
+          }
+          
+          clme.temp <- clme_em( Y=Y.boot[,m], X1=X1, X2=X2, U=U, Nks=Nks,
+                                Qs=Qs, constraints=loop.const, mq.phi=mq.phi,
+                                tsf=tsf, tsf.ind=tsf.ind, mySolver=mySolver,
+                                verbose=verbose[3], ...)
+          
+          idx <- which(clme.temp$ts.glb > ts.boot)
+          if( length(idx)>0 ){
+            ts.boot[idx] <- clme.temp$ts.glb[idx]
+          }
+          
+          update.ind <- (MNK==1) + (mnk == est.order)
+          if( update.ind>0 ){
+            ts.ind.boot <- clme.temp$ts.ind 
+          }
+        }
+        c( 1*( ts.boot >= clme.out$ts.glb ), 1*(ts.ind.boot >= clme.out$ts.ind) )
       }
       
-      ## Loop through the search grid
-      ts.boot <- -Inf
+      p.value  <- pvals[ ,   1:length(clme.out$ts.glb) , drop=FALSE ]
+      pval.ind <- pvals[ , -(1:length(clme.out$ts.glb)), drop=FALSE ]
       
-      for( mnk in 1:MNK ){
-        if( cust.const==FALSE ){
-          grid.row <- list( order=search.grid[mnk,1], node=search.grid[mnk,3],
-                            decreasing=search.grid[mnk,2] )
-          loop.const <- create.constraints( P1=ncol(X1), constraints=grid.row )
+      clme.out$p.value     <- colSums(p.value)/nsim
+      clme.out$p.value.ind <- colSums(pval.ind)/nsim
+      
+      ## End of the PARALLEL BOOTSTRAP LOOP
+    } else{
+      ## Use SEQUENTIAL processing for the bootstrap simulations
+      ## Obtain bootstrap samples      
+      Y.boot <- resid_boot( formula=formula, data=data, gfix=gfix, 
+                            eps=mr$PA, xi=mr$xi, ssq=mr$ssq, tsq=mr$tsq, 
+                            cov.theta=mr$cov.theta, nsim=nsim, 
+                            theta=clme.out$theta.null, mySolver=mySolver,
+                            seed=seed, null.resids=FALSE, ncon=ncon, ...  )
+      
+      ## EM for the bootstrap samples    
+      p.value  <- rep( 0 , length(clme.out$ts.glb) )
+      pval.ind <- rep( 0 , dim(est.const$A)[1] )
+      
+      mprint <- round( seq( 1 , round(nsim*0.9), length.out=10 ) )
+      
+      for( m in 1:nsim ){
+        
+        if( verbose[1]==TRUE & (m %in% mprint) ){
+          print( paste( "Bootstrap Iteration " , m , " of " , nsim , sep=""))
         }
         
-        clme.temp <- clme_em( Y=Y.boot[,m], X1=X1, X2=X2, U=U, Nks=Nks,
-                              Qs=Qs, constraints=loop.const, mq.phi=mq.phi,
-                              tsf=tsf, tsf.ind=tsf.ind, mySolver=mySolver,
-                              verbose=verbose[3], ...)
+        ## Loop through the search grid
+        ts.boot <- -Inf
         
-        idx <- which(clme.temp$ts.glb > ts.boot)
-        if( length(idx)>0 ){
-          ts.boot[idx] <- clme.temp$ts.glb[idx]
+        for( mnk in 1:MNK ){
+          if( cust.const==FALSE ){
+            grid.row <- list( order=search.grid[mnk,1], node=search.grid[mnk,3],
+                              decreasing=search.grid[mnk,2] )
+            loop.const <- create.constraints( P1=ncol(X1), constraints=grid.row )
+          }
+          
+          clme.temp <- clme_em( Y=Y.boot[,m], X1=X1, X2=X2, U=U, Nks=Nks,
+                                Qs=Qs, constraints=loop.const, mq.phi=mq.phi,
+                                tsf=tsf, tsf.ind=tsf.ind, mySolver=mySolver,
+                                verbose=verbose[3], ...)
+          
+          idx <- which(clme.temp$ts.glb > ts.boot)
+          if( length(idx)>0 ){
+            ts.boot[idx] <- clme.temp$ts.glb[idx]
+          }
+          
+          update.ind <- (MNK==1) + (mnk == est.order)
+          if( update.ind>0 ){
+            ts.ind.boot <- clme.temp$ts.ind 
+          }
         }
-    
-        update.ind <- (MNK==1) + (mnk == est.order)
-        if( update.ind>0 ){
-          ts.ind.boot <- clme.temp$ts.ind 
-        }
+        p.value  <- p.value  + 1*( ts.boot    >= clme.out$ts.glb )
+        pval.ind <- pval.ind + 1*(ts.ind.boot >= clme.out$ts.ind )
       }
-      p.value  <- p.value  + 1*( ts.boot    >= clme.out$ts.glb )
-      pval.ind <- pval.ind + 1*(ts.ind.boot >= clme.out$ts.ind )
-    }
-    
-    clme.out$p.value     <- p.value/nsim
-    clme.out$p.value.ind <- pval.ind/nsim
-    
+      
+      clme.out$p.value     <- p.value/nsim
+      clme.out$p.value.ind <- pval.ind/nsim
+      
+    } ## End of the SEQUENTIAL BOOTSTRAP LOOP
   } else{
     clme.out$p.value     <- NA
     clme.out$p.value.ind <- rep( NA, nrow(est.const$A) )

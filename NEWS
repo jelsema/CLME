@@ -13,6 +13,7 @@ Version 2.0-3, 2015-05-14
 - Noted nsim is in the fitted object of clme().
 - Fixed error with method VarCorr() (failed unless "lme4" or "nlme" was loaded, redefined method VarCorr)
 - Replaced vignette with static document.
+- Enabled parallel processing for bootstrap simulations, specify argument 'ncore'.
 
 
 Version 2.0-2, 2015-01-20
