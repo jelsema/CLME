@@ -57,6 +57,7 @@ The output of \code{clme} is an object of the class \code{clme}, which is list w
 \item{\code{call}}{ the function call. }
 \item{\code{order}}{ list describing the specified constraints.}
 \item{\code{P1}}{ the number of constrained parameters.}
+\item{\code{nsim}}{ the number of bootstrap simulations used for inference.}
 }
 
 

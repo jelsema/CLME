@@ -58,6 +58,8 @@ For computational reasons, the implementation is not identical to the model expr
 
 The primary function of \pkg{CLME} is \code{\link{clme}}. The other functions in this package may be run separately, but in general are designed for use by \code{\link{clme}}.
 
+The creation of this package \pkg{CLME}, this manual, and the vingette were all supported by the Intermural Research Program of the United States' National Institutes of Health (Z01 ES101744).
+
 }
 
 \author{ Casey M. Jelsema <casey.jelsema@nih.gov> }
