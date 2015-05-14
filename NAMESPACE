@@ -7,10 +7,10 @@ importFrom( "MASS" , ginv )
 importFrom( "isotone" , activeSet )
 
 importFrom( "lme4"    , 
-	lFormula,
-	fixef,
-	ranef,
-	sigma )
+  lFormula,
+  fixef,
+  ranef,
+  sigma )
 
 importFrom("stats",
 	confint, 

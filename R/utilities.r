@@ -345,6 +345,8 @@ sigma.clme <- function( object, ...){
 }
 
 
+VarCorr <- function( object, ...){ UseMethod("VarCorr") }
+
 VarCorr.clme <- function(object, ...){
   ## Print out variances or SDs
   ## Defines tiny class "varcorr_clme" to handle printing
