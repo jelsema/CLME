@@ -7,7 +7,7 @@
 \usage{
 clme(formula, data, gfix=NULL, constraints=list(), nsim=1000,
      tsf=lrt.stat, tsf.ind=w.stat.ind, mySolver="LS", 
-     verbose=c(FALSE,FALSE,FALSE), seed=NULL, levels=NULL, ncon=1, ... )
+     verbose=c(FALSE,FALSE,FALSE), seed=NULL, levels=NULL, ncon=1, ncore=1, ... )
 }
 
 \arguments{
@@ -24,6 +24,7 @@ clme(formula, data, gfix=NULL, constraints=list(), nsim=1000,
   \item{seed}{ set the seed for the RNG.}
   \item{levels}{ optional list to manually specify names for constrained coefficients. See Details.}
   \item{ncon}{ the number of variables in \code{formula} that are constrained.}
+  \item{ncore}{ the number of cores to use in parallel processing.}
   \item{...}{space for additional arguments.}
 }
 
@@ -80,6 +81,9 @@ For non-default orders, the elements \code{A} and \code{B} should be provided. \
 The argument \code{tsf} is a function to calculate the desired test statistic. The default function calculates likelihood ratio type test statistic. A Williams type test statistic, which is the maximum of the test statistic over the constraints in \code{constraints\$B}, is also available, and custom functions may be defined. See \code{\link{w.stat}} for details.
 
 By default, homogeneity of variances is assumed for residuals (e.g., \code{gfix} does not define groups) and for each random effect.
+
+If \code{ncore} is greater than 1 (the default) then \code{clme} will attempt to use the \pkg{doParallel} package to run the bootstrap samples in parallel.
+
 
 \figure{OrderPlot.jpg}{Plot of Orders.}
 

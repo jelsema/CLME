@@ -1,6 +1,8 @@
-\name{VarCorr.clme}
+\name{VarCorr}
 
+\alias{VarCorr}
 \alias{VarCorr.clme}
+
 
 
 \title{ Variance components }
