@@ -1,7 +1,42 @@
-
-
-
-
+#' S3 method to plot objects of class \code{clme}
+#'
+#' @description Generates a basic plot of estimated coefficients which are subject to constraints (\eqn{\theta_1}{theta_1} ). Lines indicate individual constraints (not global tests) and significance.
+#'
+#' @param x  object of class 'clme' to be plotted.
+#' @param alpha  significance level of the test.
+#' @param legendx  character indicating placement of legend. See Details.
+#' @param inset  inset distance(s) from the margins as a fraction of the plot region when legend is placed by keyword.
+#' @param ci  plot individual confidence intervals. 
+#' @param ylim  limits of the y axis.
+#' @param cex  size of plotting symbols.
+#' @param pch  plotting symbols.
+#' @param bg  background (fill) color of the plotting symbols.
+#' @param xlab  label of the x axis.
+#' @param ylab  label of the y axis.
+#' @param tree  logical to produce alternate graph for tree ordering. 
+#' @param ...  additional plotting arguments. 
+#'
+#' @details 
+#' All of the individual contrasts in the \code{constraints\$A} matrix are tested and plotted. The global test is not represented (unless it happens to coincide with an individual contrast). Only the elements of \eqn{\theta}{theta} which appear in any constraints (e.g. the elements of \eqn{\theta_{1}}{theta_1}) are plotted. Coefficients for the covariates are not plotted.
+#' Solid lines denote no significant difference, while dashed lines denote statistical significance. Significance is determined by the individual p-value being less than or equal to the supplied \eqn{\alpha}{alpha} threshold. By default a legend denoting the meaning of solid and dashed lines will be placed below the graph. Argument \code{legendx} may be set to a legend keyword (e.g. \code{legend=''bottomright''}) to place it inside the graph at the specified location. Setting \code{legendx} to \code{FALSE} or to a non-supported keyword suppresses the legend.
+#' Confidence intervals for the coefficients may be plotted. They are individual confidence intervals, and are computed using the covariance matrix of the unconstrained estimates of \eqn{\theta_{1}}{theta_1}. These confidence intervals have higher coverage probability than the nominal value, and as such may appear to be in conflict with the significance tests. Alternate forms of confidence intervals may be provided in future updates.#'
+#' 
+#' @seealso
+#' \code{\link{CLME-package}}
+#' \code{\link{clme}}
+#' 
+#' @examples
+#' \dontrun{
+#'   set.seed( 42 )
+#'   data( rat.blood )
+#'   cons <- list(order = "simple", decreasing = FALSE, node = 1 )
+#'   clme.out <- clme(mcv ~ time + temp + sex + (1|id), data = rat.blood , 
+#'                    constraints = cons, seed = 42, nsim = 10)
+#'   
+#'   plot( clme.out )
+#' }
+#' 
+#' 
 plot.clme <- 
   function(x , alpha=0.05 , legendx="below" , inset=0.01,
            ci=FALSE , ylim=NULL , cex=1.75 , pch=21 , bg="white" , 

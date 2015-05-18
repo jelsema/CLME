@@ -3,7 +3,44 @@
 ## Various support functions to assist the main functions
 ##
 
-# Function to define the model matrices for clme
+#' Create model matrices for \code{clme}
+#'
+#' @description
+#' Parses formulas to creates model matrices for \code{clme}. 
+#'
+#' @param formula a formula defining a linear fixed or mixed effects model. The constrained effect(s) must come before any unconstrained covariates on the right-hand side of the expression. The first \code{ncon} terms will be assumed to be constrained. 
+#' @param data data frame containing the variables in the model.
+#' @param ncon the number of variables in \code{formula} that are constrained.
+#' 
+#' 
+#' @note
+#' The first term on the right-hand side of the formula should be the fixed effect with constrained coefficients. 
+#' Random effects are represented with a vertical bar, so for example the random effect \code{U} would be included by \code{Y ~ X1 + (1|U)}.
+#' 
+#' @return
+#' A list with the elements:
+#' \tabular{rl}{
+#'   Y       \tab response variable \cr
+#'   X1      \tab design matrix for constrained effect \cr
+#'   X2      \tab design matrix for covariates \cr
+#'   P1      \tab number of constrained coefficients \cr
+#'   U       \tab matrix of random effects \cr
+#'   formula \tab the final formula call (automatically removes intercept) \cr
+#'   dframe  \tab the dataframe containing the variables in the model \cr
+#'   REidx   \tab an element to define random effect variance components \cr
+#'   REnames \tab an element to define random effect variance components \cr
+#' }
+#' 
+#' @seealso
+#' \code{\link{CLME-package}}
+#' \code{\link{clme}}
+#' 
+#' @examples
+#' data( rat.blood )
+#' model_terms_clme( mcv ~ time + temp + sex + (1|id) , data = rat.blood )
+#' 
+#' @importFrom lme4 lFormula
+#' 
 model_terms_clme <- function( formula, data, ncon=1 ){
   
   formula2 <- update.formula( formula , . ~ . - 1 )
@@ -57,13 +94,41 @@ model_terms_clme <- function( formula, data, ncon=1 ){
 ## Some methods for class CLME
 ##
 
-
-
+#' Constructor method for objects S3 class clme
+#' 
+#' @rdname as.clme
+#' 
 is.clme <- function(x) inherits(x, "clme")
 
 
-
-
+#' Constructor method for objects S3 class clme
+#'
+#' @description
+#' Test if an object is of class \code{clme} or coerce an object to be such.
+#' 
+#' @rdname as.clme
+#' 
+#' @param x list with the elements corresponding to the output of \code{\link{clme}}.
+#' @param ... space for additional arguments.
+#' 
+#' @return
+#' Returns an object of the class \code{clme}.
+#' 
+#' 
+#' @seealso
+#' \code{\link{CLME-package}}
+#' \code{\link{clme}}
+#' 
+#' @examples
+#' data( rat.blood )
+#' 
+#' cons <- list(order = "simple", decreasing = FALSE, node = 1 )
+#' clme.out <- clme(mcv ~ time + temp + sex + (1|id), data = rat.blood , 
+#'                  constraints = cons, seed = 42, nsim = 0)
+#' 
+#' is.clme( clme.out )
+#' as.clme( clme.out )
+#' 
 as.clme <- function( x , ... ){
   
   if( is.clme(x) ){
@@ -155,7 +220,39 @@ as.clme <- function( x , ... ){
 
 ################################################################################
 
-
+#' Akaike information criterion
+#'
+#' @description
+#' Calculates the Akaike and Bayesian information criterion for objects of class \code{clme}. 
+#' 
+#' @param object object of class \code{\link{clme}}.
+#' @param ... space for additional arguments.
+#' @param k value multiplied by number of coefficients
+#' 
+#' @details
+#' The log-likelihood is assumed to be the Normal distribution. The model uses residual bootstrap methodology, and Normality is neither required nor assumed. Therefore the log-likelihood and these information criterion may not be useful measures for comparing models.
+#' For \code{k=2}, the function computes the AIC. To obtain BIC, set \eqn{k = log( n/(2*pi) )}; which the method \code{BIC.clme} does.
+#' 
+#' 
+#' @return
+#' Returns the information criterion (numeric).
+#' 
+#' 
+#' @seealso
+#' \code{\link{CLME-package}}
+#' \code{\link{clme}}
+#' 
+#' @examples
+#' data( rat.blood )
+#' 
+#' cons <- list(order = "simple", decreasing = FALSE, node = 1 )
+#' clme.out <- clme(mcv ~ time + temp + sex + (1|id), data = rat.blood , 
+#'                  constraints = cons, seed = 42, nsim = 0)
+#' 
+#' AIC( clme.out )
+#' AIC( clme.out, k=log( nobs(clme.out)/(2*pi) ) )
+#' 
+#' 
 AIC.clme <- function( object, ..., k=2 ){
   ## For BIC, set k = ln( n/(2*pi) )
   logl <- logLik.clme( object, ...)[1]
@@ -166,6 +263,40 @@ AIC.clme <- function( object, ..., k=2 ){
 }
 
 
+
+
+#' Individual confidence intervals
+#'
+#' @description
+#' Calculates confidence intervals for fixed effects parameter estimates in objects of class \code{clme}.
+#' 
+#' @param object object of class \code{\link{clme}}.
+#' @param parm parameter for which confidence intervals are computed (not used).
+#' @param level nominal confidence level.
+#' @param ... space for additional arguments.
+#' 
+#' @details
+#' Confidence intervals are computed using Standard Normal critical values. 
+#' Standard errors are taken from the covariance matrix of the unconstrained parameter estimates.
+#' 
+#' 
+#' @return
+#' Returns a matrix with two columns named lcl and ucl (lower and upper confidence limit).
+#' 
+#' 
+#' @seealso
+#' \code{\link{CLME-package}}
+#' \code{\link{clme}}
+#' 
+#' @examples
+#' data( rat.blood )
+#' cons <- list(order = "simple", decreasing = FALSE, node = 1 )
+#' clme.out <- clme(mcv ~ time + temp + sex + (1|id), data = rat.blood , 
+#'                  constraints = cons, seed = 42, nsim = 0)
+#' 
+#' confint.clme( clme.out )
+#' 
+#' 
 confint.clme <- function(object, parm, level=0.95, ...){
   ## More types of confidence intervals (e.g., bootstrap) may be added in the future.
   ## If so, default confidence interval will be the current methods
@@ -194,6 +325,32 @@ confint.clme <- function(object, parm, level=0.95, ...){
 }
 
 
+#' Extract fixed effects
+#'
+#' @description
+#' Extracts the fixed effects estimates from objects of class \code{clme}. 
+#' 
+#' @rdname fixef.clme
+#' 
+#' @param object object of class \code{\link{clme}}.
+#' @param ... space for additional arguments
+#' 
+#' @return
+#' Returns a numeric vector.
+#' 
+#' 
+#' @seealso
+#' \code{\link{CLME-package}}
+#' \code{\link{clme}}
+#' 
+#' @examples
+#' data( rat.blood )
+#' cons <- list(order = "simple", decreasing = FALSE, node = 1 )
+#' clme.out <- clme(mcv ~ time + temp + sex + (1|id), data = rat.blood , 
+#'                  constraints = cons, seed = 42, nsim = 0)
+#' 
+#' fixef.clme( clme.out )
+#' 
 fixef.clme <- function( object, ... ){
   ## Print out the fixed effects
   if( is.clme(object) ){
@@ -202,6 +359,10 @@ fixef.clme <- function( object, ... ){
     stop("'object' is not of class clme")
   }
 }
+
+#' 
+#' @rdname fixef.clme
+#' 
 fixed.effects.clme <- function( object, ... ){
   fixef.clme( object, ... )
 }
@@ -213,11 +374,69 @@ fixed.effects.clme <- function( object, ... ){
 #}
 
 
+#' Extract formula
+#'
+#' @description
+#' Extracts the formula from objects of class \code{clme}. 
+#' 
+#' @param object object of class \code{\link{clme}}.
+#' @param ... space for additional arguments
+#' 
+#' @details
+#' The package \pkg{CLME} parametrizes the model with no intercept term. 
+#' If an intercept was included, it will be removed automatically.
+#' 
+#' @return
+#' Returns a formula object
+#' 
+#' 
+#' @seealso
+#' \code{\link{CLME-package}}
+#' \code{\link{clme}}
+#' 
+#' @examples
+#' data( rat.blood )
+#' cons <- list(order = "simple", decreasing = FALSE, node = 1 )
+#' clme.out <- clme(mcv ~ time + temp + sex + (1|id), data = rat.blood , 
+#'                  constraints = cons, seed = 42, nsim = 0)
+#' 
+#' formula.clme( clme.out )
+#' 
 formula.clme <- function(x, ...){
   return( x$formula )
 }
 
 
+
+#' Log-likelihood
+#'
+#' @description
+#' Computes the log-likelihood of the fitted model for objects of class \code{clme}. 
+#' 
+#' @param object object of class \code{\link{clme}}.
+#' @param ... space for additional arguments
+#' 
+#' @details
+#' The log-likelihood is computed using the Normal distribution. The model uses residual bootstrap 
+#' methodology, and Normality is neither required nor assumed. Therefore the log-likelihood may 
+#' not be a useful measure in the context of \pkg{CLME}.
+#' 
+#' @return
+#' Numeric.
+#' 
+#' 
+#' @seealso
+#' \code{\link{CLME-package}}
+#' \code{\link{clme}}
+#' 
+#' @examples
+#' data( rat.blood )
+#' cons <- list(order = "simple", decreasing = FALSE, node = 1 )
+#' clme.out <- clme(mcv ~ time + temp + sex + (1|id), data = rat.blood , 
+#'                  constraints = cons, seed = 42, nsim = 0)
+#' 
+#' logLik.clme( clme.out )
+#' 
 logLik.clme <- function( object, ...){
   ## Residuals
   YY <- object$dframe[,1]
@@ -262,12 +481,62 @@ logLik.clme <- function( object, ...){
 
 
 
+#' Extracts the model frame
+#'
+#' @description
+#' Extracts the model frame from objects of class \code{clme}. 
+#' 
+#' @param formula a formula expression.
+#' @param ... space for additional arguments
+#' 
+#' 
+#' @return
+#' Returns a data frame with the variables in the model.
+#' 
+#' 
+#' @seealso
+#' \code{\link{CLME-package}}
+#' \code{\link{clme}}
+#' 
+#' @examples
+#' \dontrun{
+#' data( rat.blood )
+#' model.frame.clme( mcv ~ time + temp + sex + (1|id), data = rat.blood )
+#' }
+#' 
 model.frame.clme <- function( formula , ...){
   ## Return the data frame
   mmat     <- model_terms_clme( formula, ... )  
   return( mmat$dframe )
 }
 
+#' Extract the fixed-effects design matrix.
+#'
+#' @description
+#' Extracts the fixed-effects design matrix from objects of class \code{clme}.
+#' 
+#' @param object an object of class \code{clme}.
+#' @param ... space for additional arguments
+#' 
+#' 
+#' @return
+#' Returns a matrix.
+#' 
+#' 
+#' @seealso
+#' \code{\link{CLME-package}}
+#' \code{\link{clme}}
+#' 
+#' @examples
+#' \dontrun{
+#' data( rat.blood )
+#' cons <- list(order = "simple", decreasing = FALSE, node = 1 )
+#' clme.out <- clme(mcv ~ time + temp + sex + (1|id), data = rat.blood , 
+#'                  constraints = cons, seed = 42, nsim = 0)
+#' 
+#' model.matrix.clme( clme.out )
+#' }
+#' 
 model.matrix.clme <- function( object, ...){
   ## Return the fixed-effects matrix
   mmat <- model_terms_clme( object$formula, object$dframe )
@@ -276,10 +545,63 @@ model.matrix.clme <- function( object, ...){
   return( cbind(X1, X2) )  
 }
 
+
+#' Number of observations
+#'
+#' @description
+#' Obtains the number of observations used to fit an model for objects of class \code{clme}.
+#' 
+#' @param object an object of class \code{clme}.
+#' @param ... space for additional arguments
+#' 
+#' 
+#' @return
+#' Numeric.
+#' 
+#' 
+#' @seealso
+#' \code{\link{CLME-package}}
+#' \code{\link{clme}}
+#' 
+#' @examples
+#' data( rat.blood )
+#' cons <- list(order = "simple", decreasing = FALSE, node = 1 )
+#' clme.out <- clme(mcv ~ time + temp + sex + (1|id), data = rat.blood , 
+#'                  constraints = cons, seed = 42, nsim = 0)
+#' 
+#' nobs.clme( clme.out )
+#' 
 nobs.clme <- function(object, ...){
   nrow( model.matrix.clme(object) )
 }
 
+
+#' Printout of fitted object.
+#'
+#' @description
+#' Prints basic information on a fitted object of class \code{clme}.
+#' 
+#' @param x an object of class \code{clme}.
+#' @param ... space for additional arguments
+#' 
+#' 
+#' @return
+#' Text printed to console.
+#' 
+#' 
+#' @seealso
+#' \code{\link{CLME-package}}
+#' \code{\link{clme}}
+#' 
+#' @examples
+#' data( rat.blood )
+#' set.seed( 42 )
+#' cons <- list(order = "simple", decreasing = FALSE, node = 1 )
+#' clme.out <- clme(mcv ~ time + temp + sex + (1|id), data = rat.blood , 
+#'                  constraints = cons, seed = 42, nsim = 10)
+#' 
+#' print.clme( clme.out )
+#' 
 print.clme <- function(x, ...){
   #cc     <- match.call()
   #digits <- cc$digits
@@ -315,6 +637,32 @@ print.clme <- function(x, ...){
 }
 
 
+#' Extract random effects
+#'
+#' @description
+#' Extracts the random effects estimates from objects of class \code{clme}.
+#' 
+#' @rdname ranef.clme
+#' 
+#' @param object object of class \code{\link{clme}}.
+#' @param ... space for additional arguments
+#' 
+#' @return
+#' Returns a numeric vector.
+#' 
+#' 
+#' @seealso
+#' \code{\link{CLME-package}}
+#' \code{\link{clme}}
+#' 
+#' @examples
+#' data( rat.blood )
+#' cons <- list(order = "simple", decreasing = FALSE, node = 1 )
+#' clme.out <- clme(mcv ~ time + temp + sex + (1|id), data = rat.blood , 
+#'                  constraints = cons, seed = 42, nsim = 0)
+#' 
+#' ranef.clme( clme.out )
+#' 
 ranef.clme <- function( object, ... ){
   ## Print out the random effects
   if( is.clme(object) ){
@@ -323,11 +671,47 @@ ranef.clme <- function( object, ... ){
     stop("'object' is not of class clme")
   }
 }
+
+#' 
+#' @rdname ranef.clme
+#' 
 random.effects.clme <- function( object , ... ){
   ranef.clme( object, ... )
 }
 
 
+
+#' Various types of residuals 
+#'
+#' @description
+#' Computes several types of residuals for objects of class \code{clme}. 
+#' 
+#' @param object object of class \code{\link{clme}}.
+#' @param type type of residual (for mixed-effects models only).
+#' @param ... space for additional arguments
+#' 
+#' @details
+#' For fixed-effects models \eqn{Y = X\beta + \epsilon}{Y = X*b + e}, residuals are given as \deqn{\hat{e} = Y - X\hat{\beta}}{ ehat = Y - X*betahat}.
+#' For mixed-effects models \eqn{Y = X\beta + + U\xi + \epsilon}{Y = X*b + U*xi + e}, three types of residuals are available.
+#' \eqn{PA = Y - X\hat{\beta}}{ PA = Y - X*betahat}\\
+#' \eqn{SS = U\hat{\xi}}{ SS = U*xihat}\\
+#' \eqn{FM = Y - X\hat{\beta} - U\hat{\xi}}{ FM = Y - X*betahat - U*xihat}
+#' 
+#' @return
+#' Returns a numeric matrix.
+#' 
+#' @seealso
+#' \code{\link{CLME-package}}
+#' \code{\link{clme}}
+#' 
+#' @examples
+#' data( rat.blood )
+#' cons <- list(order = "simple", decreasing = FALSE, node = 1 )
+#' clme.out <- clme(mcv ~ time + temp + sex + (1|id), data = rat.blood , 
+#'                  constraints = cons, seed = 42, nsim = 0)
+#'                  
+#' residuals.clme( clme.out, type='PA' )
+#' 
 residuals.clme <- function( object, type="FM", ... ){
   ## Print out residuals of specified type
   if( is.clme(object) ){
@@ -340,13 +724,67 @@ residuals.clme <- function( object, type="FM", ... ){
 }
 
 
+#' Residual variance components
+#'
+#' @description
+#' Extract residual variance components for objects of class \code{clme}.
+#' 
+#' @param object object of class \code{\link{clme}}.
+#' @param ... space for additional arguments
+#' 
+#' 
+#' @return
+#' Numeric.
+#' 
+#' @seealso
+#' \code{\link{CLME-package}}
+#' \code{\link{clme}}
+#' 
+#' @examples
+#' data( rat.blood )
+#' cons <- list(order = "simple", decreasing = FALSE, node = 1 )
+#' clme.out <- clme(mcv ~ time + temp + sex + (1|id), data = rat.blood , 
+#'                  constraints = cons, seed = 42, nsim = 0)
+#'                  
+#' sigma.clme( clme.out )
+#' 
 sigma.clme <- function( object, ...){
   return( object$ssq )
 }
 
 
+#' Variance components.
+#' @rdname VarCorr
+#' 
 VarCorr <- function( object, ...){ UseMethod("VarCorr") }
 
+
+#' Variance components.
+#'
+#' @description
+#' Extracts variance components for objects of class \code{clme}. 
+#' 
+#' @rdname VarCorr
+#' 
+#' @param object object of class \code{\link{clme}}.
+#' @param ... space for additional arguments
+#' 
+#' 
+#' @return
+#' Numeric.
+#' 
+#' @seealso
+#' \code{\link{CLME-package}}
+#' \code{\link{clme}}
+#' 
+#' @examples
+#' data( rat.blood )
+#' cons <- list(order = "simple", decreasing = FALSE, node = 1 )
+#' clme.out <- clme(mcv ~ time + temp + sex + (1|id), data = rat.blood , 
+#'                  constraints = cons, seed = 42, nsim = 0)
+#'                  
+#' VarCorr.clme( clme.out )
+#' 
 VarCorr.clme <- function(object, ...){
   ## Print out variances or SDs
   ## Defines tiny class "varcorr_clme" to handle printing
@@ -365,6 +803,33 @@ VarCorr.clme <- function(object, ...){
 
 ## Leave this method out of alphabetical order so that
 ## is it right next to the VarCorr.clme method
+
+#' Printout for variance components
+#'
+#' @description
+#' Prints variance components of an objects of \code{clme}. 
+#' 
+#' @param object object of class \code{\link{clme}}.
+#' @param ... space for additional arguments
+#' 
+#' 
+#' @return
+#' Text printed to console.
+#' 
+#' @seealso
+#' \code{\link{CLME-package}}
+#' \code{\link{clme}}
+#' 
+#' @examples
+#' \dontrun{
+#' data( rat.blood )
+#' cons <- list(order = "simple", decreasing = FALSE, node = 1 )
+#' clme.out <- clme(mcv ~ time + temp + sex + (1|id), data = rat.blood , 
+#'                  constraints = cons, seed = 42, nsim = 0)
+#'                  
+#' print.varcorr_clme( clme.out )
+#' }
+#' 
 print.varcorr_clme <- function( x, ... ){
   varcomps <- x
   rnames   <- c( "Source", rownames( varcomps ) )
@@ -378,6 +843,31 @@ print.varcorr_clme <- function( x, ... ){
 }
 
 
+
+#' Variance-covariance matrix
+#'
+#' @description
+#' Extracts variance-covariance matrix for objects of class \code{clme}.
+#' 
+#' @param object object of class \code{\link{clme}}.
+#' @param ... space for additional arguments
+#' 
+#' 
+#' @return
+#' Numeric matrix.
+#' 
+#' @seealso
+#' \code{\link{CLME-package}}
+#' \code{\link{clme}}
+#' 
+#' @examples
+#' data( rat.blood )
+#' cons <- list(order = "simple", decreasing = FALSE, node = 1 )
+#' clme.out <- clme(mcv ~ time + temp + sex + (1|id), data = rat.blood , 
+#'                  constraints = cons, seed = 42, nsim = 0)
+#'                  
+#' vcov.clme( clme.out )
+#' 
 vcov.clme <- function(object, ...){
   ## Print out covariance matrix of theta
   if( is.clme(object) ){

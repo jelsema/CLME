@@ -1,3 +1,7 @@
+#' Constrained EM algorithm for linear fixed or mixed effects models.
+#' 
+#' @rdname clme_em
+#'
 clme_em_fixed <- function( Y, X1, X2 = NULL, U = NULL, Nks = dim(X1)[1],
                      Qs = dim(U)[2], constraints, mq.phi = NULL, tsf = lrt.stat, 
                      tsf.ind = w.stat.ind, mySolver="LS", em.iter = 500, 

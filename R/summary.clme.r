@@ -1,8 +1,34 @@
-
-
-
-
-
+#' S3 method to summarize results for objects of class \code{clme}
+#'
+#' @description Summarizes the output of objects of class \code{clme}, such as those produced by \code{\link{clme}}. Prints a tabulated display of global and individual tests, as well as parameter estimates.
+#'
+#' @param object an object of class \code{clme}.
+#' @param alpha level of significance.
+#' @param digits number of decimal digits to print.
+#' @param ... additional arguments passed to other functions.
+#'
+#' @note 
+#' The individual tests are performed on the specified order. If no specific order was specified, then the individual tests are performed on the estimated order.
+#' 
+#' @seealso
+#' \code{\link{CLME-package}}
+#' \code{\link{clme}}
+#' 
+#' @examples
+#' \dontrun{
+#'   set.seed( 42 )
+#'   data( rat.blood )
+#'   cons <- list(order = "simple", decreasing = FALSE, node = 1 )
+#'   clme.out <- clme(mcv ~ time + temp + sex + (1|id), data = rat.blood , 
+#'                    constraints = cons, seed = 42, nsim = 10)
+#'   
+#'   summary( clme.out )
+#' }
+#' 
+#' @importFrom stringr str_pad
+#' @importFrom prettyR decimal.align
+#' 
+#' 
 summary.clme <- function( object, alpha=0.05, digits=4, ...){
   
   ## Title and formula
