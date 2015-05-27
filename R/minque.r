@@ -41,6 +41,9 @@
 #' # Include covariates and random effects
 #' minque(Y = Y, X1 = X1, X2 = X2, U = U )
 #' 
+#' @importFrom MASS ginv
+#' @export
+#' 
 #' 
 minque <- function( Y , X1 , X2=NULL , U=NULL , Nks=dim(X1)[1] , Qs=dim(U)[2] , 
                     mq.eps=0.0001, mq.iter=500 , verbose=FALSE, ... ){

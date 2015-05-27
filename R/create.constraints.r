@@ -63,6 +63,8 @@
 #'                                                 , decreasing=FALSE ))
 #' }
 #' 
+#' @export
+#' 
 create.constraints <- function( P1, constraints ){
   
   Q1 <- P1-1
@@ -146,13 +148,8 @@ create.constraints <- function( P1, constraints ){
   
   
   ## Make the null A-matrix
-  Anull <- matrix( 0 , nrow=P1*(P1-1) , ncol=2 )
-  for( ii in 1:P1 ){
-    idx1 <- (P1-1)*(ii-1) + 1
-    idx2 <- (P1-1)*ii
-    Anull[idx1:idx2,1] <- rep(ii,P1-1)
-    Anull[idx1:idx2,2] <- (1:P1)[-ii]
-  }
+  Anull <- t(combn( 1:P1 , m=2 ))
+  Anull <- rbind( Anull, Anull[,2:1] )
   
   ## If A has only one row, activeSet() from package "isotone" causes error.
   ## Placing same constraint twice alleviates this problem.

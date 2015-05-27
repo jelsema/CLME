@@ -7,9 +7,9 @@
 \method{formula}{clme}(x, ...)
 }
 \arguments{
-\item{...}{space for additional arguments}
+\item{x}{object of class \code{\link{clme}}.}
 
-\item{object}{object of class \code{\link{clme}}.}
+\item{...}{space for additional arguments}
 }
 \value{
 Returns a formula object
@@ -27,7 +27,7 @@ cons <- list(order = "simple", decreasing = FALSE, node = 1 )
 clme.out <- clme(mcv ~ time + temp + sex + (1|id), data = rat.blood ,
                  constraints = cons, seed = 42, nsim = 0)
 
-formula.clme( clme.out )
+formula( clme.out )
 }
 \seealso{
 \code{\link{CLME-package}}

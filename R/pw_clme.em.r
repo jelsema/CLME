@@ -1,10 +1,11 @@
-#' Constrained EM algorithm for linear fixed or mixed effects models.
+#' EM algorithm for linear fixed or mixed effects models.
 #'
-#' @description Expectation-maximization (EM) algorithm under inequality constraints 
-#' to estimate parameters and compute a test statistic.
-#'
-#' @rdname clme_em
-#'
+#' @description Expectation-maximization (EM) algorithm to estimate parameters and compute a 
+#' test statistic for linear fixed or mixed effects models. Tests for pairwise differences
+#' and does not use any order restrictions.
+#' 
+#' @rdname pw_clme_em
+#' 
 #' @param Y \eqn{N \times 1}{Nx1} vector of response data.
 #' @param X1 \eqn{N \times p_1}{Nxp1} design matrix.
 #' @param X2 optional \eqn{N \times p_2}{Nxp2} matrix of covariates.
@@ -69,13 +70,13 @@
 #' 
 #' cons <- list(order = "simple", decreasing = FALSE, node = 1 )
 #' 
-#' clme.out <- clme_em(Y = Y, X1 = X1, X2 = X2, U = U, constraints = cons)
+#' clme.out <- pw_clme_em(Y = Y, X1 = X1, X2 = X2, U = U, constraints = cons)
 #' 
 #' @importFrom isotone activeSet
 #' @importFrom isotone gpava
 #' @export
 #' 
-clme_em   <- function( Y, X1, X2 = NULL, U = NULL, Nks = dim(X1)[1],
+pw_clme_em   <- function( Y, X1, X2 = NULL, U = NULL, Nks = dim(X1)[1],
                      Qs = dim(U)[2], constraints, mq.phi = NULL, tsf = lrt.stat, 
                      tsf.ind = w.stat.ind, mySolver="LS", em.iter = 500, 
                      em.eps =  0.0001, verbose = FALSE, ... ){
@@ -91,12 +92,11 @@ clme_em   <- function( Y, X1, X2 = NULL, U = NULL, Nks = dim(X1)[1],
   dots     <- as.list(substitute(list(...)))[-1L]
   new_call <- append( em_call, dots )
   
-  
   if( is.null(U) ){
-    em_results <- do.call( "clme_em_fixed" , new_call )
+    em_results <- do.call( "pw_clme_em_fixed" , new_call )
   } else{
-    em_results <- do.call( "clme_em_mixed" , new_call )
-  }
+    em_results <- do.call( "pw_clme_em_mixed" , new_call )
+  }  
   
   return( em_results )
 

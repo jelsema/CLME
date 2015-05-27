@@ -38,6 +38,7 @@
 #' 
 #' w.stat.ind( theta , th.cov , const$B , const$A )
 #' 
+#' @export
 #' 
 
 ##
@@ -72,6 +73,7 @@ w.stat <- function( theta , cov.theta , B , A , ...  ){
 #' Williams' type statistic (individual)
 #' 
 #' @rdname w.stat
+#' @export
 #' 
 
 w.stat.ind <- function( theta , cov.theta , B , A , ...  ){
@@ -96,9 +98,6 @@ w.stat.ind <- function( theta , cov.theta , B , A , ...  ){
 #' @description
 #' Calculates the likeihood ratio type test statistic (under Normality assumption) for a 
 #' constrained linear mixed effects model. This is the default test statistic for \pkg{CLME}.
-#' 
-#' 
-#' @rdname w.stat
 #' 
 #' 
 #' @param theta estimated coefficients.
@@ -132,6 +131,8 @@ w.stat.ind <- function( theta , cov.theta , B , A , ...  ){
 #' 
 #' # Individually compute lrt statistic
 #' lrt.stat(clme.out$theta, clme.out$theta.null, clme.out$cov.theta )
+#' 
+#' @export
 #' 
 #' 
 

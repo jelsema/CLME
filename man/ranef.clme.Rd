@@ -7,7 +7,7 @@
 \usage{
 \method{ranef}{clme}(object, ...)
 
-random.effects.clme(object, ...)
+\method{random.effects}{clme}(object, ...)
 }
 \arguments{
 \item{object}{object of class \code{\link{clme}}.}
@@ -28,7 +28,7 @@ cons <- list(order = "simple", decreasing = FALSE, node = 1 )
 clme.out <- clme(mcv ~ time + temp + sex + (1|id), data = rat.blood ,
                  constraints = cons, seed = 42, nsim = 0)
 
-ranef.clme( clme.out )
+ranef( clme.out )
 }
 \seealso{
 \code{\link{CLME-package}}

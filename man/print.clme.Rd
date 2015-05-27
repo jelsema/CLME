@@ -4,7 +4,7 @@
 \alias{print.clme}
 \title{Printout of fitted object.}
 \usage{
-print.clme(x, ...)
+\method{print}{clme}(x, ...)
 }
 \arguments{
 \item{x}{an object of class \code{clme}.}
@@ -18,13 +18,15 @@ Text printed to console.
 Prints basic information on a fitted object of class \code{clme}.
 }
 \examples{
+\dontrun{
 data( rat.blood )
 set.seed( 42 )
 cons <- list(order = "simple", decreasing = FALSE, node = 1 )
 clme.out <- clme(mcv ~ time + temp + sex + (1|id), data = rat.blood ,
                  constraints = cons, seed = 42, nsim = 10)
 
-print.clme( clme.out )
+print( clme.out )
+}
 }
 \seealso{
 \code{\link{CLME-package}}

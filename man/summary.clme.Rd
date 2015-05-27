@@ -4,7 +4,7 @@
 \alias{summary.clme}
 \title{S3 method to summarize results for objects of class \code{clme}}
 \usage{
-summary.clme(object, alpha = 0.05, digits = 4, ...)
+\method{summary}{clme}(object, alpha = 0.05, digits = 4, ...)
 }
 \arguments{
 \item{object}{an object of class \code{clme}.}

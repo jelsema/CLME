@@ -1,4 +1,5 @@
 
+
 ##
 ## Various support functions to assist the main functions
 ##
@@ -40,6 +41,7 @@
 #' model_terms_clme( mcv ~ time + temp + sex + (1|id) , data = rat.blood )
 #' 
 #' @importFrom lme4 lFormula
+#' @export
 #' 
 model_terms_clme <- function( formula, data, ncon=1 ){
   
@@ -97,6 +99,7 @@ model_terms_clme <- function( formula, data, ncon=1 ){
 #' Constructor method for objects S3 class clme
 #' 
 #' @rdname as.clme
+#' @export
 #' 
 is.clme <- function(x) inherits(x, "clme")
 
@@ -128,6 +131,7 @@ is.clme <- function(x) inherits(x, "clme")
 #' 
 #' is.clme( clme.out )
 #' as.clme( clme.out )
+#' @export
 #' 
 as.clme <- function( x , ... ){
   
@@ -243,6 +247,7 @@ as.clme <- function( x , ... ){
 #' \code{\link{clme}}
 #' 
 #' @examples
+#' 
 #' data( rat.blood )
 #' 
 #' cons <- list(order = "simple", decreasing = FALSE, node = 1 )
@@ -252,6 +257,9 @@ as.clme <- function( x , ... ){
 #' AIC( clme.out )
 #' AIC( clme.out, k=log( nobs(clme.out)/(2*pi) ) )
 #' 
+#' 
+#' @method AIC clme
+#' @export
 #' 
 AIC.clme <- function( object, ..., k=2 ){
   ## For BIC, set k = ln( n/(2*pi) )
@@ -265,10 +273,12 @@ AIC.clme <- function( object, ..., k=2 ){
 
 
 
+
 #' Individual confidence intervals
 #'
 #' @description
 #' Calculates confidence intervals for fixed effects parameter estimates in objects of class \code{clme}.
+#' @rdname confint
 #' 
 #' @param object object of class \code{\link{clme}}.
 #' @param parm parameter for which confidence intervals are computed (not used).
@@ -289,13 +299,17 @@ AIC.clme <- function( object, ..., k=2 ){
 #' \code{\link{clme}}
 #' 
 #' @examples
+#' 
 #' data( rat.blood )
 #' cons <- list(order = "simple", decreasing = FALSE, node = 1 )
 #' clme.out <- clme(mcv ~ time + temp + sex + (1|id), data = rat.blood , 
 #'                  constraints = cons, seed = 42, nsim = 0)
 #' 
-#' confint.clme( clme.out )
+#' confint( clme.out )
 #' 
+#' 
+#' @method confint clme
+#' @export
 #' 
 confint.clme <- function(object, parm, level=0.95, ...){
   ## More types of confidence intervals (e.g., bootstrap) may be added in the future.
@@ -325,12 +339,22 @@ confint.clme <- function(object, parm, level=0.95, ...){
 }
 
 
+
+#' Extract fixed effects
+#' 
+#' @rdname fixef
+#' @importFrom nlme fixef
+#' @export
+#' 
+fixef <- function( object, ...){ UseMethod("fixef") }
+
+
 #' Extract fixed effects
 #'
 #' @description
 #' Extracts the fixed effects estimates from objects of class \code{clme}. 
 #' 
-#' @rdname fixef.clme
+#' @rdname fixef
 #' 
 #' @param object object of class \code{\link{clme}}.
 #' @param ... space for additional arguments
@@ -344,12 +368,18 @@ confint.clme <- function(object, parm, level=0.95, ...){
 #' \code{\link{clme}}
 #' 
 #' @examples
+#' 
 #' data( rat.blood )
 #' cons <- list(order = "simple", decreasing = FALSE, node = 1 )
 #' clme.out <- clme(mcv ~ time + temp + sex + (1|id), data = rat.blood , 
 #'                  constraints = cons, seed = 42, nsim = 0)
 #' 
-#' fixef.clme( clme.out )
+#' fixef( clme.out )
+#' 
+#' 
+#' @importFrom nlme fixef
+#' @method fixef clme
+#' @export
 #' 
 fixef.clme <- function( object, ... ){
   ## Print out the fixed effects
@@ -360,8 +390,22 @@ fixef.clme <- function( object, ... ){
   }
 }
 
+
+
+#' Extract fixed effects
 #' 
-#' @rdname fixef.clme
+#' @rdname fixef
+#' @importFrom nlme fixed.effects
+#' @export
+#' 
+fixed.effects <- function( object, ...){ UseMethod("fixed.effects") }
+
+#' Extract fixed effects
+#' 
+#' @rdname fixef
+#' 
+#' @importFrom nlme fixed.effects
+#' @export
 #' 
 fixed.effects.clme <- function( object, ... ){
   fixef.clme( object, ... )
@@ -379,7 +423,7 @@ fixed.effects.clme <- function( object, ... ){
 #' @description
 #' Extracts the formula from objects of class \code{clme}. 
 #' 
-#' @param object object of class \code{\link{clme}}.
+#' @param x object of class \code{\link{clme}}.
 #' @param ... space for additional arguments
 #' 
 #' @details
@@ -395,12 +439,16 @@ fixed.effects.clme <- function( object, ... ){
 #' \code{\link{clme}}
 #' 
 #' @examples
+#' 
 #' data( rat.blood )
 #' cons <- list(order = "simple", decreasing = FALSE, node = 1 )
 #' clme.out <- clme(mcv ~ time + temp + sex + (1|id), data = rat.blood , 
 #'                  constraints = cons, seed = 42, nsim = 0)
 #' 
-#' formula.clme( clme.out )
+#' formula( clme.out )
+#' 
+#' @method formula clme
+#' @export
 #' 
 formula.clme <- function(x, ...){
   return( x$formula )
@@ -430,12 +478,16 @@ formula.clme <- function(x, ...){
 #' \code{\link{clme}}
 #' 
 #' @examples
+#' 
 #' data( rat.blood )
 #' cons <- list(order = "simple", decreasing = FALSE, node = 1 )
 #' clme.out <- clme(mcv ~ time + temp + sex + (1|id), data = rat.blood , 
 #'                  constraints = cons, seed = 42, nsim = 0)
 #' 
-#' logLik.clme( clme.out )
+#' logLik( clme.out )
+#' 
+#' @method logLik clme
+#' @export
 #' 
 logLik.clme <- function( object, ...){
   ## Residuals
@@ -503,6 +555,8 @@ logLik.clme <- function( object, ...){
 #' data( rat.blood )
 #' model.frame.clme( mcv ~ time + temp + sex + (1|id), data = rat.blood )
 #' }
+#' @method model.frame clme
+#' @export
 #' 
 model.frame.clme <- function( formula , ...){
   ## Return the data frame
@@ -534,8 +588,10 @@ model.frame.clme <- function( formula , ...){
 #' clme.out <- clme(mcv ~ time + temp + sex + (1|id), data = rat.blood , 
 #'                  constraints = cons, seed = 42, nsim = 0)
 #' 
-#' model.matrix.clme( clme.out )
+#' model.matrix( clme.out )
 #' }
+#' @method model.matrix clme
+#' @export
 #' 
 model.matrix.clme <- function( object, ...){
   ## Return the fixed-effects matrix
@@ -564,16 +620,23 @@ model.matrix.clme <- function( object, ...){
 #' \code{\link{clme}}
 #' 
 #' @examples
+#' 
 #' data( rat.blood )
 #' cons <- list(order = "simple", decreasing = FALSE, node = 1 )
 #' clme.out <- clme(mcv ~ time + temp + sex + (1|id), data = rat.blood , 
 #'                  constraints = cons, seed = 42, nsim = 0)
 #' 
-#' nobs.clme( clme.out )
+#' nobs( clme.out )
+#' 
+#' @method nobs clme
+#' @export
 #' 
 nobs.clme <- function(object, ...){
   nrow( model.matrix.clme(object) )
 }
+
+
+
 
 
 #' Printout of fitted object.
@@ -584,23 +647,26 @@ nobs.clme <- function(object, ...){
 #' @param x an object of class \code{clme}.
 #' @param ... space for additional arguments
 #' 
-#' 
 #' @return
 #' Text printed to console.
-#' 
 #' 
 #' @seealso
 #' \code{\link{CLME-package}}
 #' \code{\link{clme}}
 #' 
 #' @examples
+#' \dontrun{
 #' data( rat.blood )
 #' set.seed( 42 )
 #' cons <- list(order = "simple", decreasing = FALSE, node = 1 )
 #' clme.out <- clme(mcv ~ time + temp + sex + (1|id), data = rat.blood , 
 #'                  constraints = cons, seed = 42, nsim = 10)
 #' 
-#' print.clme( clme.out )
+#' print( clme.out )
+#' }
+#' 
+#' @method print clme
+#' @export
 #' 
 print.clme <- function(x, ...){
   #cc     <- match.call()
@@ -638,6 +704,18 @@ print.clme <- function(x, ...){
 
 
 #' Extract random effects
+#' 
+#' @param object object of class clme.
+#' @param ... space for additional arguments
+#' 
+#' @rdname ranef
+#' @importFrom nlme ranef
+#' @export
+#' 
+ranef <- function( object, ...){ UseMethod("ranef") }
+
+
+#' Extract random effects
 #'
 #' @description
 #' Extracts the random effects estimates from objects of class \code{clme}.
@@ -656,12 +734,18 @@ print.clme <- function(x, ...){
 #' \code{\link{clme}}
 #' 
 #' @examples
+#' 
 #' data( rat.blood )
 #' cons <- list(order = "simple", decreasing = FALSE, node = 1 )
 #' clme.out <- clme(mcv ~ time + temp + sex + (1|id), data = rat.blood , 
 #'                  constraints = cons, seed = 42, nsim = 0)
 #' 
-#' ranef.clme( clme.out )
+#' ranef( clme.out )
+#' 
+#' 
+#' @importFrom nlme ranef
+#' @method ranef clme
+#' @export
 #' 
 ranef.clme <- function( object, ... ){
   ## Print out the random effects
@@ -672,8 +756,22 @@ ranef.clme <- function( object, ... ){
   }
 }
 
+
+
+#' Extract random effects
+#' 
+#' @rdname ranef
+#' @importFrom nlme random.effects
+#' @export
+#' 
+random.effects <- function( object, ...){ UseMethod("random.effects") }
+
+
 #' 
 #' @rdname ranef.clme
+#' @importFrom nlme random.effects
+#' @method random.effects clme
+#' @export
 #' 
 random.effects.clme <- function( object , ... ){
   ranef.clme( object, ... )
@@ -705,12 +803,16 @@ random.effects.clme <- function( object , ... ){
 #' \code{\link{clme}}
 #' 
 #' @examples
+#' \dontrun{
 #' data( rat.blood )
 #' cons <- list(order = "simple", decreasing = FALSE, node = 1 )
 #' clme.out <- clme(mcv ~ time + temp + sex + (1|id), data = rat.blood , 
 #'                  constraints = cons, seed = 42, nsim = 0)
 #'                  
-#' residuals.clme( clme.out, type='PA' )
+#' residuals( clme.out, type='PA' )
+#' }
+#' @method residuals clme
+#' @export
 #' 
 residuals.clme <- function( object, type="FM", ... ){
   ## Print out residuals of specified type
@@ -722,6 +824,17 @@ residuals.clme <- function( object, type="FM", ... ){
     stop("'object' is not of class clme")
   }
 }
+
+
+#' Residual variance components
+#' 
+#' @param object object of class clme.
+#' @param ... space for additional arguments
+#' 
+#' @rdname sigma
+#' @export
+#' 
+sigma <- function( object, ...){ UseMethod("sigma") }
 
 
 #' Residual variance components
@@ -741,20 +854,29 @@ residuals.clme <- function( object, type="FM", ... ){
 #' \code{\link{clme}}
 #' 
 #' @examples
+#' 
 #' data( rat.blood )
 #' cons <- list(order = "simple", decreasing = FALSE, node = 1 )
 #' clme.out <- clme(mcv ~ time + temp + sex + (1|id), data = rat.blood , 
 #'                  constraints = cons, seed = 42, nsim = 0)
 #'                  
-#' sigma.clme( clme.out )
+#' sigma( clme.out )
+#' 
+#' @importFrom lme4 sigma
+#' @method sigma clme
+#' @export
 #' 
 sigma.clme <- function( object, ...){
   return( object$ssq )
 }
 
 
-#' Variance components.
+
+#' Variance components
+#' 
 #' @rdname VarCorr
+#' @importFrom nlme VarCorr
+#' @export
 #' 
 VarCorr <- function( object, ...){ UseMethod("VarCorr") }
 
@@ -778,12 +900,18 @@ VarCorr <- function( object, ...){ UseMethod("VarCorr") }
 #' \code{\link{clme}}
 #' 
 #' @examples
+#' 
 #' data( rat.blood )
 #' cons <- list(order = "simple", decreasing = FALSE, node = 1 )
 #' clme.out <- clme(mcv ~ time + temp + sex + (1|id), data = rat.blood , 
 #'                  constraints = cons, seed = 42, nsim = 0)
 #'                  
-#' VarCorr.clme( clme.out )
+#' VarCorr( clme.out )
+#' 
+#' 
+#' @importFrom nlme VarCorr
+#' @method VarCorr clme
+#' @export
 #' 
 VarCorr.clme <- function(object, ...){
   ## Print out variances or SDs
@@ -809,7 +937,7 @@ VarCorr.clme <- function(object, ...){
 #' @description
 #' Prints variance components of an objects of \code{clme}. 
 #' 
-#' @param object object of class \code{\link{clme}}.
+#' @param x object of class \code{\link{clme}}.
 #' @param ... space for additional arguments
 #' 
 #' 
@@ -829,6 +957,7 @@ VarCorr.clme <- function(object, ...){
 #'                  
 #' print.varcorr_clme( clme.out )
 #' }
+#' @exportMethod print varcorr_clme
 #' 
 print.varcorr_clme <- function( x, ... ){
   varcomps <- x
@@ -861,12 +990,16 @@ print.varcorr_clme <- function( x, ... ){
 #' \code{\link{clme}}
 #' 
 #' @examples
+#' 
 #' data( rat.blood )
 #' cons <- list(order = "simple", decreasing = FALSE, node = 1 )
 #' clme.out <- clme(mcv ~ time + temp + sex + (1|id), data = rat.blood , 
 #'                  constraints = cons, seed = 42, nsim = 0)
 #'                  
-#' vcov.clme( clme.out )
+#' vcov( clme.out )
+#' 
+#' @method vcov clme
+#' @export
 #' 
 vcov.clme <- function(object, ...){
   ## Print out covariance matrix of theta

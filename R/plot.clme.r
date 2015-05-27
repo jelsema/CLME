@@ -36,6 +36,7 @@
 #'   plot( clme.out )
 #' }
 #' 
+#' @export
 #' 
 plot.clme <- 
   function(x , alpha=0.05 , legendx="below" , inset=0.01,

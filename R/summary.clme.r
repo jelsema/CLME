@@ -26,8 +26,11 @@
 #' }
 #' 
 #' @importFrom stringr str_pad
+#' @importFrom stringr str_trim
 #' @importFrom prettyR decimal.align
 #' 
+#' @method summary clme
+#' @export
 #' 
 summary.clme <- function( object, alpha=0.05, digits=4, ...){
   
@@ -36,26 +39,29 @@ summary.clme <- function( object, alpha=0.05, digits=4, ...){
   cat( "Formula: ")
   print( object$formula )
   
-  ## Order statement
-  if( object$order$order=="simple" ){
-    order <- "simple order"
-  }
-  if( object$order$order=="umbrella" ){
-    order <- paste0("umbrella order with node at ", object$order$node )
-  }
-  if( object$order$order=="simple.tree" ){
-    order <- paste0("tree order with node at ", object$order$node )
-  }
-  
-  
-  if( object$order$order == "custom" ){
-    cat( "\nCustom order constraints were provided" )
+  if( object$order$order=="unconstrained" ){
+    cat( paste0("\nNo order restrictions (two-tailed alternatives)") )
   } else{
-    if( object$order$estimated ){
-      ## Estimated the order
-      cat( paste0("\nOrder estimated: " , object$order$inc.dec , " ", order ) )
+    ## Order statement
+    if( object$order$order=="simple" ){
+      order <- "simple order"
+    }
+    if( object$order$order=="umbrella" ){
+      order <- paste0("umbrella order with node at ", object$order$node )
+    }
+    if( object$order$order=="simple.tree" ){
+      order <- paste0("tree order with node at ", object$order$node )
+    }
+    
+    if( object$order$order == "custom" ){
+      cat( "\nCustom order constraints were provided" )
     } else{
-      cat( paste0("\nOrder specified: " , object$order$inc.dec , " ", order ) )
+      if( object$order$estimated ){
+        ## Estimated the order
+        cat( paste0("\nOrder estimated: " , object$order$inc.dec , " ", order ) )
+      } else{
+        cat( paste0("\nOrder specified: " , object$order$inc.dec , " ", order ) )
+      }
     }
   }
   
@@ -63,7 +69,7 @@ summary.clme <- function( object, alpha=0.05, digits=4, ...){
   ## Diagnostic criterion
   crit <- c(logLik.clme(object),
             AIC.clme(object),
-            AIC( object, k=log(nobs.clme(object)/(2*pi)) ) )
+            AIC.clme( object, k=log(nobs.clme(object)/(2*pi)) ) )
   critc <- format( crit , digits=4)
   cat( "\n\nlog-likelihood:", critc[1] )
   cat( "\nAIC:           "  , critc[2] )
@@ -77,6 +83,7 @@ summary.clme <- function( object, alpha=0.05, digits=4, ...){
   Bmat   <- object$constraints$B
 
   ## Global tests
+  if( object$order$order != "unconstrained" ){
   if( length(object$ts.glb)>1 ){
     glbs <- object$ts.glb
     grow <- matrix( "NA" , nrow=length(glbs), ncol=3 )
@@ -151,6 +158,7 @@ summary.clme <- function( object, alpha=0.05, digits=4, ...){
     cat( "\n", paste0(colnames(grow) , collapse="  ") )   
     cat( "\n", paste0(grow , collapse="  ")     )
   }
+  }
   
   ## Individual tests
   glbs <- object$ts.ind
@@ -180,7 +188,7 @@ summary.clme <- function( object, alpha=0.05, digits=4, ...){
   grow <- cbind( grow1[2:length(grow1)] , grow2)
   colnames(grow)[1] <- grow1[1]
     
-  cat( "\n\nIndividual constraints (Williams' type tests): ")
+  cat( "\n\nIndividual Tests (Williams' type tests): ")
   cat( "\n", paste(colnames(grow) , collapse="  ") )
   for( ii in 1:length(glbs) ){
     cat( "\n", paste(grow[ii,] , collapse="  ")     )

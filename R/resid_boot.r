@@ -38,7 +38,7 @@
 #' boot_sample <- resid_boot(mcv ~ time + temp + sex + (1|id), nsim = 10, 
 #'                           data = rat.blood, null.resids = TRUE, ncon = 1 )
 #' 
-#' 
+#' @export
 #' 
 resid_boot <-
 function(formula, data, gfix=NULL, eps=NULL, xi=NULL, null.resids=TRUE,

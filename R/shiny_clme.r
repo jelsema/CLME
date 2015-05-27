@@ -22,6 +22,7 @@
 #' \dontrun{ shiny_clme() }
 #' 
 #' @import shiny
+#' @export
 #' 
 shiny_clme <- function(){
   library("CLME")
@@ -45,7 +46,8 @@ shiny_clme <- function(){
 
 #'
 #' @rdname shiny_clme
-#'
+#' @export
+#' 
 
 shinyUI_clme <- fluidPage( 
   titlePanel("Constrained Linear Mixed Effects"),
@@ -230,7 +232,8 @@ shinyUI_clme <- fluidPage(
 
 #'
 #' @rdname shiny_clme
-#'
+#' @export
+#' 
 
 shinyServer_clme <- function(input, output) {
   

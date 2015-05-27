@@ -27,12 +27,14 @@ For mixed-effects models \eqn{Y = X\beta + + U\xi + \epsilon}{Y = X*b + U*xi + e
 \eqn{FM = Y - X\hat{\beta} - U\hat{\xi}}{ FM = Y - X*betahat - U*xihat}
 }
 \examples{
+\dontrun{
 data( rat.blood )
 cons <- list(order = "simple", decreasing = FALSE, node = 1 )
 clme.out <- clme(mcv ~ time + temp + sex + (1|id), data = rat.blood ,
                  constraints = cons, seed = 42, nsim = 0)
 
-residuals.clme( clme.out, type='PA' )
+residuals( clme.out, type='PA' )
+}
 }
 \seealso{
 \code{\link{CLME-package}}

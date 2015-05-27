@@ -1,9 +1,9 @@
 #' Constrained EM algorithm for linear fixed or mixed effects models.
 #'
-#' @rdname clme_em
+#' @rdname pw_clme_em
 #' @export
 #'
-clme_em_mixed <- function( Y, X1, X2 = NULL, U = NULL, Nks = dim(X1)[1],
+pw_clme_em_mixed <- function( Y, X1, X2 = NULL, U = NULL, Nks = dim(X1)[1],
                      Qs = dim(U)[2], constraints, mq.phi = NULL, tsf = lrt.stat, 
                      tsf.ind = w.stat.ind, mySolver="LS", em.iter = 500, 
                      em.eps =  0.0001, verbose = FALSE, ... ){
@@ -157,16 +157,7 @@ clme_em_mixed <- function( Y, X1, X2 = NULL, U = NULL, Nks = dim(X1)[1],
     tsqvec    <- rep(tsq,Qs)  
     XSiU      <- t(X) %*% (U/ssqvec)
     cov.theta <- solve( XSiX - XSiU%*%tusui%*%t(XSiU) )
-    
-    ## Apply order constraints / isotonization
-    if( mySolver=="GLS"){
-      wts <- solve( cov.theta )[1:P1, 1:P1, drop=FALSE]
-    } else{
-      wts <- diag( solve(cov.theta) )[1:P1]
-    }
-    theta[1:P1] <- activeSet(A, y = theta[1:P1], weights = wts, mySolver=mySolver  )$x
-    
-    
+        
     # Evaluate some convergence criterion
     rel.change <- abs(theta - theta1)/theta1
     if( mean(rel.change) < em.eps || iteration >= em.iter ){
@@ -186,16 +177,20 @@ clme_em_mixed <- function( Y, X1, X2 = NULL, U = NULL, Nks = dim(X1)[1],
   theta        <- c(theta)
   names(theta) <- theta.names
   
+  if( mySolver=="GLS"){
+    wts <- solve( cov.theta )[1:P1, 1:P1, drop=FALSE]
+  } else{
+    wts <- diag( solve(cov.theta) )[1:P1]
+  }
   theta.null       <- theta
   theta.null[1:P1] <- activeSet( Anull, y = theta[1:P1], weights = wts , mySolver=mySolver )$x
   
   
   # Compute test statistic
-  ts.glb <- tsf( theta=theta, theta.null=theta.null, cov.theta=cov.theta, B=B, A=A, Y=Y, X1=X1, 
-                 X2=X2, U=U, tsq=tsq, ssq=ssq, Nks=Nks, Qs=Qs  )
-  
   ts.ind <- tsf.ind(theta=theta, theta.null=theta.null, cov.theta=cov.theta, B=B, A=A, Y=Y, X1=X1, 
                     X2=X2, U=U, tsq=tsq, ssq=ssq, Nks=Nks, Qs=Qs )
+  
+  ts.glb <- max( abs(ts.ind) )
   
   # Return the results
   em.results <- list(theta=theta, theta.null=theta.null, ssq=ssq, tsq=tsq,

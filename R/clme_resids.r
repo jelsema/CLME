@@ -45,6 +45,8 @@
 #' clme.out <- clme_resids(mcv ~ time + temp + sex + (1|id), data = rat.blood, ncon=1 )
 #' }
 #' 
+#' @importFrom MASS ginv
+#' @export
 #' 
 #'
 clme_resids <-
