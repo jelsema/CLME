@@ -48,7 +48,7 @@ model_terms_clme <- function( formula, data, ncon=1 ){
   formula2 <- update.formula( formula , . ~ . - 1 )
   
   nn    <- nrow(data)
-  Unull <- c( rep("RemoveAAA",round(nn/2)), rep("RemoveBBB",nn-round(nn/2)) )
+  Unull <- c( rep("RemoveAAA",round(nn/2)), rep("RemoveBBB", nn-round(nn/2)) )
   
   data  <- cbind( data , Unull )
   
@@ -271,6 +271,52 @@ AIC.clme <- function( object, ..., k=2 ){
 }
 
 
+#' Bayesian information criterion
+#'
+#' @description
+#' Calculates the Bayesian information criterion for objects of class \code{clme}. 
+#' 
+#' @param object object of class \code{\link{clme}}.
+#' @param ... space for additional arguments.
+#' @param k value multiplied by number of coefficients
+#' 
+#' @details
+#' The log-likelihood is assumed to be the Normal distribution. The model uses residual bootstrap methodology, and Normality is neither required nor assumed. Therefore the log-likelihood and these information criterion may not be useful measures for comparing models.
+#' For \code{k=2}, the function computes the AIC. To obtain BIC, set \eqn{k = log( n/(2*pi) )}; which the method \code{BIC.clme} does.
+#' 
+#' 
+#' @return
+#' Returns the Bayesian information criterion (numeric).
+#' 
+#' 
+#' @seealso
+#' \code{\link{CLME-package}}
+#' \code{\link{clme}}
+#' 
+#' @examples
+#' 
+#' data( rat.blood )
+#' 
+#' cons <- list(order = "simple", decreasing = FALSE, node = 1 )
+#' clme.out <- clme(mcv ~ time + temp + sex + (1|id), data = rat.blood , 
+#'                  constraints = cons, seed = 42, nsim = 0)
+#' 
+#' BIC( clme.out )
+#' BIC( clme.out, k=log( nobs(clme.out)/(2*pi) ) )
+#' 
+#' 
+#' @method BIC clme
+#' @export
+#' 
+BIC.clme <- function( object, ..., k=log(nobs(object)/(2*pi)) ){
+  ## For BIC, set k = ln( n/(2*pi) )
+  logl <- logLik( object, ...)[1]
+  bic <- AIC( object, k=k )
+
+  return(bic)
+}
+
+
 
 
 
@@ -344,9 +390,9 @@ confint.clme <- function(object, parm, level=0.95, ...){
 #' 
 #' @rdname fixef
 #' @importFrom nlme fixef
-#' @export
+#' @export 
 #' 
-fixef <- function( object, ...){ UseMethod("fixef") }
+fixef.clme <- function( object, ...){ UseMethod("fixef") }
 
 
 #' Extract fixed effects
@@ -493,9 +539,9 @@ logLik.clme <- function( object, ...){
   ## Residuals
   YY <- object$dframe[,1]
   XX <- model.matrix( object )
-  TT <- fixef.clme( object )
+  TT <- fixef( object )
   RR <- YY - apply( XX , 1 , FUN=function(xx,tht){ sum(xx*tht) }, tht=TT )
-  nn <- nobs.clme(object)
+  nn <- nobs(object)
   
   ## Covariance matrix (piecewise)
   ssq <- object$ssq
@@ -504,14 +550,13 @@ logLik.clme <- function( object, ...){
   RSiR <- c( t(RR) %*% (RR/ssqvec) )
   detS <- sum( log(ssqvec) )
   
-  if( is.null(object$Qs) ){
+  if( is.null(object$tsq) ){
     ## Fixed effects only
     RPiR   <- RSiR
     detPhi <- detS
   } else{
     ## Mixed Effects    
-    mmat   <- model_terms_clme( object$formula, object$dframe )
-    UU     <- mmat$U
+    UU     <- model.matrix( object , type="ranef" )
     tsq    <- object$tsq
     Qs     <- object$gran
     tsqvec <- rep( tsq, Qs )
@@ -523,10 +568,11 @@ logLik.clme <- function( object, ...){
     tusui      <- solve( tusu )
     
     RPiR   <- RSiR - c( RSiU%*%(tusui%*%t(RSiU)) )
-    detPhi <- det( tusui ) * sum( log(tsqvec) )  * detS
+    detPhi <- log(det( tusu )) + sum( log(tsqvec) ) + detS
   }
   
-  logL <- c( (-nn*length(TT)*log(2*pi)) - detPhi - RPiR )/2
+  logL <- -0.5*( nn*log(2*pi) + detPhi + RPiR )
+  
   return( logL )
   
 }
@@ -570,6 +616,7 @@ model.frame.clme <- function( formula , ...){
 #' Extracts the fixed-effects design matrix from objects of class \code{clme}.
 #' 
 #' @param object an object of class \code{clme}.
+#' @param type specify whether to return the fixed-effects or random-effects matrix.
 #' @param ... space for additional arguments
 #' 
 #' 
@@ -593,12 +640,17 @@ model.frame.clme <- function( formula , ...){
 #' @method model.matrix clme
 #' @export
 #' 
-model.matrix.clme <- function( object, ...){
-  ## Return the fixed-effects matrix
-  mmat <- model_terms_clme( object$formula, object$dframe )
-  X1   <- mmat$X1
-  X2   <- mmat$X2
-  return( cbind(X1, X2) )  
+model.matrix.clme <- function( object, type="fixef", ...){
+  mmat <- model_terms_clme( object$formula, object$dframe )  
+  if( type=="fixef" ){
+    ## Return the fixed-effects matrix
+    X1   <- mmat$X1
+    X2   <- mmat$X2
+    return( cbind(X1, X2) )  
+  } else if( type=="ranef" ){
+    ## Return the random-effects matrix
+    return(mmat$U)
+  }
 }
 
 
@@ -697,9 +749,7 @@ print.clme <- function(x, ...){
   
   cat( "\nVariance components: \n")
   print( VarCorr.clme(object) )
-  
-  cat( "\n\nModel based on", object$nsim, "bootstrap samples." )
-  
+  #cat( "\n\nModel based on", object$nsim, "bootstrap samples." )
 }
 
 
@@ -712,7 +762,7 @@ print.clme <- function(x, ...){
 #' @importFrom nlme ranef
 #' @export
 #' 
-ranef <- function( object, ...){ UseMethod("ranef") }
+ranef.clme <- function( object, ...){ UseMethod("ranef") }
 
 
 #' Extract random effects
@@ -832,9 +882,10 @@ residuals.clme <- function( object, type="FM", ... ){
 #' @param ... space for additional arguments
 #' 
 #' @rdname sigma
-#' @export
+#' @importFrom lme4 sigma
+#' @export sigma
 #' 
-sigma <- function( object, ...){ UseMethod("sigma") }
+sigma.clme <- function( object, ...){ UseMethod("sigma") }
 
 
 #' Residual variance components
@@ -862,7 +913,7 @@ sigma <- function( object, ...){ UseMethod("sigma") }
 #'                  
 #' sigma( clme.out )
 #' 
-#' @importFrom lme4 sigma
+#' @importMethodsFrom lme4 sigma
 #' @method sigma clme
 #' @export
 #' 
@@ -878,7 +929,7 @@ sigma.clme <- function( object, ...){
 #' @importFrom nlme VarCorr
 #' @export
 #' 
-VarCorr <- function( object, ...){ UseMethod("VarCorr") }
+VarCorr.clme <- function( object, ...){ UseMethod("VarCorr") }
 
 
 #' Variance components.

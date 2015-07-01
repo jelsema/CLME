@@ -2,24 +2,31 @@
 % Please edit documentation in R/summary.clme.r
 \name{summary.clme}
 \alias{summary.clme}
-\title{S3 method to summarize results for objects of class \code{clme}}
+\title{Produce summary values for objects of class \code{clme}}
 \usage{
-\method{summary}{clme}(object, alpha = 0.05, digits = 4, ...)
+\method{summary}{clme}(object, nsim = 1000, seed = 42, verbose = c(FALSE,
+  FALSE), ...)
 }
 \arguments{
 \item{object}{an object of class \code{clme}.}
 
-\item{alpha}{level of significance.}
+\item{nsim}{the number of bootstrap samples to use for inference.}
 
-\item{digits}{number of decimal digits to print.}
+\item{seed}{the value for the seed of the random number generator.}
+
+\item{verbose}{vector of logicals. First element will print progress for bootstrap test,
+second element is passed to the EM algorithm for every bootstrap sample.}
 
 \item{...}{additional arguments passed to other functions.}
 }
-\description{
-Summarizes the output of objects of class \code{clme}, such as those produced by \code{\link{clme}}. Prints a tabulated display of global and individual tests, as well as parameter estimates.
+\value{
+The output of \code{summary.clme} is an object of the class \code{summary.clme}. This is a list
+containing the input object (of class \code{clme}), along with elements:
+\item{\code{p.value}}{ p-value for the global hypothesis}
+\item{\code{p.value.ind}}{ p-values for each of the constraints}
 }
-\note{
-The individual tests are performed on the specified order. If no specific order was specified, then the individual tests are performed on the estimated order.
+\description{
+Summarizes the output of objects of class \code{clme}, such as those produced by \code{\link{clme}}.
 }
 \examples{
 \dontrun{

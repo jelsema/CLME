@@ -1,12 +1,12 @@
 Package: CLME
 Title: Constrained Inference for Linear Mixed Effects Models
 Version: 2.0-3
-Depends: R (>= 3.0.2), foreach, doParallel
-Imports: MASS, lme4, nlme, shiny, methods, isotone, stringr, prettyR, stats
+Depends: R (>= 3.0.2), foreach, doParallel, shiny
+Imports: MASS, lme4, nlme, methods, isotone, stringr, prettyR, stats
 Date: 2015-05-18
 Description: Constrained inference for linear mixed effects models using residual bootstrap methodology
 Author: Casey M. Jelsema
-Maintainer: Casey M. Jelsema <casey.jelsema@nih.gov>
+Maintainer: Casey M. Jelsema <jelsema.casey@gmail.com>
 BuildVignettes: false
 BugReports: https://github.com/jelsema/CLME/issues
 LazyLoad: yes

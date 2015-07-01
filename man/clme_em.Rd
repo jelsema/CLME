@@ -16,7 +16,7 @@ clme_em_mixed(Y, X1, X2 = NULL, U = NULL, Nks = dim(X1)[1],
   tsf.ind = w.stat.ind, mySolver = "LS", em.iter = 500, em.eps = 1e-04,
   verbose = FALSE, ...)
 
-clme_em(Y, X1, X2 = NULL, U = NULL, Nks = dim(X1)[1], Qs = dim(U)[2],
+clme_em(Y, X1, X2 = NULL, U = NULL, Nks = nrow(X1), Qs = ncol(U),
   constraints, mq.phi = NULL, tsf = lrt.stat, tsf.ind = w.stat.ind,
   mySolver = "LS", em.iter = 500, em.eps = 1e-04, verbose = FALSE, ...)
 }

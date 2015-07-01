@@ -12,6 +12,15 @@ PROJECTED DEVELOPMENT:
 ===========================
 VERSION HISTORY:
 
+Version 2.0-4, 2015-07-01
+- Fixed error in logLik.clme.
+- Changed maintainer email.
+- Added explicit BIC.clme method (instead of forcing custom use of AIC.clme)
+- Removed the bootstrap computations from clme() and put them into summary.clme(). 
+- summary.clme() now returns a list of values (largely the same as clme()) but does not automatically print output to console.
+- print.summary.clme() prints the output of summary.clme to the console.
+
+
 Version 2.0-3, 2015-05-14
 - Noted nsim is in the fitted object of clme().
 - Fixed error with method VarCorr() (failed unless "lme4" or "nlme" was loaded, redefined method VarCorr)

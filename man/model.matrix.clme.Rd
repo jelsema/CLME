@@ -4,10 +4,12 @@
 \alias{model.matrix.clme}
 \title{Extract the fixed-effects design matrix.}
 \usage{
-\method{model.matrix}{clme}(object, ...)
+\method{model.matrix}{clme}(object, type = "fixef", ...)
 }
 \arguments{
 \item{object}{an object of class \code{clme}.}
+
+\item{type}{specify whether to return the fixed-effects or random-effects matrix.}
 
 \item{...}{space for additional arguments}
 }

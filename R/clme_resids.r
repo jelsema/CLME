@@ -65,7 +65,9 @@ function( formula, data, gfix=NULL, ncon=1 ){
   U  <- mmat$U
   
   if( is.null(gfix) ){
-    gfix <- rep("Residual", nrow(U)) 
+    gfix <- rep("Residual", nrow(X1)) 
+  } else{
+    data <- with( data, data[order(gfix),])
   }
   Nks <- table(gfix)
   

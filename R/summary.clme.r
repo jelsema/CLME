@@ -1,4 +1,155 @@
-#' S3 method to summarize results for objects of class \code{clme}
+#' Produce summary values for objects of class \code{clme}
+#'
+#' @description Summarizes the output of objects of class \code{clme}, such as those produced by \code{\link{clme}}.
+#'
+#' @param object an object of class \code{clme}.
+#' @param nsim the number of bootstrap samples to use for inference.
+#' @param seed the value for the seed of the random number generator.
+#' @param verbose vector of logicals. First element will print progress for bootstrap test,
+#'        second element is passed to the EM algorithm for every bootstrap sample.
+#' @param ... additional arguments passed to other functions.
+#'
+#'
+#' @return
+#' The output of \code{summary.clme} is an object of the class \code{summary.clme}. This is a list
+#' containing the input object (of class \code{clme}), along with elements:
+#' \item{\code{p.value}}{ p-value for the global hypothesis}
+#' \item{\code{p.value.ind}}{ p-values for each of the constraints}
+#'
+#' 
+#' 
+#' @seealso
+#' \code{\link{CLME-package}}
+#' \code{\link{clme}}
+#' 
+#' @examples
+#' \dontrun{
+#'   set.seed( 42 )
+#'   data( rat.blood )
+#'   cons <- list(order = "simple", decreasing = FALSE, node = 1 )
+#'   clme.out <- clme(mcv ~ time + temp + sex + (1|id), data = rat.blood , 
+#'                    constraints = cons, seed = 42, nsim = 10)
+#'   
+#'   summary( clme.out )
+#' }
+#' 
+#' 
+#' @method summary clme
+#' @export
+#' 
+summary.clme <- function( object, nsim=1000, seed=42, verbose=c(FALSE,FALSE), ... ){
+  
+  if( !is.clme(object) ){ stop("'object' is not of class clme")}
+  
+  ## Extract some values from the fitted object
+  cust.const  <- object$cust.const
+  search.grid <- object$search.grid
+  MNK         <- dim( search.grid )[1]  
+  
+  mmat <- model_terms_clme( formula(object), data=object$dframe, ncon=object$ncon )
+  P1 <- mmat$P1
+  X1 <- mmat$X1
+  X2 <- mmat$X2
+  U  <- mmat$U
+  
+  Qs      <- object$gran
+  tsf     <- object$tsf
+  tsf.ind <- object$tsf.ind
+  mq.phi  <- object$mq.phi
+  
+  est_const <- object$constraints
+  est_order <- object$order$est_order
+  
+  if( length(verbose)<2 ){
+    verbose <- c(verbose, rep(FALSE, 2-length(verbose) ) )
+  }
+  
+  # Pick up soem values from the input object if they are there
+  if( !is.null(object$call$nsim) ){
+    nsim2 <- object$call$nsim
+  } else{
+    nsim2 <- nsim
+    object$nsim <- nsim
+  }
+  
+  if( !is.null(object$call$nsim) ){
+    seed2 <- object$call$seed
+  } else{
+    seed2 <- seed
+  }
+  
+  mr <- clme_resids( formula=formula(object), data=object$dframe, 
+                     gfix=object$gfix_group, ncon=object$ncon )
+    
+  ## This is the loop for the bootstrap simulations
+  # Eventually this should be (optionally) parallelized
+  if( nsim2 > 0 ){
+    ## Obtain bootstrap samples      
+    Y_boot <- resid_boot( formula=formula(object), data=object$dframe, gfix=object$gfix_group, 
+                          eps=mr$PA, xi=mr$xi, ssq=mr$ssq, tsq=mr$tsq, 
+                          cov.theta=mr$cov.theta, nsim=nsim2, 
+                          theta=object$theta.null, mySolver=object$mySolver,
+                          seed=seed, null.resids=FALSE, ncon=object$ncon, ...  )
+    
+    ## EM for the bootstrap samples    
+    p.value  <- rep( 0 , length(object$ts.glb) )
+    pval.ind <- rep( 0 , nrow(est_const$A) )
+    
+    mprint <- round( seq( 1 , round(nsim2*0.9), length.out=10 ) )
+    
+    for( m in 1:nsim2 ){
+      
+      if( verbose[1]==TRUE & (m %in% mprint) ){
+        print( paste( "Bootstrap Iteration " , m , " of " , nsim2 , sep=""))
+      }
+      
+      ## Loop through the search grid
+      ts.boot <- -Inf
+      
+      for( mnk in 1:MNK ){
+        if( cust.const==FALSE ){
+          grid.row <- list( order=search.grid[mnk,1], node=search.grid[mnk,3],
+                            decreasing=search.grid[mnk,2] )
+          loop.const <- create.constraints( P1=P1, constraints=grid.row )
+        }
+        
+        clme.temp <- clme_em( Y=Y_boot[,m], X1=X1, X2=X2, U=U, Nks=object$gfix,
+                              Qs=Qs, constraints=loop.const, mq.phi=mq.phi,
+                              tsf=tsf, tsf.ind=tsf.ind, mySolver=object$mySolver,
+                              verbose=verbose[2], ...)
+        
+        idx <- which(clme.temp$ts.glb > ts.boot)
+        if( length(idx)>0 ){
+          ts.boot[idx] <- clme.temp$ts.glb[idx]
+        }
+        
+        update.ind <- (MNK==1) + (mnk == est_order)
+        if( update.ind>0 ){
+          ts.ind.boot <- clme.temp$ts.ind 
+        }
+      }
+      p.value  <- p.value  + 1*( ts.boot    >= object$ts.glb )
+      pval.ind <- pval.ind + 1*(ts.ind.boot >= object$ts.ind )
+    }
+    
+    object$p.value     <- p.value/nsim2
+    object$p.value.ind <- pval.ind/nsim2
+    
+    ## End of the SEQUENTIAL BOOTSTRAP LOOP
+  } else{
+    object$p.value     <- NA
+    object$p.value.ind <- rep( NA, nrow(est_const$A) )
+  }
+  
+  ## Collect the results and return the object
+  
+  class(object) <- "summary.clme"
+  return(object)
+}
+
+
+
+#' S3 method to print a summary for objects of class \code{clme}
 #'
 #' @description Summarizes the output of objects of class \code{clme}, such as those produced by \code{\link{clme}}. Prints a tabulated display of global and individual tests, as well as parameter estimates.
 #'
@@ -9,6 +160,9 @@
 #'
 #' @note 
 #' The individual tests are performed on the specified order. If no specific order was specified, then the individual tests are performed on the estimated order.
+#' 
+#' @return
+#' \code{NULL}, just prints results to the console.
 #' 
 #' @seealso
 #' \code{\link{CLME-package}}
@@ -29,10 +183,14 @@
 #' @importFrom stringr str_trim
 #' @importFrom prettyR decimal.align
 #' 
-#' @method summary clme
+#' @method print summary.clme
 #' @export
 #' 
-summary.clme <- function( object, alpha=0.05, digits=4, ...){
+print.summary.clme <- function( object, alpha=0.05, digits=4, ...){
+  
+  if( class(object)=="summary.clme" ){
+    class(object) <- "clme"  
+  }
   
   ## Title and formula
   cat( "Linear mixed model subject to order restrictions\n" )
@@ -67,9 +225,9 @@ summary.clme <- function( object, alpha=0.05, digits=4, ...){
   
     
   ## Diagnostic criterion
-  crit <- c(logLik.clme(object),
-            AIC.clme(object),
-            AIC.clme( object, k=log(nobs.clme(object)/(2*pi)) ) )
+  crit <- c(logLik(object),
+            AIC(object),
+            BIC(object) )
   critc <- format( crit , digits=4)
   cat( "\n\nlog-likelihood:", critc[1] )
   cat( "\nAIC:           "  , critc[2] )
@@ -77,7 +235,7 @@ summary.clme <- function( object, alpha=0.05, digits=4, ...){
   cat( "\n(log-likelihood, AIC, BIC computed under normality)")  
   
   ## Tests
-  est    <- fixef.clme(object)
+  est    <- fixef(object)
   tnames <- names(est)
   Amat   <- object$constraints$A
   Bmat   <- object$constraints$B
