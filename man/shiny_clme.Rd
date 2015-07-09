@@ -48,7 +48,7 @@
   .. .. .. .. .. .. .. ..$ name    : chr "form"
   .. .. .. .. .. .. .. ..$ attribs :List of 1
   .. .. .. .. .. .. .. .. ..$ class: chr "well"
-  .. .. .. .. .. .. .. ..$ children:List of 35
+  .. .. .. .. .. .. .. ..$ children:List of 36
   .. .. .. .. .. .. .. .. ..$ :List of 3
   .. .. .. .. .. .. .. .. .. ..$ name    : chr "div"
   .. .. .. .. .. .. .. .. .. ..$ attribs :List of 1
@@ -66,7 +66,7 @@
   .. .. .. .. .. .. .. .. .. .. .. .. ..$ id    : chr "file1"
   .. .. .. .. .. .. .. .. .. .. .. .. ..$ name  : chr "file1"
   .. .. .. .. .. .. .. .. .. .. .. .. ..$ type  : chr "file"
-  .. .. .. .. .. .. .. .. .. .. .. .. ..$ accept: chr "text/csv,text/comma-separated-values,text/plain,.csv"
+  .. .. .. .. .. .. .. .. .. .. .. .. ..$ accept: chr "text/csv,text/comma-separated-values,text/plain,.csv,.xlsx"
   .. .. .. .. .. .. .. .. .. .. .. ..$ children: list()
   .. .. .. .. .. .. .. .. .. .. .. ..- attr(*, "class")= chr "shiny.tag"
   .. .. .. .. .. .. .. .. .. .. ..$ :List of 3
@@ -105,8 +105,9 @@
   .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ attribs :List of 1
   .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ id: chr "dlmt"
   .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ children:List of 1
-  .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ :Classes 'html', 'character'  atomic [1:1] <option value="Comma" selected>Comma</option>
-<option value="Tab">Tab</option>
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ :Classes 'html', 'character'  atomic [1:1] <option value="Comma-delimited" selected>Comma-delimited</option>
+<option value="Tab-delimited">Tab-delimited</option>
+<option value="xlsx">xlsx</option>
   .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..- attr(*, "html")= logi TRUE
   .. .. .. .. .. .. .. .. .. .. .. .. .. ..- attr(*, "class")= chr "shiny.tag"
   .. .. .. .. .. .. .. .. .. .. .. .. ..$ :List of 3
@@ -342,6 +343,36 @@
   .. .. .. .. .. .. .. .. .. .. .. ..- attr(*, "class")= chr "shiny.tag"
   .. .. .. .. .. .. .. .. .. ..- attr(*, "class")= chr "shiny.tag"
   .. .. .. .. .. .. .. .. ..$ :List of 3
+  .. .. .. .. .. .. .. .. .. ..$ name    : chr "div"
+  .. .. .. .. .. .. .. .. .. ..$ attribs :List of 1
+  .. .. .. .. .. .. .. .. .. .. ..$ class: chr "form-group shiny-input-container"
+  .. .. .. .. .. .. .. .. .. ..$ children:List of 1
+  .. .. .. .. .. .. .. .. .. .. ..$ :List of 3
+  .. .. .. .. .. .. .. .. .. .. .. ..$ name    : chr "div"
+  .. .. .. .. .. .. .. .. .. .. .. ..$ attribs :List of 1
+  .. .. .. .. .. .. .. .. .. .. .. .. ..$ class: chr "checkbox"
+  .. .. .. .. .. .. .. .. .. .. .. ..$ children:List of 1
+  .. .. .. .. .. .. .. .. .. .. .. .. ..$ :List of 3
+  .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ name    : chr "label"
+  .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ attribs : list()
+  .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ children:List of 2
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ :List of 3
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ name    : chr "input"
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ attribs :List of 2
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ id  : chr "decreasing"
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ type: chr "checkbox"
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ children: list()
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..- attr(*, "class")= chr "shiny.tag"
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ :List of 3
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ name    : chr "span"
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ attribs : list()
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ children:List of 1
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ : chr "Decreasing (inverted) order:"
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..- attr(*, "class")= chr "shiny.tag"
+  .. .. .. .. .. .. .. .. .. .. .. .. .. ..- attr(*, "class")= chr "shiny.tag"
+  .. .. .. .. .. .. .. .. .. .. .. ..- attr(*, "class")= chr "shiny.tag"
+  .. .. .. .. .. .. .. .. .. ..- attr(*, "class")= chr "shiny.tag"
+  .. .. .. .. .. .. .. .. ..$ :List of 3
   .. .. .. .. .. .. .. .. .. ..$ name    : chr "span"
   .. .. .. .. .. .. .. .. .. ..$ attribs :List of 1
   .. .. .. .. .. .. .. .. .. .. ..$ class: chr "help-block"
@@ -448,36 +479,6 @@
   .. .. .. .. .. .. .. .. .. .. .. .. ..$ class: chr "form-control"
   .. .. .. .. .. .. .. .. .. .. .. .. ..$ value: chr "None"
   .. .. .. .. .. .. .. .. .. .. .. ..$ children: list()
-  .. .. .. .. .. .. .. .. .. .. .. ..- attr(*, "class")= chr "shiny.tag"
-  .. .. .. .. .. .. .. .. .. ..- attr(*, "class")= chr "shiny.tag"
-  .. .. .. .. .. .. .. .. ..$ :List of 3
-  .. .. .. .. .. .. .. .. .. ..$ name    : chr "div"
-  .. .. .. .. .. .. .. .. .. ..$ attribs :List of 1
-  .. .. .. .. .. .. .. .. .. .. ..$ class: chr "form-group shiny-input-container"
-  .. .. .. .. .. .. .. .. .. ..$ children:List of 1
-  .. .. .. .. .. .. .. .. .. .. ..$ :List of 3
-  .. .. .. .. .. .. .. .. .. .. .. ..$ name    : chr "div"
-  .. .. .. .. .. .. .. .. .. .. .. ..$ attribs :List of 1
-  .. .. .. .. .. .. .. .. .. .. .. .. ..$ class: chr "checkbox"
-  .. .. .. .. .. .. .. .. .. .. .. ..$ children:List of 1
-  .. .. .. .. .. .. .. .. .. .. .. .. ..$ :List of 3
-  .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ name    : chr "label"
-  .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ attribs : list()
-  .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ children:List of 2
-  .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ :List of 3
-  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ name    : chr "input"
-  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ attribs :List of 2
-  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ id  : chr "decreasing"
-  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ type: chr "checkbox"
-  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ children: list()
-  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..- attr(*, "class")= chr "shiny.tag"
-  .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ :List of 3
-  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ name    : chr "span"
-  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ attribs : list()
-  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ children:List of 1
-  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ : chr "Decreasing order (inverted):"
-  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..- attr(*, "class")= chr "shiny.tag"
-  .. .. .. .. .. .. .. .. .. .. .. .. .. ..- attr(*, "class")= chr "shiny.tag"
   .. .. .. .. .. .. .. .. .. .. .. ..- attr(*, "class")= chr "shiny.tag"
   .. .. .. .. .. .. .. .. .. ..- attr(*, "class")= chr "shiny.tag"
   .. .. .. .. .. .. .. .. ..$ :List of 3
@@ -664,10 +665,46 @@
   .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ href: chr "shared/ionrangeslider"
   .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ meta      : NULL
   .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ script    : chr "js/ion.rangeSlider.min.js"
-  .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ stylesheet: chr [1:3] "css/normalize.css" "css/ion.rangeSlider.css" "css/ion.rangeSlider.skinShiny.css"
+  .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ stylesheet: chr [1:2] "css/ion.rangeSlider.css" "css/ion.rangeSlider.skinShiny.css"
   .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ head      : NULL
   .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ attachment: NULL
   .. .. .. .. .. .. .. .. .. .. .. .. .. ..- attr(*, "class")= chr "html_dependency"
+  .. .. .. .. .. .. .. .. .. ..- attr(*, "class")= chr "shiny.tag"
+  .. .. .. .. .. .. .. .. ..$ :List of 3
+  .. .. .. .. .. .. .. .. .. ..$ name    : chr "div"
+  .. .. .. .. .. .. .. .. .. ..$ attribs :List of 1
+  .. .. .. .. .. .. .. .. .. .. ..$ data-display-if: chr "input.outcheck"
+  .. .. .. .. .. .. .. .. .. ..$ children:List of 1
+  .. .. .. .. .. .. .. .. .. .. ..$ :List of 3
+  .. .. .. .. .. .. .. .. .. .. .. ..$ name    : chr "div"
+  .. .. .. .. .. .. .. .. .. .. .. ..$ attribs :List of 1
+  .. .. .. .. .. .. .. .. .. .. .. .. ..$ class: chr "form-group shiny-input-container"
+  .. .. .. .. .. .. .. .. .. .. .. ..$ children:List of 1
+  .. .. .. .. .. .. .. .. .. .. .. .. ..$ :List of 3
+  .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ name    : chr "div"
+  .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ attribs :List of 1
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ class: chr "checkbox"
+  .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ children:List of 1
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ :List of 3
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ name    : chr "label"
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ attribs : list()
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ children:List of 2
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ :List of 3
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ name    : chr "input"
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ attribs :List of 2
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ id  : chr "makeFactor"
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ type: chr "checkbox"
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ children: list()
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..- attr(*, "class")= chr "shiny.tag"
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ :List of 3
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ name    : chr "span"
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ attribs : list()
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ children:List of 1
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ : chr "Force constrained effect to be factor"
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..- attr(*, "class")= chr "shiny.tag"
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..- attr(*, "class")= chr "shiny.tag"
+  .. .. .. .. .. .. .. .. .. .. .. .. .. ..- attr(*, "class")= chr "shiny.tag"
+  .. .. .. .. .. .. .. .. .. .. .. ..- attr(*, "class")= chr "shiny.tag"
   .. .. .. .. .. .. .. .. .. ..- attr(*, "class")= chr "shiny.tag"
   .. .. .. .. .. .. .. .. ..$ :List of 3
   .. .. .. .. .. .. .. .. .. ..$ name    : chr "hr"
@@ -986,7 +1023,7 @@
   .. .. .. .. .. .. .. .. .. ..$ name    : chr "ul"
   .. .. .. .. .. .. .. .. .. ..$ attribs :List of 1
   .. .. .. .. .. .. .. .. .. .. ..$ class: chr "nav nav-tabs"
-  .. .. .. .. .. .. .. .. .. ..$ children:List of 3
+  .. .. .. .. .. .. .. .. .. ..$ children:List of 4
   .. .. .. .. .. .. .. .. .. .. ..$ :List of 3
   .. .. .. .. .. .. .. .. .. .. .. ..$ name    : chr "li"
   .. .. .. .. .. .. .. .. .. .. .. ..$ attribs :List of 1
@@ -995,7 +1032,7 @@
   .. .. .. .. .. .. .. .. .. .. .. .. ..$ :List of 3
   .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ name    : chr "a"
   .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ attribs :List of 3
-  .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ href       : chr "#tab-8299-1"
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ href       : chr "#tab-5060-1"
   .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ data-toggle: chr "tab"
   .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ data-value : chr "Data Summary"
   .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ children:List of 1
@@ -1009,7 +1046,7 @@
   .. .. .. .. .. .. .. .. .. .. .. .. ..$ :List of 3
   .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ name    : chr "a"
   .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ attribs :List of 3
-  .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ href       : chr "#tab-8299-2"
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ href       : chr "#tab-5060-2"
   .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ data-toggle: chr "tab"
   .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ data-value : chr "Model Summary"
   .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ children:List of 1
@@ -1023,11 +1060,25 @@
   .. .. .. .. .. .. .. .. .. .. .. .. ..$ :List of 3
   .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ name    : chr "a"
   .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ attribs :List of 3
-  .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ href       : chr "#tab-8299-3"
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ href       : chr "#tab-5060-3"
   .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ data-toggle: chr "tab"
   .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ data-value : chr "Model Plot"
   .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ children:List of 1
   .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ : chr "Model Plot"
+  .. .. .. .. .. .. .. .. .. .. .. .. .. ..- attr(*, "class")= chr "shiny.tag"
+  .. .. .. .. .. .. .. .. .. .. .. ..- attr(*, "class")= chr "shiny.tag"
+  .. .. .. .. .. .. .. .. .. .. ..$ :List of 3
+  .. .. .. .. .. .. .. .. .. .. .. ..$ name    : chr "li"
+  .. .. .. .. .. .. .. .. .. .. .. ..$ attribs : list()
+  .. .. .. .. .. .. .. .. .. .. .. ..$ children:List of 1
+  .. .. .. .. .. .. .. .. .. .. .. .. ..$ :List of 3
+  .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ name    : chr "a"
+  .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ attribs :List of 3
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ href       : chr "#tab-5060-4"
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ data-toggle: chr "tab"
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ data-value : chr "Model Data"
+  .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ children:List of 1
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ : chr "Model Data"
   .. .. .. .. .. .. .. .. .. .. .. .. .. ..- attr(*, "class")= chr "shiny.tag"
   .. .. .. .. .. .. .. .. .. .. .. ..- attr(*, "class")= chr "shiny.tag"
   .. .. .. .. .. .. .. .. .. ..- attr(*, "class")= chr "shiny.tag"
@@ -1035,13 +1086,13 @@
   .. .. .. .. .. .. .. .. .. ..$ name    : chr "div"
   .. .. .. .. .. .. .. .. .. ..$ attribs :List of 1
   .. .. .. .. .. .. .. .. .. .. ..$ class: chr "tab-content"
-  .. .. .. .. .. .. .. .. .. ..$ children:List of 3
+  .. .. .. .. .. .. .. .. .. ..$ children:List of 4
   .. .. .. .. .. .. .. .. .. .. ..$ :List of 3
   .. .. .. .. .. .. .. .. .. .. .. ..$ name    : chr "div"
   .. .. .. .. .. .. .. .. .. .. .. ..$ attribs :List of 3
   .. .. .. .. .. .. .. .. .. .. .. .. ..$ class     : chr "tab-pane active"
   .. .. .. .. .. .. .. .. .. .. .. .. ..$ data-value: chr "Data Summary"
-  .. .. .. .. .. .. .. .. .. .. .. .. ..$ id        : chr "tab-8299-1"
+  .. .. .. .. .. .. .. .. .. .. .. .. ..$ id        : chr "tab-5060-1"
   .. .. .. .. .. .. .. .. .. .. .. ..$ children:List of 2
   .. .. .. .. .. .. .. .. .. .. .. .. ..$ :List of 3
   .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ name    : chr "div"
@@ -1064,7 +1115,7 @@
   .. .. .. .. .. .. .. .. .. .. .. ..$ attribs :List of 3
   .. .. .. .. .. .. .. .. .. .. .. .. ..$ class     : chr "tab-pane"
   .. .. .. .. .. .. .. .. .. .. .. .. ..$ data-value: chr "Model Summary"
-  .. .. .. .. .. .. .. .. .. .. .. .. ..$ id        : chr "tab-8299-2"
+  .. .. .. .. .. .. .. .. .. .. .. .. ..$ id        : chr "tab-5060-2"
   .. .. .. .. .. .. .. .. .. .. .. ..$ children:List of 1
   .. .. .. .. .. .. .. .. .. .. .. .. ..$ :List of 3
   .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ name    : chr "pre"
@@ -1079,7 +1130,7 @@
   .. .. .. .. .. .. .. .. .. .. .. ..$ attribs :List of 3
   .. .. .. .. .. .. .. .. .. .. .. .. ..$ class     : chr "tab-pane"
   .. .. .. .. .. .. .. .. .. .. .. .. ..$ data-value: chr "Model Plot"
-  .. .. .. .. .. .. .. .. .. .. .. .. ..$ id        : chr "tab-8299-3"
+  .. .. .. .. .. .. .. .. .. .. .. .. ..$ id        : chr "tab-5060-3"
   .. .. .. .. .. .. .. .. .. .. .. ..$ children:List of 1
   .. .. .. .. .. .. .. .. .. .. .. .. ..$ :List of 3
   .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ name    : chr "div"
@@ -1089,6 +1140,44 @@
   .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ style: chr "width: 100\% ; height: 650px"
   .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ children: list()
   .. .. .. .. .. .. .. .. .. .. .. .. .. ..- attr(*, "class")= chr "shiny.tag"
+  .. .. .. .. .. .. .. .. .. .. .. ..- attr(*, "class")= chr "shiny.tag"
+  .. .. .. .. .. .. .. .. .. .. ..$ :List of 3
+  .. .. .. .. .. .. .. .. .. .. .. ..$ name    : chr "div"
+  .. .. .. .. .. .. .. .. .. .. .. ..$ attribs :List of 3
+  .. .. .. .. .. .. .. .. .. .. .. .. ..$ class     : chr "tab-pane"
+  .. .. .. .. .. .. .. .. .. .. .. .. ..$ data-value: chr "Model Data"
+  .. .. .. .. .. .. .. .. .. .. .. .. ..$ id        : chr "tab-5060-4"
+  .. .. .. .. .. .. .. .. .. .. .. ..$ children:List of 1
+  .. .. .. .. .. .. .. .. .. .. .. .. ..$ :List of 3
+  .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ name    : chr "div"
+  .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ attribs :List of 2
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ id   : chr "datatbl"
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ class: chr "shiny-datatable-output"
+  .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ children: list()
+  .. .. .. .. .. .. .. .. .. .. .. .. .. ..- attr(*, "class")= chr "shiny.tag"
+  .. .. .. .. .. .. .. .. .. .. .. .. .. ..- attr(*, "html_dependencies")=List of 2
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ :List of 8
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ name      : chr "datatables"
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ version   : chr "1.10.5"
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ src       :List of 1
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ href: chr "shared/datatables"
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ meta      : NULL
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ script    : chr "js/jquery.dataTables.min.js"
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ stylesheet: NULL
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ head      : NULL
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ attachment: NULL
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..- attr(*, "class")= chr "html_dependency"
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ :List of 8
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ name      : chr "datatables-bootstrap"
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ version   : chr "1.10.5"
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ src       :List of 1
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ href: chr "shared/datatables"
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ meta      : NULL
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ script    : chr "js/dataTables.bootstrap.js"
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ stylesheet: chr [1:2] "css/dataTables.bootstrap.css" "css/dataTables.extra.css"
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ head      : NULL
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ attachment: NULL
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..- attr(*, "class")= chr "html_dependency"
   .. .. .. .. .. .. .. .. .. .. .. ..- attr(*, "class")= chr "shiny.tag"
   .. .. .. .. .. .. .. .. .. ..- attr(*, "class")= chr "shiny.tag"
   .. .. .. .. .. .. .. ..- attr(*, "class")= chr "shiny.tag"

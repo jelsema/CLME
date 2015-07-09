@@ -43,8 +43,12 @@ summary.clme <- function( object, nsim=1000, seed=42, verbose=c(FALSE,FALSE), ..
   
   ## Extract some values from the fitted object
   cust.const  <- object$cust.const
-  search.grid <- object$search.grid
+  search.grid <- object$search.grid 
   MNK         <- dim( search.grid )[1]  
+  if( cust.const==TRUE ){
+    loop.const <- object$constraints
+    MNK        <- 1
+  }
   
   mmat <- model_terms_clme( formula(object), data=object$dframe, ncon=object$ncon )
   P1 <- mmat$P1
@@ -64,18 +68,19 @@ summary.clme <- function( object, nsim=1000, seed=42, verbose=c(FALSE,FALSE), ..
     verbose <- c(verbose, rep(FALSE, 2-length(verbose) ) )
   }
   
-  # Pick up soem values from the input object if they are there
-  if( !is.null(object$call$nsim) ){
-    nsim2 <- object$call$nsim
+  # Pick up some values from the input object if they are there
+  if( !is.null(object$nsim) ){
+    nsim2 <- eval( object$nsim )
   } else{
-    nsim2 <- nsim
+    nsim2       <- nsim
     object$nsim <- nsim
   }
   
-  if( !is.null(object$call$nsim) ){
-    seed2 <- object$call$seed
+  if( !is.null(object$seed) ){
+    seed2 <- eval( object$seed )
   } else{
-    seed2 <- seed
+    seed2       <- seed
+    object$seed <- seed
   }
   
   mr <- clme_resids( formula=formula(object), data=object$dframe, 
@@ -89,7 +94,7 @@ summary.clme <- function( object, nsim=1000, seed=42, verbose=c(FALSE,FALSE), ..
                           eps=mr$PA, xi=mr$xi, ssq=mr$ssq, tsq=mr$tsq, 
                           cov.theta=mr$cov.theta, nsim=nsim2, 
                           theta=object$theta.null, mySolver=object$mySolver,
-                          seed=seed, null.resids=FALSE, ncon=object$ncon, ...  )
+                          seed=seed2, null.resids=FALSE, ncon=object$ncon  )
     
     ## EM for the bootstrap samples    
     p.value  <- rep( 0 , length(object$ts.glb) )

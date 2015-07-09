@@ -1,6 +1,51 @@
 #' S3 method to plot objects of class \code{clme}
 #'
 #' @description Generates a basic plot of estimated coefficients which are subject to constraints (\eqn{\theta_1}{theta_1} ). Lines indicate individual constraints (not global tests) and significance.
+#' 
+#' @inheritParams plot.summary.clme
+#' 
+#' @note
+#' While it is possible to plot the output of a clme fit, this will only plot the fitted means.
+#' To indicate significance, plotting must be performed on the summary of a clme fit. This method
+#' will change the class so that plot.summary.clme will be called properly.
+#' 
+#' @seealso
+#' \code{\link{CLME-package}}
+#' \code{\link{clme}}
+#' \code{\link{plot.summary.clme}}
+#' 
+#' @examples
+#' \dontrun{
+#'   set.seed( 42 )
+#'   data( rat.blood )
+#'   cons <- list(order = "simple", decreasing = FALSE, node = 1 )
+#'   clme.out <- clme(mcv ~ time + temp + sex + (1|id), data = rat.blood , 
+#'                    constraints = cons, seed = 42, nsim = 10)
+#'   plot( clme.out )
+#' }
+#' 
+#' @export
+#' 
+plot.clme <- function(x , ...){
+  
+  if( is.clme(x) ){
+    class(x) <- "summary.clme"
+  } else{
+    stop("'x' is not of class clme")
+  }
+  
+  x$p.value.ind <- rep( 1, length(x$ts.ind) )
+  x$p.value     <- rep( 1, length(x$ts.glb) )
+  
+  plot(x)
+  
+}
+
+
+
+#' S3 method to plot objects of class \code{clme}
+#'
+#' @description Generates a basic plot of estimated coefficients which are subject to constraints (\eqn{\theta_1}{theta_1} ). Lines indicate individual constraints (not global tests) and significance.
 #'
 #' @param x  object of class 'clme' to be plotted.
 #' @param alpha  significance level of the test.
@@ -17,9 +62,21 @@
 #' @param ...  additional plotting arguments. 
 #'
 #' @details 
-#' All of the individual contrasts in the \code{constraints\$A} matrix are tested and plotted. The global test is not represented (unless it happens to coincide with an individual contrast). Only the elements of \eqn{\theta}{theta} which appear in any constraints (e.g. the elements of \eqn{\theta_{1}}{theta_1}) are plotted. Coefficients for the covariates are not plotted.
-#' Solid lines denote no significant difference, while dashed lines denote statistical significance. Significance is determined by the individual p-value being less than or equal to the supplied \eqn{\alpha}{alpha} threshold. By default a legend denoting the meaning of solid and dashed lines will be placed below the graph. Argument \code{legendx} may be set to a legend keyword (e.g. \code{legend=''bottomright''}) to place it inside the graph at the specified location. Setting \code{legendx} to \code{FALSE} or to a non-supported keyword suppresses the legend.
-#' Confidence intervals for the coefficients may be plotted. They are individual confidence intervals, and are computed using the covariance matrix of the unconstrained estimates of \eqn{\theta_{1}}{theta_1}. These confidence intervals have higher coverage probability than the nominal value, and as such may appear to be in conflict with the significance tests. Alternate forms of confidence intervals may be provided in future updates.#'
+#' All of the individual contrasts in the \code{constraints\$A} matrix are tested and plotted. 
+#' The global test is not represented (unless it happens to coincide with an individual contrast). 
+#' Only the elements of \eqn{\theta}{theta} which appear in any constraints (e.g. the elements of
+#'  \eqn{\theta_{1}}{theta_1}) are plotted. Coefficients for the covariates are not plotted.
+#' Solid lines denote no significant difference, while dashed lines denote statistical significance.
+#'  Significance is determined by the individual p-value being less than or equal to the supplied 
+#'  \eqn{\alpha}{alpha} threshold. By default a legend denoting the meaning of solid and dashed lines
+#'   will be placed below the graph. Argument \code{legendx} may be set to a legend keyword (e.g. 
+#'   \code{legend=''bottomright''}) to place it inside the graph at the specified location. Setting
+#'    \code{legendx} to \code{FALSE} or to a non-supported keyword suppresses the legend.
+#' Confidence intervals for the coefficients may be plotted. They are individual confidence intervals,
+#'  and are computed using the covariance matrix of the unconstrained estimates of 
+#'  \eqn{\theta_{1}}{theta_1}. These confidence intervals have higher coverage probability than the 
+#'  nominal value, and as such may appear to be in conflict with the significance tests. Alternate
+#'   forms of confidence intervals may be provided in future updates.#'
 #' 
 #' @seealso
 #' \code{\link{CLME-package}}
@@ -32,39 +89,40 @@
 #'   cons <- list(order = "simple", decreasing = FALSE, node = 1 )
 #'   clme.out <- clme(mcv ~ time + temp + sex + (1|id), data = rat.blood , 
 #'                    constraints = cons, seed = 42, nsim = 10)
-#'   
-#'   plot( clme.out )
+#'   clme.out2 <- summary( clme.out )
+#'   plot( clme.out2 )
 #' }
 #' 
 #' @export
 #' 
-plot.clme <- 
+plot.summary.clme <- 
   function(x , alpha=0.05 , legendx="below" , inset=0.01,
            ci=FALSE , ylim=NULL , cex=1.75 , pch=21 , bg="white" , 
            xlab = expression( paste( "Component of " , theta[1] ) ),
            ylab = expression( paste( "Estimated Value of " , theta[1] ) ) , 
            tree=NULL, ...){
   object <- x
-  if( !is.clme(object) ){
-    stop("Argument 'object' is not of class clme.")
-  } else{
-    
-    theta <- fixef(object)
-    A     <- object$constraints$A
-    r     <- nrow(A)
-    p1    <- max(A)
-    
-    if( ci ){ 
-      ci.wd <- min( 1/p1 , 1/15 ) 
-      CIs <- confint(object, level=(1-alpha))
-    }
-    
-    if( legendx=="below" ){
-      layout( rbind(1,2) , heights=c(7,1) )
-    }
-    
-    theta1 <- object$theta[1:p1]
-    
+  
+  #if( !is.clme(object) ){ stop("Argument 'object' is not of class clme.") }
+  class(object) <- "clme"
+
+
+  theta <- fixef(object)
+  A     <- object$constraints$A
+  r     <- nrow(A)
+  p1    <- max(A)
+  
+  if( ci ){ 
+    ci.wd <- min( 1/p1 , 1/15 ) 
+    CIs <- confint(object, level=(1-alpha))
+  }
+  
+  if( legendx=="below" ){
+    layout( rbind(1,2) , heights=c(7,1) )
+  }
+  
+  theta1 <- object$theta[1:p1]
+  
     # Pick some reasonable plot limits
     if( is.null(ylim) ){
       if( ci ){
@@ -134,7 +192,8 @@ plot.clme <-
     }
     
     
-    ## Put a legend on the plot if requested
+  ## Put a legend on the plot if requested (if the p-values aren't all =1)  
+  if( !identical( object$p.value.ind, rep(1, length(object$p.value.ind)) ) ){
     if( legendx=="below" ){
       safe.mar <- par( no.readonly=TRUE )$mar
       par(mar=c(0, 0, 0, 0) , ...)
@@ -151,9 +210,10 @@ plot.clme <-
                 lty = c(1,2), col=1 , ncol=1 , bty ="o" , inset=inset , ...)
       }
     }
-    
   }
-  
 }
 
+
+
+all.equal( c(1,2,3), c(2,3,4)-1 )
 

@@ -2,9 +2,12 @@
 % Please edit documentation in R/utilities.r
 \name{AIC.clme}
 \alias{AIC.clme}
+\alias{AIC.summary.clme}
 \title{Akaike information criterion}
 \usage{
 \method{AIC}{clme}(object, ..., k = 2)
+
+\method{AIC}{summary.clme}(object, ..., k = 2)
 }
 \arguments{
 \item{object}{object of class \code{\link{clme}}.}
@@ -17,6 +20,8 @@
 Returns the information criterion (numeric).
 }
 \description{
+Calculates the Akaike and Bayesian information criterion for objects of class \code{clme}.
+
 Calculates the Akaike and Bayesian information criterion for objects of class \code{clme}.
 }
 \details{
@@ -34,6 +39,9 @@ AIC( clme.out )
 AIC( clme.out, k=log( nobs(clme.out)/(2*pi) ) )
 }
 \seealso{
+\code{\link{CLME-package}}
+\code{\link{clme}}
+
 \code{\link{CLME-package}}
 \code{\link{clme}}
 }

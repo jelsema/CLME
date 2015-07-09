@@ -301,19 +301,22 @@ function( formula, data, gfix=NULL, constraints=list(), tsf=lrt.stat, tsf.ind=w.
 
   ## Add some values to the output object
   class(clme.out)       <- "clme"
+  clme.out$call         <- cc  
+  clme.out$formula      <- mmat$formula
   clme.out$constraints  <- list( A=est_const$A, B=est_const$B )
-  clme.out$dframe        <- mmat$dframe
+  clme.out$dframe       <- mmat$dframe
   
   names(clme.out$theta) <- c( colnames(X1), colnames(X2) )
   names(clme.out$ssq)   <- names(Nks)
   names(clme.out$tsq)   <- names(Qs)
   
-  clme.out$search.grid <- search.grid
   clme.out$cust.const  <- cust.const
   clme.out$ncon        <- ncon
   clme.out$tsf         <- tsf
   clme.out$tsf.ind     <- tsf.ind
   
+  clme.out$nsim <- eval(cc$nsim)
+  clme.out$seed <- eval(cc$seed)
   
   if( !is.null(levels) ){
     names(clme.out$theta)[1:P1]        <- xlev
@@ -329,22 +332,21 @@ function( formula, data, gfix=NULL, constraints=list(), tsf=lrt.stat, tsf.ind=w.
   }
   
   clme.out$random.effects <- mr$xi
-
-  clme.out$gfix    <- Nks
-  clme.out$gfix_group <- gfix
-  clme.out$gran    <- Qs
-  clme.out$formula <- mmat$formula
-  clme.out$call    <- cc  
-  clme.out$P1      <- P1
-  clme.out$mq.phi  <- mq.phi
+  clme.out$gfix           <- Nks
+  clme.out$gfix_group     <- gfix
+  clme.out$gran           <- Qs
+  clme.out$P1             <- P1
+  clme.out$mq.phi         <- mq.phi
   
   ## Report the estimated order
   clme.out$order <- list()
+  clme.out$order$est_order   <- est.order
   if( cust.const == TRUE ){
     clme.out$order$estimated <- FALSE
     clme.out$order$order     <- "custom"
     clme.out$order$node      <- NULL
     clme.out$order$inc.dec   <- NULL
+    clme.out$search.grid     <- NULL
   } else{
       if( MNK==1 ){
         clme.out$order$estimated <- FALSE
@@ -360,8 +362,8 @@ function( formula, data, gfix=NULL, constraints=list(), tsf=lrt.stat, tsf.ind=w.
       } else{
         clme.out$order$inc.dec <- "increasing"
       }
+      clme.out$search.grid <- search.grid
   }
-  clme.out$order$est_order <- est.order
   
   if (verbose[1]==TRUE){
     cat( prnt_warn )

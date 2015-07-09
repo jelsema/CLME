@@ -2,9 +2,12 @@
 % Please edit documentation in R/utilities.r
 \name{BIC.clme}
 \alias{BIC.clme}
+\alias{BIC.summary.clme}
 \title{Bayesian information criterion}
 \usage{
 \method{BIC}{clme}(object, ..., k = log(nobs(object)/(2 * pi)))
+
+\method{BIC}{summary.clme}(object, ..., k = log(nobs(object)/(2 * pi)))
 }
 \arguments{
 \item{object}{object of class \code{\link{clme}}.}
@@ -18,6 +21,8 @@ Returns the Bayesian information criterion (numeric).
 }
 \description{
 Calculates the Bayesian information criterion for objects of class \code{clme}.
+
+Calculates the Akaike and Bayesian information criterion for objects of class \code{clme}.
 }
 \details{
 The log-likelihood is assumed to be the Normal distribution. The model uses residual bootstrap methodology, and Normality is neither required nor assumed. Therefore the log-likelihood and these information criterion may not be useful measures for comparing models.
@@ -34,6 +39,9 @@ BIC( clme.out )
 BIC( clme.out, k=log( nobs(clme.out)/(2*pi) ) )
 }
 \seealso{
+\code{\link{CLME-package}}
+\code{\link{clme}}
+
 \code{\link{CLME-package}}
 \code{\link{clme}}
 }

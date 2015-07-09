@@ -2,9 +2,12 @@
 % Please edit documentation in R/utilities.r
 \name{nobs.clme}
 \alias{nobs.clme}
+\alias{nobs.summary.clme}
 \title{Number of observations}
 \usage{
 \method{nobs}{clme}(object, ...)
+
+\method{nobs}{summary.clme}(object, ...)
 }
 \arguments{
 \item{object}{an object of class \code{clme}.}
@@ -16,6 +19,8 @@ Numeric.
 }
 \description{
 Obtains the number of observations used to fit an model for objects of class \code{clme}.
+
+Number of observations
 }
 \examples{
 data( rat.blood )
@@ -28,5 +33,7 @@ nobs( clme.out )
 \seealso{
 \code{\link{CLME-package}}
 \code{\link{clme}}
+
+\code{\link{nobs.clme}}
 }
 

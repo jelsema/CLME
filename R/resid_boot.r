@@ -93,7 +93,7 @@ function(formula, data, gfix=NULL, eps=NULL, xi=NULL, null.resids=TRUE,
   
   if( is.null(ssq) ){
     theta1 <- ginv( t(X)%*%X )%*%(t(X)%*%Y)  
-    ssq   <- vector()
+    ssq    <- vector()
     for( k in 1:K ){
       Yk <- Y[ N1[k]:N2[k] ]
       Xk <- X[ N1[k]:N2[k],]  

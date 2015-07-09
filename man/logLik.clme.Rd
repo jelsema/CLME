@@ -2,9 +2,12 @@
 % Please edit documentation in R/utilities.r
 \name{logLik.clme}
 \alias{logLik.clme}
+\alias{logLik.summary.clme}
 \title{Log-likelihood}
 \usage{
 \method{logLik}{clme}(object, ...)
+
+\method{logLik}{summary.clme}(object, ...)
 }
 \arguments{
 \item{object}{object of class \code{\link{clme}}.}
@@ -16,6 +19,8 @@ Numeric.
 }
 \description{
 Computes the log-likelihood of the fitted model for objects of class \code{clme}.
+
+Log-likelihood
 }
 \details{
 The log-likelihood is computed using the Normal distribution. The model uses residual bootstrap
@@ -33,5 +38,7 @@ logLik( clme.out )
 \seealso{
 \code{\link{CLME-package}}
 \code{\link{clme}}
+
+\code{\link{logLik.clme}}
 }
 
