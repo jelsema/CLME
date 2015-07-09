@@ -31,8 +31,14 @@ A list with the elements:
 Parses formulas to creates model matrices for \code{clme}.
 }
 \note{
-The first term on the right-hand side of the formula should be the fixed effect with constrained coefficients.
-Random effects are represented with a vertical bar, so for example the random effect \code{U} would be included by \code{Y ~ X1 + (1|U)}.
+The first term on the right-hand side of the formula should be the fixed effect
+with constrained coefficients. Random effects are represented with a vertical bar,
+so for example the random effect \code{U} would be included by
+\code{Y ~ X1 + (1|U)}.
+
+The intercept is removed automatically. This is done to ensure that parameter
+estimates are of the means of interest, rather than being expressed as a mean
+with offsets.
 }
 \examples{
 data( rat.blood )

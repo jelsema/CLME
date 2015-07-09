@@ -2,9 +2,12 @@
 % Please edit documentation in R/utilities.r
 \name{VarCorr.clme}
 \alias{VarCorr.clme}
+\alias{VarCorr.summary.clme}
 \title{Variance components}
 \usage{
-VarCorr.clme(object, ...)
+\method{VarCorr}{clme}(object, ...)
+
+\method{VarCorr}{summary.clme}(object, ...)
 
 \method{VarCorr}{clme}(object, ...)
 }
@@ -17,6 +20,8 @@ VarCorr.clme(object, ...)
 Numeric.
 }
 \description{
+Variance components
+
 Variance components
 
 Extracts variance components for objects of class \code{clme}.

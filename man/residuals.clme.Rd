@@ -2,9 +2,12 @@
 % Please edit documentation in R/utilities.r
 \name{residuals.clme}
 \alias{residuals.clme}
+\alias{residuals.summary.clme}
 \title{Various types of residuals}
 \usage{
 \method{residuals}{clme}(object, type = "FM", ...)
+
+\method{residuals}{summary.clme}(object, type = "FM", ...)
 }
 \arguments{
 \item{object}{object of class \code{\link{clme}}.}
@@ -18,6 +21,8 @@ Returns a numeric matrix.
 }
 \description{
 Computes several types of residuals for objects of class \code{clme}.
+
+Various types of residuals
 }
 \details{
 For fixed-effects models \eqn{Y = X\beta + \epsilon}{Y = X*b + e}, residuals are given as \deqn{\hat{e} = Y - X\hat{\beta}}{ ehat = Y - X*betahat}.

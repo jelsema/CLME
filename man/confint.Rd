@@ -2,9 +2,12 @@
 % Please edit documentation in R/utilities.r
 \name{confint.clme}
 \alias{confint.clme}
+\alias{confint.summary.clme}
 \title{Individual confidence intervals}
 \usage{
 \method{confint}{clme}(object, parm, level = 0.95, ...)
+
+\method{confint}{summary.clme}(object, parm, level = 0.95, ...)
 }
 \arguments{
 \item{object}{object of class \code{\link{clme}}.}
@@ -20,6 +23,8 @@ Returns a matrix with two columns named lcl and ucl (lower and upper confidence 
 }
 \description{
 Calculates confidence intervals for fixed effects parameter estimates in objects of class \code{clme}.
+
+Calculates confidence intervals for fixed effects parameter estimates in objects of class \code{clme}.
 }
 \details{
 Confidence intervals are computed using Standard Normal critical values.
@@ -34,6 +39,9 @@ clme.out <- clme(mcv ~ time + temp + sex + (1|id), data = rat.blood ,
 confint( clme.out )
 }
 \seealso{
+\code{\link{CLME-package}}
+\code{\link{clme}}
+
 \code{\link{CLME-package}}
 \code{\link{clme}}
 }

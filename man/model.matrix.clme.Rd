@@ -2,9 +2,12 @@
 % Please edit documentation in R/utilities.r
 \name{model.matrix.clme}
 \alias{model.matrix.clme}
-\title{Extract the fixed-effects design matrix.}
+\alias{model.matrix.summary.clme}
+\title{Extract the model design matrix.}
 \usage{
 \method{model.matrix}{clme}(object, type = "fixef", ...)
+
+\method{model.matrix}{summary.clme}(object, ...)
 }
 \arguments{
 \item{object}{an object of class \code{clme}.}
@@ -18,6 +21,8 @@ Returns a matrix.
 }
 \description{
 Extracts the fixed-effects design matrix from objects of class \code{clme}.
+
+Extract the model design matrix.
 }
 \examples{
 \dontrun{
@@ -32,5 +37,7 @@ model.matrix( clme.out )
 \seealso{
 \code{\link{CLME-package}}
 \code{\link{clme}}
+
+\code{\link{model.matrix.clme}}
 }
 

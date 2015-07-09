@@ -9,19 +9,25 @@ Constrained inference on linear fixed and mixed models using residual bootstrap.
 Covariates and random effects are permitted but not required.
 
 Appropriate credit should be given when publishing results obtained using \pkg{CLME}, or when
-developing other programs/packages based off of this one. Use \code{citation(package="CLME")} for
- Bibtex information.
+developing other programs/packages based off of this one. Use \code{citation(package="CLME")}
+for Bibtex information.
+
+The work was produced in part with funding from the Intramural Research Program of the NIH,
+National Institute of Environmental Health Sciences (Z01 ES101744).
 }
 \details{
 \tabular{ll}{
 Package: \tab CLME\cr
 Type:    \tab Package\cr
-Version: \tab 2.0.3\cr
+Version: \tab 2.0.4\cr
 Date:    \tab 2015-05-18\cr
 License: \tab GLP-3  \cr
 }
 
-This package implements the constrained linear mixed effects model described in Farnan, Ivanova, and Peddada (2014). See that paper for more details regarding the method. Here we give a brief overview of the assumed model:
+This package was introduced in Jelsema and Peddada (2015, under review). The method which
+is implemented is the constrained linear mixed effects model described in
+Farnan, Ivanova, and Peddada (2014). See that paper for more details regarding the method.
+Here we give a brief overview of the assumed model:
 
 \deqn{ Y = X_{1}\theta_{1} + X_{2}\theta_{2} + U\xi + \epsilon }{Y = X1*theta1 + X2*theta2 + U*xi + e}
 
@@ -65,7 +71,7 @@ The creation of this package \pkg{CLME}, this manual, and the vingette were all 
 Unless otherwise noted, Casey M. Jelsema wrote the functions in this package.
 }
 \author{
-Casey M. Jelsema <\email{casey.jelsema@nih.gov}>
+Casey M. Jelsema <\email{casey.jelsema@gmail.com}>
 
 Shyamal D. Peddada
 }
@@ -74,5 +80,9 @@ Farnan, L., Ivanova, A., and Peddada, S. D. (2014).
 Linear Mixed Efects Models under Inequality Constraints with Applications.
 \emph{PLOS ONE}, 9(1). e84778. doi: 10.1371/journal.pone.0084778
 \url{http://www.plosone.org/article/info:doi/10.1371/journal.pone.0084778}
+
+Jelsema, C.M. and Peddada, S.D. (2015).
+CLME: An R Package for Linear Mixed Effects Models under Inequality Constraints.
+\emph{(under review)}.
 }
 

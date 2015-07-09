@@ -2,9 +2,12 @@
 % Please edit documentation in R/utilities.r
 \name{vcov.clme}
 \alias{vcov.clme}
+\alias{vcov.summary.clme}
 \title{Variance-covariance matrix}
 \usage{
 \method{vcov}{clme}(object, ...)
+
+\method{vcov}{summary.clme}(object, ...)
 }
 \arguments{
 \item{object}{object of class \code{\link{clme}}.}
@@ -16,6 +19,8 @@ Numeric matrix.
 }
 \description{
 Extracts variance-covariance matrix for objects of class \code{clme}.
+
+Variance-covariance matrix
 }
 \examples{
 data( rat.blood )

@@ -3,13 +3,22 @@
 \name{ranef.clme}
 \alias{random.effects.clme}
 \alias{ranef.clme}
+\alias{ranef.summary.clme}
 \title{Extract random effects}
 \usage{
+\method{ranef}{clme}(object, ...)
+
+\method{ranef}{summary.clme}(object, ...)
+
 \method{ranef}{clme}(object, ...)
 
 \method{random.effects}{clme}(object, ...)
 }
 \arguments{
+\item{object}{object of class clme.}
+
+\item{...}{space for additional arguments}
+
 \item{object}{object of class \code{\link{clme}}.}
 
 \item{...}{space for additional arguments}
@@ -18,6 +27,10 @@
 Returns a numeric vector.
 }
 \description{
+Extract random effects
+
+Extract random effects
+
 Extracts the random effects estimates from objects of class \code{clme}.
 
 

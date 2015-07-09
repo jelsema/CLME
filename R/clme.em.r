@@ -1,7 +1,8 @@
-#' Constrained EM algorithm for linear fixed or mixed effects models.
+#' @title Constrained EM algorithm for linear fixed or mixed effects models.
 #'
-#' @description Expectation-maximization (EM) algorithm under inequality constraints 
-#' to estimate parameters and compute a test statistic.
+#' @description \code{clme_em} is the general function, it will call the others.
+#' These Expectation-maximization (EM) algorithms estimate model parameters and 
+#' compute a test statistic.
 #'
 #' @rdname clme_em
 #'

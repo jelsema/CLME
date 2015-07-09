@@ -15,8 +15,14 @@
 #' 
 #' 
 #' @note
-#' The first term on the right-hand side of the formula should be the fixed effect with constrained coefficients. 
-#' Random effects are represented with a vertical bar, so for example the random effect \code{U} would be included by \code{Y ~ X1 + (1|U)}.
+#' The first term on the right-hand side of the formula should be the fixed effect 
+#' with constrained coefficients. Random effects are represented with a vertical bar, 
+#' so for example the random effect \code{U} would be included by 
+#' \code{Y ~ X1 + (1|U)}.
+#' 
+#' The intercept is removed automatically. This is done to ensure that parameter 
+#' estimates are of the means of interest, rather than being expressed as a mean 
+#' with offsets.
 #' 
 #' @return
 #' A list with the elements:
@@ -270,6 +276,26 @@ AIC.clme <- function( object, ..., k=2 ){
   return(aic)
 }
 
+#' Akaike information criterion
+#'
+#' @description
+#' Calculates the Akaike and Bayesian information criterion for objects of class \code{clme}. 
+#' 
+#' @rdname AIC.clme
+#' 
+#' @seealso
+#' \code{\link{CLME-package}}
+#' \code{\link{clme}}
+#' 
+#' @method AIC summary.clme
+#' @export
+#' 
+AIC.summary.clme <- function( object, ..., k=2 ){
+  class(object) <- "clme"
+  AIC( object, ..., k=k )
+}
+
+
 
 #' Bayesian information criterion
 #'
@@ -312,12 +338,27 @@ BIC.clme <- function( object, ..., k=log(nobs(object)/(2*pi)) ){
   ## For BIC, set k = ln( n/(2*pi) )
   logl <- logLik( object, ...)[1]
   bic <- AIC( object, k=k )
-
   return(bic)
 }
 
-
-
+#' Bayesian information criterion
+#'
+#' @description
+#' Calculates the Akaike and Bayesian information criterion for objects of class \code{clme}. 
+#' 
+#' @rdname BIC.clme
+#' 
+#' @seealso
+#' \code{\link{CLME-package}}
+#' \code{\link{clme}}
+#' 
+#' @method BIC summary.clme
+#' @export
+#' 
+BIC.summary.clme <- function( object, ..., k=log(nobs(object)/(2*pi)) ){
+  class(object) <- "clme"
+  BIC( object, ..., k=k )
+}
 
 
 #' Individual confidence intervals
@@ -384,15 +425,45 @@ confint.clme <- function(object, parm, level=0.95, ...){
   return( ints )
 }
 
+#' Individual confidence intervals
+#'
+#' @description
+#' Calculates confidence intervals for fixed effects parameter estimates in objects of class \code{clme}.
+#' @rdname confint
+#' 
+#' @seealso
+#' \code{\link{CLME-package}}
+#' \code{\link{clme}}
+#' 
+#' @method confint summary.clme
+#' @export
+#' 
+confint.summary.clme <- function(object, parm, level=0.95, ...){
+  class(object) <- "clme"
+  confint( object, parm, level, ... )
+}
 
 
 #' Extract fixed effects
 #' 
-#' @rdname fixef
-#' @importFrom nlme fixef
+#' @importFrom lme4 fixef
+#' @method fixef clme
 #' @export 
 #' 
 fixef.clme <- function( object, ...){ UseMethod("fixef") }
+
+
+#' Extract fixed effects
+#' 
+#' @rdname fixef.clme
+#' @importFrom lme4 fixef
+#' @method fixef summary.clme
+#' @export 
+#' 
+fixef.summary.clme <- function( object, ...){ 
+  class(object) <- "clme"
+  fixef(object, ...)
+}
 
 
 #' Extract fixed effects
@@ -400,14 +471,13 @@ fixef.clme <- function( object, ...){ UseMethod("fixef") }
 #' @description
 #' Extracts the fixed effects estimates from objects of class \code{clme}. 
 #' 
-#' @rdname fixef
+#' @rdname fixef.clme
 #' 
 #' @param object object of class \code{\link{clme}}.
 #' @param ... space for additional arguments
 #' 
 #' @return
 #' Returns a numeric vector.
-#' 
 #' 
 #' @seealso
 #' \code{\link{CLME-package}}
@@ -422,8 +492,7 @@ fixef.clme <- function( object, ...){ UseMethod("fixef") }
 #' 
 #' fixef( clme.out )
 #' 
-#' 
-#' @importFrom nlme fixef
+#' @importFrom lme4 fixef
 #' @method fixef clme
 #' @export
 #' 
@@ -436,11 +505,9 @@ fixef.clme <- function( object, ... ){
   }
 }
 
-
-
 #' Extract fixed effects
 #' 
-#' @rdname fixef
+#' @rdname fixef.clme
 #' @importFrom nlme fixed.effects
 #' @export
 #' 
@@ -448,20 +515,58 @@ fixed.effects <- function( object, ...){ UseMethod("fixed.effects") }
 
 #' Extract fixed effects
 #' 
-#' @rdname fixef
-#' 
+#' @rdname fixef.clme
 #' @importFrom nlme fixed.effects
 #' @export
 #' 
-fixed.effects.clme <- function( object, ... ){
+fixed.effects.summary.clme <- function( object, ...){
+  class(object) <- "clme"
+  fixef(object, ...)
+}
+
+
+#' @rdname fixef.clme
+#' @importFrom nlme fixed.effects
+#' @method fixed.effects clme
+#' @export
+#' 
+fixed.effects.clme <- function( object , ... ){
   fixef.clme( object, ... )
 }
-#coefficients.clme <- function( object, ... ){
-#  fixef.clme( object, ... )
-#}
-#coef.clme <- function( object, ... ){
-#  fixef.clme( object, ... )
-#}
+
+#' @rdname fixef.clme
+#' @method coefficients clme
+#' @export
+#' 
+coefficients.clme <- function( object, ... ){
+  fixef.clme( object, ... )
+}
+
+#' @rdname fixef.clme
+#' @method coef clme
+#' @export
+#' 
+coef.clme <- function( object, ... ){
+  fixef.clme( object, ... )
+}
+
+#' @rdname fixef.clme
+#' @method coefficients summary.clme
+#' @export
+#' 
+coefficients.summary.clme <- function( object, ... ){
+  class(object) <- "clme"
+  fixef.clme( object, ... )
+}
+
+#' @rdname fixef.clme
+#' @method coef summary.clme
+#' @export
+#' 
+coef.summary.clme <- function( object, ... ){
+  class(object) <- "clme"
+  fixef.clme( object, ... )
+}
 
 
 #' Extract formula
@@ -499,7 +604,6 @@ fixed.effects.clme <- function( object, ... ){
 formula.clme <- function(x, ...){
   return( x$formula )
 }
-
 
 
 #' Log-likelihood
@@ -577,7 +681,20 @@ logLik.clme <- function( object, ...){
   
 }
 
-
+#' Log-likelihood
+#' 
+#' @rdname logLik.clme
+#' 
+#' @seealso
+#' \code{\link{logLik.clme}} 
+#' 
+#' @method logLik summary.clme
+#' @export
+#' 
+logLik.summary.clme <- function( object, ...){
+  class(object) <- "clme"
+  logLik(object, ...)
+}
 
 #' Extracts the model frame
 #'
@@ -610,7 +727,24 @@ model.frame.clme <- function( formula , ...){
   return( mmat$dframe )
 }
 
-#' Extract the fixed-effects design matrix.
+#' Extracts the model frame
+#' 
+#' @rdname model.frame.clme
+#' 
+#' @seealso
+#' \code{\link{model.frame.clme}} 
+#' 
+#' @method model.frame summary.clme
+#' @export
+#' 
+model.frame.summary.clme <- function( object, ...){
+  class(object) <- "clme"
+  model.frame(object, ...)
+}
+
+
+
+#' Extract the model design matrix.
 #'
 #' @description
 #' Extracts the fixed-effects design matrix from objects of class \code{clme}.
@@ -653,6 +787,20 @@ model.matrix.clme <- function( object, type="fixef", ...){
   }
 }
 
+#' Extract the model design matrix.
+#' 
+#' @rdname model.matrix.clme
+#' 
+#' @seealso
+#' \code{\link{model.matrix.clme}} 
+#' 
+#' @method model.matrix summary.clme
+#' @export
+#' 
+model.matrix.summary.clme <- function( object, ...){
+  class(object) <- "clme"
+  model.matrix(object, ...)
+}
 
 #' Number of observations
 #'
@@ -687,7 +835,20 @@ nobs.clme <- function(object, ...){
   nrow( model.matrix.clme(object) )
 }
 
-
+#' Number of observations
+#' 
+#' @rdname nobs.clme
+#' 
+#' @seealso
+#' \code{\link{nobs.clme}} 
+#' 
+#' @method nobs summary.clme
+#' @export
+#' 
+nobs.summary.clme <- function( object, ...){
+  class(object) <- "clme"
+  nobs(object, ...)
+}
 
 
 
@@ -758,11 +919,23 @@ print.clme <- function(x, ...){
 #' @param object object of class clme.
 #' @param ... space for additional arguments
 #' 
-#' @rdname ranef
+#' @rdname ranef.clme
 #' @importFrom nlme ranef
 #' @export
 #' 
 ranef.clme <- function( object, ...){ UseMethod("ranef") }
+
+#' Extract random effects
+#' 
+#' @rdname ranef.clme
+#' 
+#' @importFrom nlme ranef
+#' @export
+#' 
+ranef.summary.clme <- function( object, ...){
+  class(object) <- "clme"
+  ranef(object, ...)
+}
 
 
 #' Extract random effects
@@ -806,8 +979,6 @@ ranef.clme <- function( object, ... ){
   }
 }
 
-
-
 #' Extract random effects
 #' 
 #' @rdname ranef
@@ -815,6 +986,17 @@ ranef.clme <- function( object, ... ){
 #' @export
 #' 
 random.effects <- function( object, ...){ UseMethod("random.effects") }
+
+#' Extract random effects
+#' 
+#' @rdname ranef
+#' @importFrom nlme random.effects
+#' @export
+#' 
+random.effects.summary.clme <- function( object, ...){
+  class(object) <- "clme"
+  ranef(object, ...)
+}
 
 
 #' 
@@ -875,17 +1057,31 @@ residuals.clme <- function( object, type="FM", ... ){
   }
 }
 
+#' Various types of residuals 
+#'
+#' @rdname residuals.clme
+#' 
+#' @method residuals summary.clme
+#' @export
+#' 
+residuals.summary.clme <- function( object, type="FM", ... ){
+  class(object) <- "clme"
+  residuals( object, type, ...)
+}
+
+
 
 #' Residual variance components
+#'
+#' @description
+#' Extract residual variance components for objects of class \code{clme}.
+#'
+#' @export
 #' 
-#' @param object object of class clme.
-#' @param ... space for additional arguments
-#' 
-#' @rdname sigma
-#' @importFrom lme4 sigma
-#' @export sigma
-#' 
-sigma.clme <- function( object, ...){ UseMethod("sigma") }
+sigma.clme <- function( object, ...){
+  UseMethod("sigma")
+}
+
 
 
 #' Residual variance components
@@ -913,11 +1109,42 @@ sigma.clme <- function( object, ...){ UseMethod("sigma") }
 #'                  
 #' sigma( clme.out )
 #' 
-#' @importMethodsFrom lme4 sigma
 #' @method sigma clme
 #' @export
 #' 
 sigma.clme <- function( object, ...){
+  return( object$ssq )
+}
+
+#' Residual variance components
+#'
+#' @description
+#' Extract residual variance components for objects of class \code{clme}.
+#' 
+#' @param object object of class \code{\link{clme}}.
+#' @param ... space for additional arguments
+#' 
+#' 
+#' @return
+#' Numeric.
+#' 
+#' @seealso
+#' \code{\link{CLME-package}}
+#' \code{\link{clme}}
+#' 
+#' @examples
+#' 
+#' data( rat.blood )
+#' cons <- list(order = "simple", decreasing = FALSE, node = 1 )
+#' clme.out <- clme(mcv ~ time + temp + sex + (1|id), data = rat.blood , 
+#'                  constraints = cons, seed = 42, nsim = 0)
+#'                  
+#' sigma( clme.out )
+#' 
+#' @method sigma summary.clme
+#' @export
+#' 
+sigma.summary.clme <- function( object, ...){
   return( object$ssq )
 }
 
@@ -926,10 +1153,21 @@ sigma.clme <- function( object, ...){
 #' Variance components
 #' 
 #' @rdname VarCorr
-#' @importFrom nlme VarCorr
+#' @importFrom lme4 VarCorr
 #' @export
 #' 
 VarCorr.clme <- function( object, ...){ UseMethod("VarCorr") }
+
+#' Variance components
+#' 
+#' @rdname VarCorr
+#' @importFrom lme4 VarCorr
+#' @export
+#' 
+VarCorr.summary.clme <- function( object, ...){
+  class(object) <- "clme"
+  VarCorr(object, ...)
+}
 
 
 #' Variance components.
@@ -960,7 +1198,7 @@ VarCorr.clme <- function( object, ...){ UseMethod("VarCorr") }
 #' VarCorr( clme.out )
 #' 
 #' 
-#' @importFrom nlme VarCorr
+#' @importFrom lme4 VarCorr
 #' @method VarCorr clme
 #' @export
 #' 
@@ -977,7 +1215,7 @@ VarCorr.clme <- function(object, ...){
     colnames(varcomps) <- "Variance"
     class(varcomps)    <- "varcorr_clme"
     return( varcomps )
-  } 
+  }
 }
 
 ## Leave this method out of alphabetical order so that
@@ -1008,18 +1246,21 @@ VarCorr.clme <- function(object, ...){
 #'                  
 #' print.varcorr_clme( clme.out )
 #' }
+#' @importFrom stringr str_pad
 #' @exportMethod print varcorr_clme
 #' 
 print.varcorr_clme <- function( x, ... ){
-  varcomps <- x
-  rnames   <- c( "Source", rownames( varcomps ) )
-  rnames   <- str_pad(rnames, width=max(nchar(rnames)), side = "right", pad = " ")
-  vars     <- format( varcomps , digits=5)
   
+  
+  rnames   <- c( "Source", rownames( x ) )
+  rnames   <- str_pad(rnames, width=max(nchar(rnames)), side = "right", pad = " ")
+  vars     <- format( x , digits=5 )
+    
   cat( rnames[1], "\t" , "Variance" )
   for( ii in 1:length(vars) ){
     cat( "\n", rnames[ii+1], "\t" , vars[ii] )
-  }
+  }  
+  
 }
 
 
@@ -1059,6 +1300,18 @@ vcov.clme <- function(object, ...){
   } else{
     stop("'object' is not of class clme")
   }  
+}
+
+#' Variance-covariance matrix
+#'
+#' @rdname vcov.clme
+#' 
+#' @method vcov summary.clme
+#' @export
+#' 
+vcov.summary.clme <- function(object, ...){
+  class(object) <- "clme"
+  vcov(object, ...)
 }
 
 

@@ -2,9 +2,12 @@
 % Please edit documentation in R/utilities.r
 \name{model.frame.clme}
 \alias{model.frame.clme}
+\alias{model.frame.summary.clme}
 \title{Extracts the model frame}
 \usage{
 \method{model.frame}{clme}(formula, ...)
+
+\method{model.frame}{summary.clme}(object, ...)
 }
 \arguments{
 \item{formula}{a formula expression.}
@@ -16,6 +19,8 @@ Returns a data frame with the variables in the model.
 }
 \description{
 Extracts the model frame from objects of class \code{clme}.
+
+Extracts the model frame
 }
 \examples{
 \dontrun{
@@ -26,5 +31,7 @@ model.frame.clme( mcv ~ time + temp + sex + (1|id), data = rat.blood )
 \seealso{
 \code{\link{CLME-package}}
 \code{\link{clme}}
+
+\code{\link{model.frame.clme}}
 }
 

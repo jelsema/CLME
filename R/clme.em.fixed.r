@@ -1,4 +1,4 @@
-#' Constrained EM algorithm for linear fixed or mixed effects models.
+#' @description \code{clme_em_fixed} performs a constrained EM algorithm for linear fixed effects models.
 #' 
 #' @rdname clme_em
 #' @export
