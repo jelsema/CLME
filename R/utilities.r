@@ -1260,12 +1260,7 @@ VarCorr.clme <- function(object, ...){
 #' @exportMethod print varcorr_clme
 #' 
 print.varcorr_clme <- function( x, ... ){
-  varcomps <- x
-  attributes(x) <- NULL
-  rnames   <- c( "Source", rownames( varcomps ) )
-  rnames   <- str_pad(rnames, width=max(nchar(rnames)), side = "right", pad = " ")
-  vars     <- format( varcomps , digits=5 )  
-  
+
   rnames   <- c( "Source", rownames( x ) )
   rnames   <- str_pad(rnames, width=max(nchar(rnames)), side = "right", pad = " ")
   vars     <- format( x , digits=5 )
