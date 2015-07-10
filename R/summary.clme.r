@@ -191,7 +191,9 @@ summary.clme <- function( object, nsim=1000, seed=42, verbose=c(FALSE,FALSE), ..
 #' @method print summary.clme
 #' @export
 #' 
-print.summary.clme <- function( object, alpha=0.05, digits=4, ...){
+print.summary.clme <- function( x, alpha=0.05, digits=4, ...){
+  
+  object <- x
   
   if( class(object)=="summary.clme" ){
     class(object) <- "clme"  

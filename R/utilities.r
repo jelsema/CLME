@@ -747,9 +747,9 @@ model.frame.clme <- function( formula , ...){
 #' @method model.frame summary.clme
 #' @export
 #' 
-model.frame.summary.clme <- function( object, ...){
+model.frame.summary.clme <- function( formula, ...){
   class(object) <- "clme"
-  model.frame(object, ...)
+  model.frame(formula, ...)
 }
 
 
@@ -1088,7 +1088,7 @@ residuals.summary.clme <- function( object, type="FM", ... ){
 #'
 #' @export
 #' 
-sigma.clme <- function( object, ...){
+sigma <- function( object, ...){
   UseMethod("sigma")
 }
 
@@ -1166,7 +1166,8 @@ sigma.summary.clme <- function( object, ...){
 #' @importFrom lme4 VarCorr
 #' @export
 #' 
-VarCorr.clme <- function( object, ...){ UseMethod("VarCorr") }
+VarCorr.clme <- function( x, ...){ UseMethod("VarCorr") }
+
 
 #' Variance components
 #' 
@@ -1174,9 +1175,9 @@ VarCorr.clme <- function( object, ...){ UseMethod("VarCorr") }
 #' @importFrom lme4 VarCorr
 #' @export
 #' 
-VarCorr.summary.clme <- function( object, ...){
-  class(object) <- "clme"
-  VarCorr(object, ...)
+VarCorr.summary.clme <- function( x ...){
+  class(x) <- "clme"
+  VarCorr(x, sigma, rdig)
 }
 
 
@@ -1187,9 +1188,9 @@ VarCorr.summary.clme <- function( object, ...){
 #' 
 #' @rdname VarCorr
 #' 
-#' @param object object of class \code{\link{clme}}.
-#' @param ... space for additional arguments
-#' 
+#' @param x object of class \code{\link{clme}}.
+#' @param sigma multiplier for variance (not used).
+#' @param rdig number of digits to round to.
 #' 
 #' @return
 #' Numeric.
@@ -1212,15 +1213,15 @@ VarCorr.summary.clme <- function( object, ...){
 #' @method VarCorr clme
 #' @export
 #' 
-VarCorr.clme <- function(object, ...){
+VarCorr.clme <- function(x, sigma=1, rdig=3){
   ## Print out variances or SDs
   ## Defines tiny class "varcorr_clme" to handle printing
   ## using the method: print.varcorr_clme
-  if( !is.clme(object) ){
+  if( !is.clme(x) ){
     stop("'object' is not of class clme")
   } else{
-    varcomps <- matrix( c(object$tsq, object$ssq ), ncol=1 )
-    rnames   <- c( "Source", names(object$tsq), names(object$ssq) )
+    varcomps <- matrix( c(x$tsq, x$ssq ), ncol=1 )
+    rnames   <- c( "Source", names(x$tsq), names(x$ssq) )
     rownames(varcomps) <- rnames[-1]
     colnames(varcomps) <- "Variance"
     class(varcomps)    <- "varcorr_clme"
@@ -1237,8 +1238,8 @@ VarCorr.clme <- function(object, ...){
 #' Prints variance components of an objects of \code{clme}. 
 #' 
 #' @param x object of class \code{\link{clme}}.
-#' @param ... space for additional arguments
-#' 
+#' @param sigma multiplier for variance (not used).
+#' @param rdig number of digits to round to.#' 
 #' 
 #' @return
 #' Text printed to console.
@@ -1259,11 +1260,11 @@ VarCorr.clme <- function(object, ...){
 #' @importFrom stringr str_pad
 #' @exportMethod print varcorr_clme
 #' 
-print.varcorr_clme <- function( x, ... ){
+print.varcorr_clme <- function(x, sigma=1, rdig=3){
 
   rnames   <- c( "Source", rownames( x ) )
   rnames   <- str_pad(rnames, width=max(nchar(rnames)), side = "right", pad = " ")
-  vars     <- format( x , digits=5 )
+  vars     <- format( x , digits=rdig )
     
   cat( rnames[1], "\t" , "Variance" )
   for( ii in 1:length(vars) ){
