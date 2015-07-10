@@ -528,6 +528,7 @@ fixed.effects.summary.clme <- function( object, ...){
 #' @rdname fixef.clme
 #' @importFrom nlme fixed.effects
 #' @method fixed.effects clme
+<<<<<<< HEAD
 #' @export
 #' 
 fixed.effects.clme <- function( object , ... ){
@@ -538,6 +539,18 @@ fixed.effects.clme <- function( object , ... ){
 #' @method coefficients clme
 #' @export
 #' 
+=======
+#' @export
+#' 
+fixed.effects.clme <- function( object , ... ){
+  fixef.clme( object, ... )
+}
+
+#' @rdname fixef.clme
+#' @method coefficients clme
+#' @export
+#' 
+>>>>>>> e4bc55beb8a1ecfc20a27f1865ba6b31093348f2
 coefficients.clme <- function( object, ... ){
   fixef.clme( object, ... )
 }
@@ -1250,6 +1263,14 @@ VarCorr.clme <- function(object, ...){
 #' @exportMethod print varcorr_clme
 #' 
 print.varcorr_clme <- function( x, ... ){
+<<<<<<< HEAD
+=======
+  varcomps <- x
+  attributes(x) <- NULL
+  rnames   <- c( "Source", rownames( varcomps ) )
+  rnames   <- str_pad(rnames, width=max(nchar(rnames)), side = "right", pad = " ")
+  vars     <- format( varcomps , digits=5 )
+>>>>>>> e4bc55beb8a1ecfc20a27f1865ba6b31093348f2
   
   
   rnames   <- c( "Source", rownames( x ) )
@@ -1259,7 +1280,11 @@ print.varcorr_clme <- function( x, ... ){
   cat( rnames[1], "\t" , "Variance" )
   for( ii in 1:length(vars) ){
     cat( "\n", rnames[ii+1], "\t" , vars[ii] )
+<<<<<<< HEAD
   }  
+=======
+  }
+>>>>>>> e4bc55beb8a1ecfc20a27f1865ba6b31093348f2
   
 }
 
