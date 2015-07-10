@@ -4,10 +4,10 @@
 \alias{print.summary.clme}
 \title{S3 method to print a summary for objects of class \code{clme}}
 \usage{
-\method{print}{summary.clme}(object, alpha = 0.05, digits = 4, ...)
+\method{print}{summary.clme}(x, alpha = 0.05, digits = 4, ...)
 }
 \arguments{
-\item{object}{an object of class \code{clme}.}
+\item{x}{an object of class \code{clme}.}
 
 \item{alpha}{level of significance.}
 

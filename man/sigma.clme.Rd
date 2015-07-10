@@ -5,8 +5,6 @@
 \title{Residual variance components}
 \usage{
 \method{sigma}{clme}(object, ...)
-
-\method{sigma}{clme}(object, ...)
 }
 \arguments{
 \item{object}{object of class \code{\link{clme}}.}
@@ -17,8 +15,6 @@
 Numeric.
 }
 \description{
-Extract residual variance components for objects of class \code{clme}.
-
 Extract residual variance components for objects of class \code{clme}.
 }
 \examples{

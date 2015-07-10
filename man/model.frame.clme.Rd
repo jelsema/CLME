@@ -7,7 +7,7 @@
 \usage{
 \method{model.frame}{clme}(formula, ...)
 
-\method{model.frame}{summary.clme}(object, ...)
+\method{model.frame}{summary.clme}(formula, ...)
 }
 \arguments{
 \item{formula}{a formula expression.}

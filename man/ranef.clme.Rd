@@ -18,10 +18,6 @@
 \item{object}{object of class clme.}
 
 \item{...}{space for additional arguments}
-
-\item{object}{object of class \code{\link{clme}}.}
-
-\item{...}{space for additional arguments}
 }
 \value{
 Returns a numeric vector.

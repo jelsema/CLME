@@ -158,7 +158,7 @@ summary.clme <- function( object, nsim=1000, seed=42, verbose=c(FALSE,FALSE), ..
 #'
 #' @description Summarizes the output of objects of class \code{clme}, such as those produced by \code{\link{clme}}. Prints a tabulated display of global and individual tests, as well as parameter estimates.
 #'
-#' @param object an object of class \code{clme}.
+#' @param x an object of class \code{clme}.
 #' @param alpha level of significance.
 #' @param digits number of decimal digits to print.
 #' @param ... additional arguments passed to other functions.

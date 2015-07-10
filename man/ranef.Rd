@@ -9,6 +9,11 @@ random.effects(object, ...)
 
 \method{random.effects}{summary.clme}(object, ...)
 }
+\arguments{
+\item{object}{object of class clme.}
+
+\item{...}{space for additional arguments}
+}
 \description{
 Extract random effects
 
