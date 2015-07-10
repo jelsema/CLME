@@ -26,6 +26,8 @@ fixed.effects(object, ...)
 
 \method{coefficients}{clme}(object, ...)
 
+\method{coefficients}{clme}(object, ...)
+
 \method{coef}{clme}(object, ...)
 
 \method{coefficients}{summary.clme}(object, ...)
@@ -50,6 +52,8 @@ Extracts the fixed effects estimates from objects of class \code{clme}.
 Extract fixed effects
 
 Extract fixed effects
+
+
 }
 \examples{
 data( rat.blood )
