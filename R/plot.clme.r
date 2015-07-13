@@ -24,6 +24,7 @@
 #'   plot( clme.out )
 #' }
 #' 
+#' @import graphics
 #' @export
 #' 
 plot.clme <- function(x , ...){
@@ -92,6 +93,9 @@ plot.clme <- function(x , ...){
 #'   clme.out2 <- summary( clme.out )
 #'   plot( clme.out2 )
 #' }
+#' 
+#' 
+#' @import graphics
 #' 
 #' @export
 #' 
@@ -213,7 +217,4 @@ plot.summary.clme <-
   }
 }
 
-
-
-all.equal( c(1,2,3), c(2,3,4)-1 )
 

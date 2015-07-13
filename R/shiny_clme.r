@@ -47,7 +47,6 @@ shiny_clme <- function(){
 #'
 #' @rdname shiny_clme
 #' 
-#' @importFrom openxlsx read.xlsx
 #' @export
 #' 
 
@@ -244,9 +243,14 @@ shinyUI_clme <- fluidPage(
 
 #'
 #' @rdname shiny_clme
+#' 
+#' 
+#' @import graphics
+#' @importFrom openxlsx read.xlsx
+#' @importFrom utils read.csv
+#' 
 #' @export
 #' 
-
 shinyServer_clme <- function(input, output) {
     
   clme_out <- reactive({

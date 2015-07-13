@@ -63,6 +63,8 @@
 #'                                                 , decreasing=FALSE ))
 #' }
 #' 
+#' 
+#' @importFrom utils combn
 #' @export
 #' 
 create.constraints <- function( P1, constraints ){
