@@ -19,6 +19,7 @@
 #' @param mySolver solver to use in isotonization (passed to \code{activeSet}). 
 #' @param em.eps criterion for convergence for the EM algorithm. 
 #' @param em.iter maximum number of iterations permitted for the EM algorithm. 
+#' @param all_pair logical, whether all pairwise comparisons should be considered (constraints will be ignored).
 #' @param verbose if \code{TRUE}, function prints messages on progress of the EM algorithm.
 #' @param ... space for additional arguments.
 #'
@@ -79,7 +80,7 @@
 clme_em   <- function( Y, X1, X2 = NULL, U = NULL, Nks = nrow(X1),
                      Qs = ncol(U), constraints, mq.phi = NULL, tsf = lrt.stat, 
                      tsf.ind = w.stat.ind, mySolver="LS", em.iter = 500, 
-                     em.eps =  0.0001, verbose = FALSE, ... ){
+                     em.eps = 0.0001, all_pair = FALSE, dvar=NULL, verbose = FALSE, ... ){
   
   
   ##
@@ -98,6 +99,10 @@ clme_em   <- function( Y, X1, X2 = NULL, U = NULL, Nks = nrow(X1),
   } else{
     em_results <- do.call( "clme_em_mixed" , new_call )
   }
+  
+  
+  
+  
   
   return( em_results )
 

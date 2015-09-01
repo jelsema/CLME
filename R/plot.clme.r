@@ -38,7 +38,14 @@ plot.clme <- function(x , ...){
   x$p.value.ind <- rep( 1, length(x$ts.ind) )
   x$p.value     <- rep( 1, length(x$ts.glb) )
   
-  plot(x)
+  # plot(x)
+  
+  plt_call  <- as.list( environment() )  
+  dots      <- as.list(substitute(list(...)))[-1L]
+  new_call  <- append( plt_call, dots )
+  
+  do.call( "plot" , new_call )
+   
   
 }
 
@@ -116,6 +123,8 @@ plot.summary.clme <-
   r     <- nrow(A)
   p1    <- max(A)
   
+  all_pair <- object$all_pair
+  
   if( ci ){ 
     ci.wd <- min( 1/p1 , 1/15 ) 
     CIs <- confint(object, level=(1-alpha))
@@ -160,11 +169,13 @@ plot.summary.clme <-
       axis(side=1, at=1:p1, labels=names(theta1), ...)
   
       # Connect the contrasts with solid/dashed lines
-      for( ii in 1:r){  
-        idx <- A[ii,]
-        if( object$p.value.ind[ii]  > alpha ){ lty <- 1 }
-        if( object$p.value.ind[ii] <= alpha ){ lty <- 2 }
-        points( idx , theta[idx] , lty=lty , lwd=2 , type="l")
+      if( all_pair==FALSE  ){
+        for( ii in 1:r){  
+          idx <- A[ii,]
+          if( object$p.value.ind[ii]  > alpha ){ lty <- 1 }
+          if( object$p.value.ind[ii] <= alpha ){ lty <- 2 }
+          points( idx , theta[idx] , lty=lty , lwd=2 , type="l")
+        }
       }
   
       ## Add the CIs if necessary

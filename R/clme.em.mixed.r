@@ -6,7 +6,7 @@
 clme_em_mixed <- function( Y, X1, X2 = NULL, U = NULL, Nks = dim(X1)[1],
                      Qs = dim(U)[2], constraints, mq.phi = NULL, tsf = lrt.stat, 
                      tsf.ind = w.stat.ind, mySolver="LS", em.iter = 500, 
-                     em.eps =  0.0001, verbose = FALSE, ... ){
+                     em.eps = 0.0001, all_pair = FALSE, var=NULL, verbose = FALSE, ... ){
   
   
   if( verbose==TRUE ){
@@ -56,6 +56,10 @@ clme_em_mixed <- function( Y, X1, X2 = NULL, U = NULL, Nks = dim(X1)[1],
                 FUN=function(k, N1, N2, R ){ sum( R[N1[k]:N2[k]]^2 ) / Nks[k] } ,
                 N1, N2, R)
   
+  if( any(var_fix) ){
+    ssq[ var_fix==1 ] <- dvar[var_fix==1]
+  }
+  
   ssqvec  <- rep(  ssq,Nks)  
   
   
@@ -104,6 +108,11 @@ clme_em_mixed <- function( Y, X1, X2 = NULL, U = NULL, Nks = dim(X1)[1],
                     } ,
                   ssq , Nks , N1 , N2 , trace.vec )
     
+    var_fix <- (ssq == 0 )
+    if( any(var_fix) ){
+      ssq[ var_fix==1 ] <- dvar[var_fix==1]
+    }
+    
     ssqvec  <- rep(  ssq,Nks)
         
     # Step 2a: Estimate Thetas
@@ -117,12 +126,10 @@ clme_em_mixed <- function( Y, X1, X2 = NULL, U = NULL, Nks = dim(X1)[1],
     U1         <- apply( U , 2 , FUN=function(x,sq){x*sq} , 1/sqrt(ssqvec) )
     tusu       <- t(U1) %*% U1
     diag(tusu) <- diag(tusu) + 1/tsqvec
-    tusui      <- solve(tusu)    
-    
+    tusui      <- solve(tusu)
     
     #theta[1:P1]  <- theta1[ 1:P1] + ginv(t(X1)%*%SigmaI%*%X1) %*% ((t(X1)%*%PsiI)%*%R )
     theta[1:P1]  <- theta1[1:P1] + ginv( t(X1)%*%(X1/ssqvec) ) %*% (X1SiR - X1SiU%*%(tusui%*%USiR))
-    
     
     if( is.null(X2)==FALSE ){
       #theta[(P1+1):(P1+P2)] <- ( theta1[ (P1+1):(P1+P2)] + 
@@ -158,14 +165,17 @@ clme_em_mixed <- function( Y, X1, X2 = NULL, U = NULL, Nks = dim(X1)[1],
     XSiU      <- t(X) %*% (U/ssqvec)
     cov.theta <- solve( XSiX - XSiU%*%tusui%*%t(XSiU) )
     
-    ## Apply order constraints / isotonization
-    if( mySolver=="GLS"){
-      wts <- solve( cov.theta )[1:P1, 1:P1, drop=FALSE]
-    } else{
-      wts <- diag( solve(cov.theta) )[1:P1]
-    }
-    theta[1:P1] <- activeSet(A, y = theta[1:P1], weights = wts, mySolver=mySolver  )$x
     
+    ## Apply order constraints / isotonization
+    if( all_pair==FALSE ){
+      if( mySolver=="GLS"){
+        wts <- solve( cov.theta )[1:P1, 1:P1, drop=FALSE]
+      } else{
+        wts <- diag( solve(cov.theta) )[1:P1]
+      }
+      
+      theta[1:P1] <- activeSet(A, y = theta[1:P1], weights = wts, mySolver=mySolver )$x
+    }
     
     # Evaluate some convergence criterion
     rel.change <- abs(theta - theta1)/theta1
@@ -183,9 +193,11 @@ clme_em_mixed <- function( Y, X1, X2 = NULL, U = NULL, Nks = dim(X1)[1],
     message("EM Algorithm ran for " , iteration , " iterations." )
   }
   
+  wts <- diag( solve(cov.theta) )[1:P1]
+  
   theta        <- c(theta)
   names(theta) <- theta.names
-  
+
   theta.null       <- theta
   theta.null[1:P1] <- activeSet( Anull, y = theta[1:P1], weights = wts , mySolver=mySolver )$x
   

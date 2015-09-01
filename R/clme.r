@@ -12,6 +12,7 @@
 #' @param tsf function to calculate the test statistic. 
 #' @param tsf.ind function to calculate the test statistic for individual constrats. See Details for further information. 
 #' @param mySolver solver to use in isotonization (passed to \code{activeSet}). 
+#' @param all_pair logical, whether all pairwise comparisons should be considered (constraints will be ignored).
 #' @param verbose optional. Vector of 3 logicals. The first causes printing of iteration step, the second two are passed as the \code{verbose} argument to the functions \code{\link{minque}} and \code{\link{clme_em}}, respectively. 
 #' @param levels optional list to manually specify names for constrained coefficients. See Details.
 #' @param ncon the number of variables in \code{formula} that are constrained.
@@ -95,9 +96,9 @@
 #' 
 clme <-
 function( formula, data, gfix=NULL, constraints=list(), tsf=lrt.stat, tsf.ind=w.stat.ind, 
-          mySolver="LS", verbose=c(FALSE,FALSE,FALSE), levels=NULL, ncon=1, ... ){
+          mySolver="LS", all_pair=FALSE, verbose=c(FALSE,FALSE,FALSE), levels=NULL, ncon=1, ... ){
   
-  cc <- match.call( expand.dots=TRUE )  
+  cc <- match.call( expand.dots=TRUE )
   
   if( ncon==1 & !is.null(levels) ){
     if( is.list(levels) ){
@@ -150,10 +151,19 @@ function( formula, data, gfix=NULL, constraints=list(), tsf=lrt.stat, tsf.ind=w.
   }  
   
   ## Assess the constraints
-  cust.const <- is.matrix( constraints$A )
+  cust_const <- is.matrix( constraints$A )
   prnt_warn <- ""
   
-  if( cust.const == TRUE ){
+  if( all_pair==TRUE ){
+    Amat        <- t(combn( 1:P1 , m=2 ))
+    Bmat        <- Amat
+    Anull       <- rbind( Amat, Amat[,2:1] )
+    constraints <- list( A=Amat, B=Bmat, Anull=Anull )
+    cust_const  <- TRUE 
+  }
+  
+  
+  if( cust_const == TRUE ){
     if( !is.numeric(constraints$A) ){
       stop( "'constraints$A' must be numeric" )
     }    
@@ -189,7 +199,7 @@ function( formula, data, gfix=NULL, constraints=list(), tsf=lrt.stat, tsf.ind=w.
   }
   
   ## Revert to LRT if necessary
-  if( cust.const==TRUE & identical( tsf , w.stat ) & is.null(constraints$B) ){
+  if( cust_const==TRUE & identical( tsf , w.stat ) & is.null(constraints$B) ){
     prnt_warn <- paste( prnt_warn, "\nWilliams type statistic selected with custom constraints, but 
               'constraints$B' is NULL. Reverting to LRT statistic")
     tsf <- lrt.stat
@@ -197,7 +207,7 @@ function( formula, data, gfix=NULL, constraints=list(), tsf=lrt.stat, tsf.ind=w.
     
   
   ## Set up search grid if using defaults
-  if( cust.const==FALSE ){
+  if( cust_const==FALSE ){
     search.grid <- expand.grid( constraints$order , 
                                 constraints$decreasing ,
                                 constraints$node )  
@@ -241,11 +251,11 @@ function( formula, data, gfix=NULL, constraints=list(), tsf=lrt.stat, tsf.ind=w.
   ##
   
   ## Obtain tau if needed
-  if( is.null(U)==FALSE ){
+  if( is.null(U) ){
+    mq.phi <- NULL
+  } else{
     mq.phi <- minque( Y=Y , X1=X1 , X2=X2 , U=U , Nks=Nks , Qs=Qs ,
                       verbose=verbose[2], ... )
-  } else{
-    mq.phi <- NULL
   }
   
   ## EM for the observed data
@@ -259,7 +269,7 @@ function( formula, data, gfix=NULL, constraints=list(), tsf=lrt.stat, tsf.ind=w.
   
   for( mnk in 1:MNK ){
     
-    if( cust.const==FALSE ){
+    if( cust_const==FALSE ){
       grid.row <- list( order     = search.grid[mnk,1], 
                         node      = search.grid[mnk,3], 
                         decreasing= search.grid[mnk,2])       
@@ -269,10 +279,10 @@ function( formula, data, gfix=NULL, constraints=list(), tsf=lrt.stat, tsf.ind=w.
     clme.temp <- clme_em( Y=Y, X1=X1, X2=X2, U=U, Nks=Nks, 
                           Qs=Qs, constraints=loop.const, mq.phi=mq.phi,
                           tsf=tsf, tsf.ind=tsf.ind, mySolver=mySolver,
-                          verbose=verbose[3], ... )    
+                          verbose=verbose[3], all_pair=all_pair, ... )    
     
     # If global test stat is larger, update current estimate of order  
-    if( cust.const==FALSE ){
+    if( cust_const==FALSE ){
       update.max <- (mnk==1) + (clme.temp$ts.glb > ts.max)
     } else{
       update.max <- 1
@@ -286,7 +296,7 @@ function( formula, data, gfix=NULL, constraints=list(), tsf=lrt.stat, tsf.ind=w.
     
   }
   
-  if( cust.const==FALSE ){
+  if( cust_const==FALSE ){
     grid.row <- list( order     = search.grid[est.order,1], 
                       node      = search.grid[est.order,3],
                       decreasing= search.grid[est.order,2]) 
@@ -297,7 +307,6 @@ function( formula, data, gfix=NULL, constraints=list(), tsf=lrt.stat, tsf.ind=w.
   
   ## Calculate the residuals from unconstrained model
   mr <- clme_resids( formula=formula, data=data, gfix=gfix, ncon=ncon )
-  
 
   ## Add some values to the output object
   class(clme.out)       <- "clme"
@@ -310,13 +319,22 @@ function( formula, data, gfix=NULL, constraints=list(), tsf=lrt.stat, tsf.ind=w.
   names(clme.out$ssq)   <- names(Nks)
   names(clme.out$tsq)   <- names(Qs)
   
-  clme.out$cust.const  <- cust.const
+  clme.out$cust_const  <- cust_const
+  clme.out$all_pair    <- all_pair
   clme.out$ncon        <- ncon
   clme.out$tsf         <- tsf
   clme.out$tsf.ind     <- tsf.ind
   
+  clme.out$random.effects <- mr$xi
+  clme.out$gfix           <- Nks
+  clme.out$gfix_group     <- gfix
+  clme.out$gran           <- Qs
+  clme.out$P1             <- P1
+  clme.out$mq.phi         <- mq.phi
+  
   clme.out$nsim <- eval(cc$nsim)
   clme.out$seed <- eval(cc$seed)
+  
   
   if( !is.null(levels) ){
     names(clme.out$theta)[1:P1]        <- xlev
@@ -331,17 +349,13 @@ function( formula, data, gfix=NULL, constraints=list(), tsf=lrt.stat, tsf.ind=w.
     colnames(clme.out$residuals) <- c("PA", "SS", "FM")
   }
   
-  clme.out$random.effects <- mr$xi
-  clme.out$gfix           <- Nks
-  clme.out$gfix_group     <- gfix
-  clme.out$gran           <- Qs
-  clme.out$P1             <- P1
-  clme.out$mq.phi         <- mq.phi
-  
   ## Report the estimated order
-  clme.out$order <- list()
-  clme.out$order$est_order   <- est.order
-  if( cust.const == TRUE ){
+  clme.out$order           <- list()
+  clme.out$order$est_order <- est.order
+  
+  if( all_pair==TRUE ){
+    clme.out$order$order <- "unconstrained"
+  } else if( cust_const == TRUE ){
     clme.out$order$estimated <- FALSE
     clme.out$order$order     <- "custom"
     clme.out$order$node      <- NULL
