@@ -6,7 +6,7 @@
 clme_em_mixed <- function( Y, X1, X2 = NULL, U = NULL, Nks = dim(X1)[1],
                      Qs = dim(U)[2], constraints, mq.phi = NULL, tsf = lrt.stat, 
                      tsf.ind = w.stat.ind, mySolver="LS", em.iter = 500, 
-                     em.eps = 0.0001, all_pair = FALSE, var=NULL, verbose = FALSE, ... ){
+                     em.eps = 0.0001, all_pair = FALSE, dvar = NULL, verbose = FALSE, ... ){
   
   
   if( verbose==TRUE ){
@@ -56,6 +56,7 @@ clme_em_mixed <- function( Y, X1, X2 = NULL, U = NULL, Nks = dim(X1)[1],
                 FUN=function(k, N1, N2, R ){ sum( R[N1[k]:N2[k]]^2 ) / Nks[k] } ,
                 N1, N2, R)
   
+  var_fix <- (ssq <= .Machine$double.eps )
   if( any(var_fix) ){
     ssq[ var_fix==1 ] <- dvar[var_fix==1]
   }

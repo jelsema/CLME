@@ -1,19 +1,19 @@
 citHeader("To cite CLME in publications use:")
 
 citEntry(entry = "Article",
-  title        = "{CLME}: An {R} Package  for Linear Mixed Effects Models under Inequality Constraints",
+  title        = "{CLME}: An {R} Package  for Linear Mixed Effects Models Under Inequality Constraints",
   author       = personList(as.person("Casey M. Jelsema"),
                    as.person("Shyamal D. Peddada")),
   journal      = "(under review)",
   year         = "2015",
   textVersion  =
   paste("Casey M. Jelsema and Shyamal D. Peddada (2015).",
-        "CLME: An R Package  for Linear Mixed Effects Models under Inequality Constraints.",
+        "CLME: An R Package  for Linear Mixed Effects Models Under Inequality Constraints.",
         "(under review)")
 )
 
 citEntry(entry = "Article",
-  title        = "Linear Mixed Efects Models under Inequality Constraints with Applications",
+  title        = "Linear Mixed Efects Models Under Inequality Constraints with Applications",
   author       = personList(as.person("Laura Farnan"),
                    as.person("Anastasia Ivanova"),
                    as.person("Shyamal D. Peddada")),
@@ -26,7 +26,7 @@ citEntry(entry = "Article",
 
   textVersion  =
   paste("Laura Farnan, Anastasia Ivanova, and Shyamal D. Peddada (2014).",
-        "Linear Mixed Efects Models under Inequality Constraints with Applications.",
+        "Linear Mixed Efects Models Under Inequality Constraints with Applications.",
         "PLOS ONE, 9(1).",
         "URL http://www.plosone.org/article/info:doi/10.1371/journal.pone.0084778.")
 )

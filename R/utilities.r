@@ -540,9 +540,9 @@ fixed.effects.clme <- function( object , ... ){
 #' @method coefficients clme
 #' @export
 #' 
-fixed.effects.clme <- function( object , ... ){
-  fixef.clme( object, ... )
-}
+#fixed.effects.clme <- function( object , ... ){
+#  fixef.clme( object, ... )
+#}
 
 #' @rdname fixef.clme
 #' @method coefficients clme
@@ -1081,21 +1081,6 @@ residuals.summary.clme <- function( object, type="FM", ... ){
 
 
 
-#' Residual variance components
-#' 
-#' @param object object of class \code{\link{clme}}.
-#' @param ... space for additional arguments
-#' 
-#' @description
-#' Extract residual variance components for objects of class \code{clme}.
-#'
-#' @export
-#' 
-sigma <- function( object, ...){
-  UseMethod("sigma")
-}
-
-
 
 #' Residual variance components
 #'
@@ -1122,6 +1107,7 @@ sigma <- function( object, ...){
 #'                  
 #' sigma( clme.out )
 #' 
+#' @importFrom lme4 sigma
 #' @method sigma clme
 #' @export
 #' 
@@ -1163,25 +1149,19 @@ sigma.summary.clme <- function( object, ...){
 
 
 
+
 #' Variance components
 #' 
-#' @param object object from which to extract variance components
-#' @param ... space for additional arguments.
+#' @param x object of class \code{\link{summary.clme}}.
+#' @param sigma (unused at present).
+#' @param rdig number of digits to round to (unused at present).
 #' 
 #' @rdname VarCorr
 #' @export
 #' 
-VarCorr <- function( object, ...){ UseMethod("VarCorr") }
-
-
-#' Variance components
-#' 
-#' @rdname VarCorr
-#' @export
-#' 
-VarCorr.summary.clme <- function( object, ...){
-  class(object) <- "clme"
-  VarCorr(object, ...)
+VarCorr.summary.clme <- function( x, sigma, rdig ){
+  class(x) <- "clme"
+  VarCorr(x, sigma=1, rdig=4)
 }
 
 
@@ -1213,18 +1193,18 @@ VarCorr.summary.clme <- function( object, ...){
 #' @method VarCorr clme
 #' @export
 #' 
-VarCorr.clme <- function(object, ...){
+VarCorr.clme <- function(x, sigma, rdig ){
   ## Print out variances or SDs
   ## Defines tiny class "varcorr_clme" to handle printing
   ## using the method: print.varcorr_clme
-  if( !is.clme(object) ){
-    stop("'object' is not of class clme")
+  if( !is.clme(x) ){
+    stop("'x' is not of class clme")
   } else{
-    varcomps <- matrix( c(object$tsq, object$ssq ), ncol=1 )
-    rnames   <- c( "Source", names(object$tsq), names(object$ssq) )
+    varcomps <- matrix( sqrt(c(x$tsq, x$ssq )), ncol=1 )
+    rnames   <- c( "Source", names(x$tsq), names(x$ssq) )
     rownames(varcomps) <- rnames[-1]
-    colnames(varcomps) <- "Variance"
-    class(varcomps)    <- "varcorr_clme"
+    colnames(varcomps) <- "Std. Error"
+    #class(varcomps)    <- "varcorr_clme"
     return( varcomps )
   }
 }
@@ -1261,15 +1241,17 @@ VarCorr.clme <- function(object, ...){
 #' @exportMethod print varcorr_clme
 #' 
 print.varcorr_clme <- function(object, rdig=5, ...){
-
+  
   rnames   <- c( "Source", rownames( object ) )
   rnames   <- str_pad(rnames, width=max(nchar(rnames)), side = "right", pad = " ")
   vars     <- format( object , digits=rdig )
-    
+
   cat( rnames[1], "\t" , "Variance" )
   for( ii in 1:length(vars) ){
     cat( "\n", rnames[ii+1], "\t" , vars[ii] )
   }
+  
+  return(NULL)
   
 }
 

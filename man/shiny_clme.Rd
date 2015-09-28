@@ -641,31 +641,44 @@
   .. .. .. .. .. .. .. .. .. .. .. .. .. ..- attr(*, "class")= chr "shiny.tag"
   .. .. .. .. .. .. .. .. .. .. .. .. ..$ :List of 3
   .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ name    : chr "input"
-  .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ attribs :List of 12
+  .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ attribs :List of 14
   .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ class                  : chr "js-range-slider"
   .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ id                     : chr "alpha"
-  .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ data-min               : num 0
-  .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ data-max               : num 0.15
-  .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ data-from              : num 0.05
-  .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ data-step              : num 0.01
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ data-min               : chr "0"
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ data-max               : chr "0.15"
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ data-from              : chr "0.05"
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ data-step              : chr "0.01"
   .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ data-grid              : chr "true"
   .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ data-grid-num          : num 7.5
   .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ data-grid-snap         : chr "false"
   .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ data-prettify-separator: chr ","
   .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ data-keyboard          : chr "true"
   .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ data-keyboard-step     : num 6.67
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ data-drag-interval     : chr "true"
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ data-data-type         : chr "number"
   .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ children: list()
   .. .. .. .. .. .. .. .. .. .. .. .. .. ..- attr(*, "class")= chr "shiny.tag"
   .. .. .. .. .. .. .. .. .. .. .. ..- attr(*, "class")= chr "shiny.tag"
-  .. .. .. .. .. .. .. .. .. .. .. ..- attr(*, "html_dependencies")=List of 1
+  .. .. .. .. .. .. .. .. .. .. .. ..- attr(*, "html_dependencies")=List of 2
   .. .. .. .. .. .. .. .. .. .. .. .. ..$ :List of 8
   .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ name      : chr "ionrangeslider"
-  .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ version   : chr "2.0.6"
+  .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ version   : chr "2.0.12"
   .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ src       :List of 1
   .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ href: chr "shared/ionrangeslider"
   .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ meta      : NULL
   .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ script    : chr "js/ion.rangeSlider.min.js"
   .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ stylesheet: chr [1:2] "css/ion.rangeSlider.css" "css/ion.rangeSlider.skinShiny.css"
+  .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ head      : NULL
+  .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ attachment: NULL
+  .. .. .. .. .. .. .. .. .. .. .. .. .. ..- attr(*, "class")= chr "html_dependency"
+  .. .. .. .. .. .. .. .. .. .. .. .. ..$ :List of 8
+  .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ name      : chr "strftime"
+  .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ version   : chr "0.9.2"
+  .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ src       :List of 1
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ href: chr "shared/strftime"
+  .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ meta      : NULL
+  .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ script    : chr "strftime-min.js"
+  .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ stylesheet: NULL
   .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ head      : NULL
   .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ attachment: NULL
   .. .. .. .. .. .. .. .. .. .. .. .. .. ..- attr(*, "class")= chr "html_dependency"
@@ -1032,7 +1045,7 @@
   .. .. .. .. .. .. .. .. .. .. .. .. ..$ :List of 3
   .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ name    : chr "a"
   .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ attribs :List of 3
-  .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ href       : chr "#tab-3376-1"
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ href       : chr "#tab-2238-1"
   .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ data-toggle: chr "tab"
   .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ data-value : chr "Data Summary"
   .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ children:List of 1
@@ -1046,7 +1059,7 @@
   .. .. .. .. .. .. .. .. .. .. .. .. ..$ :List of 3
   .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ name    : chr "a"
   .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ attribs :List of 3
-  .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ href       : chr "#tab-3376-2"
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ href       : chr "#tab-2238-2"
   .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ data-toggle: chr "tab"
   .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ data-value : chr "Model Summary"
   .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ children:List of 1
@@ -1060,7 +1073,7 @@
   .. .. .. .. .. .. .. .. .. .. .. .. ..$ :List of 3
   .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ name    : chr "a"
   .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ attribs :List of 3
-  .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ href       : chr "#tab-3376-3"
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ href       : chr "#tab-2238-3"
   .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ data-toggle: chr "tab"
   .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ data-value : chr "Model Plot"
   .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ children:List of 1
@@ -1074,7 +1087,7 @@
   .. .. .. .. .. .. .. .. .. .. .. .. ..$ :List of 3
   .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ name    : chr "a"
   .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ attribs :List of 3
-  .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ href       : chr "#tab-3376-4"
+  .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ href       : chr "#tab-2238-4"
   .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ data-toggle: chr "tab"
   .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ data-value : chr "Model Data"
   .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ children:List of 1
@@ -1092,7 +1105,7 @@
   .. .. .. .. .. .. .. .. .. .. .. ..$ attribs :List of 3
   .. .. .. .. .. .. .. .. .. .. .. .. ..$ class     : chr "tab-pane active"
   .. .. .. .. .. .. .. .. .. .. .. .. ..$ data-value: chr "Data Summary"
-  .. .. .. .. .. .. .. .. .. .. .. .. ..$ id        : chr "tab-3376-1"
+  .. .. .. .. .. .. .. .. .. .. .. .. ..$ id        : chr "tab-2238-1"
   .. .. .. .. .. .. .. .. .. .. .. ..$ children:List of 2
   .. .. .. .. .. .. .. .. .. .. .. .. ..$ :List of 3
   .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ name    : chr "div"
@@ -1115,7 +1128,7 @@
   .. .. .. .. .. .. .. .. .. .. .. ..$ attribs :List of 3
   .. .. .. .. .. .. .. .. .. .. .. .. ..$ class     : chr "tab-pane"
   .. .. .. .. .. .. .. .. .. .. .. .. ..$ data-value: chr "Model Summary"
-  .. .. .. .. .. .. .. .. .. .. .. .. ..$ id        : chr "tab-3376-2"
+  .. .. .. .. .. .. .. .. .. .. .. .. ..$ id        : chr "tab-2238-2"
   .. .. .. .. .. .. .. .. .. .. .. ..$ children:List of 1
   .. .. .. .. .. .. .. .. .. .. .. .. ..$ :List of 3
   .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ name    : chr "pre"
@@ -1130,7 +1143,7 @@
   .. .. .. .. .. .. .. .. .. .. .. ..$ attribs :List of 3
   .. .. .. .. .. .. .. .. .. .. .. .. ..$ class     : chr "tab-pane"
   .. .. .. .. .. .. .. .. .. .. .. .. ..$ data-value: chr "Model Plot"
-  .. .. .. .. .. .. .. .. .. .. .. .. ..$ id        : chr "tab-3376-3"
+  .. .. .. .. .. .. .. .. .. .. .. .. ..$ id        : chr "tab-2238-3"
   .. .. .. .. .. .. .. .. .. .. .. ..$ children:List of 1
   .. .. .. .. .. .. .. .. .. .. .. .. ..$ :List of 3
   .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ name    : chr "div"
@@ -1146,7 +1159,7 @@
   .. .. .. .. .. .. .. .. .. .. .. ..$ attribs :List of 3
   .. .. .. .. .. .. .. .. .. .. .. .. ..$ class     : chr "tab-pane"
   .. .. .. .. .. .. .. .. .. .. .. .. ..$ data-value: chr "Model Data"
-  .. .. .. .. .. .. .. .. .. .. .. .. ..$ id        : chr "tab-3376-4"
+  .. .. .. .. .. .. .. .. .. .. .. .. ..$ id        : chr "tab-2238-4"
   .. .. .. .. .. .. .. .. .. .. .. ..$ children:List of 1
   .. .. .. .. .. .. .. .. .. .. .. .. ..$ :List of 3
   .. .. .. .. .. .. .. .. .. .. .. .. .. ..$ name    : chr "div"
@@ -1191,7 +1204,7 @@
   .. ..$ version   : chr "3.3.1"
   .. ..$ src       :List of 2
   .. .. ..$ href: chr "shared/bootstrap"
-  .. .. ..$ file: chr "/home/statman/R/x86_64-pc-linux-gnu-library/3.2/shiny/www/shared/bootstrap"
+  .. .. ..$ file: chr "/Library/Frameworks/R.framework/Versions/3.2/Resources/library/shiny/www/shared/bootstrap"
   .. ..$ meta      :List of 1
   .. .. ..$ viewport: chr "width=device-width, initial-scale=1"
   .. ..$ script    : chr [1:3] "js/bootstrap.min.js" "shim/html5shiv.min.js" "shim/respond.min.js"

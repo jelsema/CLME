@@ -375,7 +375,7 @@ print.summary.clme <- function( x, alpha=0.05, digits=4, ...){
                        paste0(cipct, "% lower"), paste0(cipct, "% upper"))
   tvals <- .align_table.clme( tvals )
   
-  cat( "\n\nFixed effect coefficients (theta): \n")
+  cat( "\nFixed effect coefficients (theta): \n")
   cat( paste0(colnames(tvals), collapse="  ") )
   for( ii in 1:length(est) ){
     cat( "\n", paste0( c(tvals[ii,]),  collapse="  ") )

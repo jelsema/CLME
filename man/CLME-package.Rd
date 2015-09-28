@@ -19,7 +19,7 @@ National Institute of Environmental Health Sciences (Z01 ES101744).
 \tabular{ll}{
 Package: \tab CLME\cr
 Type:    \tab Package\cr
-Version: \tab 2.0.4\cr
+Version: \tab 2.0.5\cr
 Date:    \tab 2015-05-18\cr
 License: \tab GLP-3  \cr
 }

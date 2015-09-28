@@ -4,7 +4,7 @@
 \alias{print.varcorr_clme}
 \title{Printout for variance components}
 \usage{
-\method{print}{varcorr_clme}(object, rdig = 5, ...)
+print.varcorr_clme(object, rdig = 5, ...)
 }
 \arguments{
 \item{object}{object of class \code{\link{clme}}.}

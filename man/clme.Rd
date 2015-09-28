@@ -5,8 +5,8 @@
 \title{Constrained Inference for Linear Mixed Effects Models}
 \usage{
 clme(formula, data, gfix = NULL, constraints = list(), tsf = lrt.stat,
-  tsf.ind = w.stat.ind, mySolver = "LS", verbose = c(FALSE, FALSE, FALSE),
-  levels = NULL, ncon = 1, ...)
+  tsf.ind = w.stat.ind, mySolver = "LS", all_pair = FALSE,
+  verbose = c(FALSE, FALSE, FALSE), levels = NULL, ncon = 1, ...)
 }
 \arguments{
 \item{formula}{a formula expression. The constrained effect(s) must come before any unconstrained covariates on the right-hand side of the expression. The first \code{ncon} terms will be assumed to be constrained.}
@@ -22,6 +22,8 @@ clme(formula, data, gfix = NULL, constraints = list(), tsf = lrt.stat,
 \item{tsf.ind}{function to calculate the test statistic for individual constrats. See Details for further information.}
 
 \item{mySolver}{solver to use in isotonization (passed to \code{activeSet}).}
+
+\item{all_pair}{logical, whether all pairwise comparisons should be considered (constraints will be ignored).}
 
 \item{verbose}{optional. Vector of 3 logicals. The first causes printing of iteration step, the second two are passed as the \code{verbose} argument to the functions \code{\link{minque}} and \code{\link{clme_em}}, respectively.}
 

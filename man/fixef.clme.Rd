@@ -26,8 +26,6 @@ fixed.effects(object, ...)
 
 \method{coefficients}{clme}(object, ...)
 
-\method{coefficients}{clme}(object, ...)
-
 \method{coef}{clme}(object, ...)
 
 \method{coefficients}{summary.clme}(object, ...)
