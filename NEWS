@@ -1,6 +1,6 @@
 ===========================
 PROJECTED DEVELOPMENT:
-- Better handling of environments (currently non-existant)
+- Better handling of environments (currently non-existent)
 - Better formula parsing (hopefully to remove dependence on lme4::lFormula 
   so that I don't have to add/drop a trivial random effect).
 - Improvements to GUI in shiny_clme(), particularly:
