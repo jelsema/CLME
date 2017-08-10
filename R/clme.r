@@ -5,7 +5,9 @@
 #'
 #' @rdname clme
 #'
-#' @param formula a formula expression. The constrained effect(s) must come before any unconstrained covariates on the right-hand side of the expression. The first \code{ncon} terms will be assumed to be constrained.
+#' @param formula a formula expression. The constrained effect must come before any unconstrained 
+#'                covariates on the right-hand side of the expression. The constrained effect should 
+#'                be an ordered factor.
 #' @param data data frame containing the variables in the model. 
 #' @param gfix optional vector of group levels for residual variances. Data should be sorted by this value.
 #' @param constraints optional list containing the constraints. See Details for further information. 
@@ -91,6 +93,11 @@
 #' clme.out <- clme(mcv ~ time + temp + sex + (1|id), data=rat.blood , 
 #'                  constraints=cons, seed=42, nsim=10, ncon=1)
 #' 
+#' @references
+#' Jelsema, C. M. and Peddada, S. D. (2016). 
+#' CLME: An R Package for Linear Mixed Effects Models under Inequality Constraints. 
+#' \emph{Journal of Statistical Software}, 75(1), 1-32. doi:10.18637/jss.v075.i01
+#' 
 #' @importFrom MASS ginv
 #' @export
 #' 
@@ -112,6 +119,14 @@ function( formula, data, gfix=NULL, constraints=list(), tsf=lrt.stat, tsf.ind=w.
   } else{
     xlev <- NULL
   }
+  
+  ## If provided, sort the data by gfix
+  if( !is.null(gfix) ){
+    data$clme_gfix <- gfix
+    data           <- data[ with(data, order(clme_gfix)), ]
+    data$clme_gfix <- NULL
+  }
+  
   
   mmat     <- model_terms_clme( formula, data, ncon )
   formula2 <- mmat$formula
@@ -192,10 +207,10 @@ function( formula, data, gfix=NULL, constraints=list(), tsf=lrt.stat, tsf.ind=w.
   
   ## Make sure test stat function is okay
   if( is.function(tsf)==FALSE ){
-    stop("'tsf' is not a valid function")
+    stop("'tsf' is not a function")
   }
   if( is.function(tsf.ind)==FALSE ){
-    stop("'tsf.ind' is not a valid function")
+    stop("'tsf.ind' is not a function")
   }
   
   ## Revert to LRT if necessary
@@ -305,6 +320,9 @@ function( formula, data, gfix=NULL, constraints=list(), tsf=lrt.stat, tsf.ind=w.
     est_const <- constraints
   }
   
+  constraints$A <- est_const$A
+  constraints$B <- est_const$B
+  
   ## Calculate the residuals from unconstrained model
   mr <- clme_resids( formula=formula, data=data, gfix=gfix, ncon=ncon )
 
@@ -312,7 +330,7 @@ function( formula, data, gfix=NULL, constraints=list(), tsf=lrt.stat, tsf.ind=w.
   class(clme.out)       <- "clme"
   clme.out$call         <- cc  
   clme.out$formula      <- mmat$formula
-  clme.out$constraints  <- list( A=est_const$A, B=est_const$B )
+  clme.out$constraints  <- constraints
   clme.out$dframe       <- mmat$dframe
   
   names(clme.out$theta) <- c( colnames(X1), colnames(X2) )
