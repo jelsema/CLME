@@ -140,7 +140,7 @@ w.stat.ind <- function( theta , cov.theta , B , A , ...  ){
 
 lrt.stat <- function( theta, theta.null, cov.theta, ... ){  
   theta.diff <- theta - theta.null  
-  test.stat  <- c( t(theta.diff) %*% cov.theta %*% theta.diff )
+  test.stat  <- 2*c( t(theta.diff) %*% cov.theta %*% theta.diff )
   
   names(test.stat) <- "Bootstrap LRT"
   

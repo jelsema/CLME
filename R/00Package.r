@@ -29,8 +29,8 @@
 #' \tabular{ll}{
 #' Package: \tab CLME\cr
 #' Type:    \tab Package\cr
-#' Version: \tab 2.0.5\cr
-#' Date:    \tab 2015-05-18\cr
+#' Version: \tab 2.0-6\cr
+#' Date:    \tab 2016-11-07\cr
 #' License: \tab GLP-3  \cr
 #' }
 #' 
@@ -78,14 +78,13 @@
 #' The creation of this package \pkg{CLME}, this manual, and the vingette were all supported by the Intermural Research Program of the United States' National Institutes of Health (Z01 ES101744).
 #' 
 #' @references
+#' Jelsema, C. M. and Peddada, S. D. (2016). 
+#' CLME: An R Package for Linear Mixed Effects Models under Inequality Constraints. 
+#' \emph{Journal of Statistical Software}, 75(1), 1-32. doi:10.18637/jss.v075.i01
+#' 
 #' Farnan, L., Ivanova, A., and Peddada, S. D. (2014).
 #' Linear Mixed Efects Models under Inequality Constraints with Applications.
 #' \emph{PLOS ONE}, 9(1). e84778. doi: 10.1371/journal.pone.0084778
-#' \url{http://www.plosone.org/article/info:doi/10.1371/journal.pone.0084778}
-#' 
-#' Jelsema, C.M. and Peddada, S.D. (2015).
-#' CLME: An R Package for Linear Mixed Effects Models under Inequality Constraints.
-#' \emph{(under review)}.
 #' 
 #' 
 #' @import methods

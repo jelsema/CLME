@@ -1,10 +1,10 @@
 ===========================
 PROJECTED DEVELOPMENT:
-- Better handling of environments (currently non-existant)
+- Better handling of environments (currently nonexistent)
 - Better formula parsing (hopefully to remove dependence on lme4::lFormula 
   so that I don't have to add/drop a trivial random effect).
 - Improvements to GUI in shiny_clme(), particularly:
-  - Plots/summary for data when main response variable is not a factor
+  - Plots/summary for data when main independent variable is not a factor
     or when there are multiple variables instead of a single factor
 - Implement unconstrained model testing all pairwise comparisons.
 - Add argument to not bootstrap the random effect residuals. See Morris (2002) doi:10.1016/S0167-7152(02)00041-X
@@ -13,6 +13,9 @@ PROJECTED DEVELOPMENT:
 
 ===========================
 VERSION HISTORY:
+
+Version 2.0-5, 2016-11-07
+- Added reference to JSS manuscript: Jelsema and Peddada (2016)
 
 Version 2.0-4, 2015-07-01
 - Fixed error in logLik.clme.
@@ -62,6 +65,7 @@ Version 1.0-0, 2014-09-09
 ===========================
 Author / Maintainer:
 Casey M. Jelsema
-Biostatistics Branch
-National Intitute of Environmental Health Sciences
+Assistant Professor
+Department of Statistics
+West Virginia University
 <jelsema.casey@gmail.com>

@@ -7,7 +7,6 @@
 #' @param formula a formula expression. The constrained effect(s) must come before any unconstrained covariates on the right-hand side of the expression. The first \code{ncon} terms will be assumed to be constrained.
 #' @param data data frame containing the variables in the model. 
 #' @param gfix optional vector of group levels for residual variances. Data should be sorted by this value.
-#' @param ncon the number of variables in \code{formula} that are constrained.
 #'
 #' @details 
 #' For fixed-effects models \eqn{Y = X\beta + \epsilon}{Y = X*b + e}, residuals are given as \eqn{\hat{e} = Y - X\hat{\beta}}{ ehat = Y - X*betahat}.
@@ -42,7 +41,7 @@
 #' data( rat.blood )
 #' cons <- list(order = "simple", decreasing = FALSE, node = 1 )
 #' 
-#' clme.out <- clme_resids(mcv ~ time + temp + sex + (1|id), data = rat.blood, ncon=1 )
+#' clme.out <- clme_resids(mcv ~ time + temp + sex + (1|id), data = rat.blood )
 #' }
 #' 
 #' @importFrom MASS ginv
@@ -50,13 +49,13 @@
 #' 
 #'
 clme_resids <-
-function( formula, data, gfix=NULL, ncon=1 ){
+function( formula, data, gfix=NULL ){
   
   ##
   ## I should consider a way to condense this so it doesn't need to 
   ## be copied between here, clme() and resid_boot().
   ##
-  suppressMessages( mmat <- model_terms_clme( formula, data, ncon ) )
+  suppressMessages( mmat <- model_terms_clme( formula, data ) )
   formula2 <- mmat$formula
   Y  <- mmat$Y
   P1 <- mmat$P1

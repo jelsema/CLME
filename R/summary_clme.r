@@ -53,7 +53,7 @@ summary.clme <- function( object, nsim=1000, seed=42, verbose=c(FALSE,FALSE), ..
     MNK         <- dim( search.grid )[1]  
   }
   
-  mmat <- model_terms_clme( formula(object), data=object$dframe, ncon=object$ncon )
+  mmat <- model_terms_clme( formula(object), data=object$dframe )
   P1 <- mmat$P1
   X1 <- mmat$X1
   X2 <- mmat$X2
@@ -87,7 +87,7 @@ summary.clme <- function( object, nsim=1000, seed=42, verbose=c(FALSE,FALSE), ..
   }
   
   mr <- clme_resids( formula=formula(object), data=object$dframe, 
-                     gfix=object$gfix_group, ncon=object$ncon )
+                     gfix=object$gfix_group  )
   
   ## This is the loop for the bootstrap simulations
   # Eventually this should be (optionally) parallelized
@@ -97,7 +97,7 @@ summary.clme <- function( object, nsim=1000, seed=42, verbose=c(FALSE,FALSE), ..
                           eps=mr$PA, xi=mr$xi, ssq=mr$ssq, tsq=mr$tsq, 
                           cov.theta=mr$cov.theta, nsim=nsim2, 
                           theta=object$theta.null, mySolver=object$mySolver,
-                          seed=seed2, null.resids=FALSE, ncon=object$ncon  )
+                          seed=seed2, null.resids=FALSE )
     
     ## EM for the bootstrap samples
     TS.boot     <- matrix( 0, nrow=nsim2, ncol=length(object$ts.glb) )

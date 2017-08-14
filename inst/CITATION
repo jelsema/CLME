@@ -1,16 +1,26 @@
-citHeader("To cite CLME in publications use:")
+bibentry(bibtype = "Article",
+  title        = "{CLME}: An {R} Package for Linear Mixed Effects Models under Inequality Constraints",
+  author       = c(person(given = c("Casey", "M."),
+                          family = "Jelsema",
+                          email = "casey.jelsema@mail.wvu.edu"),
+                   person(given = c("Shyamal", "D."),
+                          family = "Peddada",
+                          email = "peddada@niehs.nih.gov")),
+  journal      = "Journal of Statistical Software",
+  year         = "2016",
+  volume       = "75",
+  number       = "1",
+  pages        = "1--32",
+  doi          = "10.18637/jss.v075.i01",
 
-citEntry(entry = "Article",
-  title        = "{CLME}: An {R} Package  for Linear Mixed Effects Models Under Inequality Constraints",
-  author       = personList(as.person("Casey M. Jelsema"),
-                   as.person("Shyamal D. Peddada")),
-  journal      = "(under review)",
-  year         = "2015",
+  header       = "To cite CLME in publications use:",
   textVersion  =
-  paste("Casey M. Jelsema and Shyamal D. Peddada (2015).",
-        "CLME: An R Package  for Linear Mixed Effects Models Under Inequality Constraints.",
-        "(under review)")
+  paste("Casey M. Jelsema, Shyamal D. Peddada (2016).",
+        "CLME: An R Package for Linear Mixed Effects Models under Inequality Constraints.",
+        "Journal of Statistical Software, 75(1), 1-32.",
+        "doi:10.18637/jss.v075.i01")
 )
+
 
 citEntry(entry = "Article",
   title        = "Linear Mixed Efects Models Under Inequality Constraints with Applications",
@@ -22,13 +32,12 @@ citEntry(entry = "Article",
   volume       = "9",
   number       = "1",
   doi          = "10.1371/journal.pone.0084778",
-  url          = "http://www.plosone.org/article/info:doi/10.1371/journal.pone.0084778",
 
   textVersion  =
   paste("Laura Farnan, Anastasia Ivanova, and Shyamal D. Peddada (2014).",
         "Linear Mixed Efects Models Under Inequality Constraints with Applications.",
         "PLOS ONE, 9(1).",
-        "URL http://www.plosone.org/article/info:doi/10.1371/journal.pone.0084778.")
+        "doi: 10.1371/journal.pone.0084778")
 )
 
 

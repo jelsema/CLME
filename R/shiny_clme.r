@@ -44,7 +44,10 @@ shiny_clme <- function(){
 ##############################################################################
 #  shinyUI(bootstrapPage())
 
+#' CLME siny GUI: UI
 #'
+#' @description The UI for the shiny app in CLME
+#' 
 #' @rdname shiny_clme
 #' 
 #' @export
@@ -241,6 +244,10 @@ shinyUI_clme <- fluidPage(
 ##
 ##############################################################################
 
+
+#' CLME siny GUI: server
+#'
+#' @description The server for the shiny app in CLME
 #'
 #' @rdname shiny_clme
 #' 
@@ -275,7 +282,7 @@ shinyServer_clme <- function(input, output) {
         if( dlmt=="xlsx"){
           data1   <- read.xlsx( xlsxFile=paste(file1), colNames=TRUE )
         }
-                
+        
         yy      <- input$yy
         p1      <- input$p1
         p2      <- input$p2
@@ -309,7 +316,8 @@ shinyServer_clme <- function(input, output) {
                 
         ## Get the indexes for X2 and U
         parse_idx <- function( arg1 ){
-          arg1 <- toupper(arg1)
+          
+          arg1 <- toupper(gsub( " ", "", arg1 ))
           if( arg1=="NONE" ){
             p4 <- 0
           } else{
@@ -484,7 +492,7 @@ shinyServer_clme <- function(input, output) {
       })
       
       
-    }   
+    } 
   })
   
   ##

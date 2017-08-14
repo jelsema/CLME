@@ -112,6 +112,7 @@ plot.summary.clme <-
            xlab = expression( paste( "Component of " , theta[1] ) ),
            ylab = expression( paste( "Estimated Value of " , theta[1] ) ) , 
            tree=NULL, ...){
+  
   object <- x
   
   #if( !is.clme(object) ){ stop("Argument 'object' is not of class clme.") }
@@ -192,10 +193,10 @@ plot.summary.clme <-
     }
     
     if( tree ){
-      ## MAKE THE CODE FOR A SIMPLE TREE PLOT HERE.      
+      ## PLOT FOR TREE ORDER
       plot(x=1, y=0, col=0, ylim=ylim, xlim=c(0.9,2.1), xlab="", ylab="Estimated Coefficient", xaxt="n")
       axis(side=1, at=c(1,1.78), labels=c("Control (Node)" , "Treatment") )
-      node <- object$order$node
+      node <- object$constraints$node
       
       legend( 0.86, theta1[node]+0.35, names(theta1)[node] ,cex=.8, bty='n' ) 
       
