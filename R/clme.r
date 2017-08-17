@@ -89,7 +89,7 @@
 #' cons <- list(order="simple", decreasing=FALSE, node=1 )
 #' 
 #' clme.out <- clme(mcv ~ time + temp + sex + (1|id), data=rat.blood , 
-#'                  constraints=cons, seed=42, nsim=10, ncon=1)
+#'                  constraints=cons, seed=42, nsim=10 )
 #' 
 #' @references
 #' Jelsema, C. M. and Peddada, S. D. (2016). 
@@ -215,8 +215,10 @@ function( formula, data=NULL, gfix=NULL, constraints=list(), tsf=lrt.stat, tsf.i
     
     # Remove duplicates / extraneous
     # "simple" doesn't need node
-    idx         <- 1*(search.grid[,1]=="simple"   &  search.grid[,3] > 1)
-    search.grid <- search.grid[ idx==0 , , drop=FALSE]
+    # idx         <- 1*(search.grid[,1]=="simple"   &  search.grid[,3] > 1)
+    # search.grid <- search.grid[ idx==0 , , drop=FALSE]
+    idx <- 1*(search.grid[,1]=="simple" )
+    search.grid[idx==1,3] <- 0
     
     # Detect any umbrella that match simple order
     repl_row1 <- data.frame( Var1="simple", Var2=FALSE, Var3=1 )  # simple INCREASING = umbrella INC_1 and DEC_P1
@@ -228,11 +230,11 @@ function( formula, data=NULL, gfix=NULL, constraints=list(), tsf=lrt.stat, tsf.i
     idx <- 1*( (search.grid[,1]=="umbrella" & search.grid[,2] == FALSE & search.grid[,3] ==  1 ) + 
                (search.grid[,1]=="umbrella" & search.grid[,2] == TRUE  & search.grid[,3] == P1 ) )
     
-    search.grid[ idx==1, ] <- repl_row1
+    if( sum(idx)>1 ){ search.grid[ idx==1, ] <- repl_row1 }
     
     idx <- 1*( (search.grid[,1]=="umbrella" & search.grid[,2] == FALSE & search.grid[,3] == P1 ) + 
                  (search.grid[,1]=="umbrella" & search.grid[,2] == TRUE  & search.grid[,3] ==  1 ) )
-    search.grid[ idx==1, ] <- repl_row2
+    if( sum(idx)>1 ){ search.grid[ idx==1, ] <- repl_row2 }
     
     
     # Move simple.tree to the bottom
@@ -245,7 +247,6 @@ function( formula, data=NULL, gfix=NULL, constraints=list(), tsf=lrt.stat, tsf.i
     ## Remove duplicate rows
     search.grid <- unique( search.grid )
     MNK         <- dim( search.grid )[1]
-    
     
   } else{
     MNK <- 1

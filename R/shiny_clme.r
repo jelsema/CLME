@@ -13,9 +13,8 @@
 #' If group levels for the constrained effect are character, they may not be read in the proper order. An extra column may contain the ordered group levels (it may therefore have different length than the rest of the dataset).
 #' 
 #' @note
-#' This function is primarily designed to be called by \code{\link{clme}}. 
+#' This function is primarily designed to call \code{\link{clme}}. 
 #' 
-#' By default, homogeneous variances are assumed for the residuals and (if included) random effects. Heterogeneity can be induced using the arguments \code{Nks} and \code{Qs}, which refer to the vectors \eqn{ (n_{1}, n_{2}, \ldots, n_{k}) }{(n1, n2 ,... , nk)} and \eqn{ (c_{1}, c_{2}, \ldots, c_{q}) }{(c1, c2 ,... , cq)}, respectively. See \code{\link{clme_em}} for further explanation of these values.
 #' 
 #' 
 #' @examples
@@ -83,13 +82,17 @@ shinyUI_clme <- fluidPage(
                   label = "Test Statistic:",
                   choices=c("LRT", "Williams") 
       ),
-      checkboxGroupInput(inputId = "order",
-                         label = "Order (select at least one):",
-                         choices=c("Simple","Umbrella","Tree")
+      selectInput(inputId = "order",
+                         label = "Order:",
+                         choices=c("Unspecified", "Simple", "Umbrella", "Tree")
       ),
-      checkboxInput(inputId = "decreasing",
-                    label = "Decreasing (inverted) order:",
-                    value=FALSE
+      selectInput(inputId = "decreasing",
+                    label = "Direction:",
+                  choices=c("Unspecified (both)", "Increasing", "Decreasing")
+      ),
+      textInput(inputId = "node",
+                  label = "Node:",
+                  value = "None"
       ),
       helpText("Identify columns of data"),
       helpText("Use column letters or numbers"),
@@ -222,7 +225,10 @@ shinyUI_clme <- fluidPage(
                  tableOutput(outputId = "sum_table")
         ),
         tabPanel("Model Summary", 
-                 verbatimTextOutput(outputId = "summary")
+                 verbatimTextOutput(outputId = "summary"),
+                 h3("Code to run model:"),
+                 verbatimTextOutput(outputId = "fullCode")
+                 
         ), 
         tabPanel("Model Plot"   ,
                  plotOutput(outputId = "fig1", height = "650px")
@@ -275,12 +281,16 @@ shinyServer_clme <- function(input, output) {
         
         if( dlmt=="Comma-delimited"){
           data1   <- read.csv( file=paste(file1) )
+          file_text <- paste0( "dFrame <- data.frame(read.csv(file=", input$file1[1], "))" )
         }
         if( dlmt=="Tab-delimited" ){
           data1   <- read.csv( file=paste(file1) , sep="\t")
+          file_text <- paste0( "dFrame <- data.frame(read.csv(file=", input$file1[1], ", sep='\t'))" )
+          
         }
         if( dlmt=="xlsx"){
           data1   <- read.xlsx( xlsxFile=paste(file1), colNames=TRUE )
+          file_text <- paste0( "dFrame <- data.frame(read.xlsx(xlsxFile=", input$file1[1], ", colNames=TRUE))" )
         }
         
         yy      <- input$yy
@@ -390,22 +400,19 @@ shinyServer_clme <- function(input, output) {
           ran <- TRUE
         }
         
-        ncon   <- length(idx_x1)
-        
-        
         ## Create the formula
         
-        ## Reorder the levels of X1 if need be
-        if( ncon==1 & input$xlevel1 ){
+        ## Reorder the levels of X1 if needed
+        if( input$xlevel1 ){
           xlev    <- parse_idx(input$xlevels)
-          nlev    <- length(levels(as.factor( data1[,xlev] )))
+          nlev    <- length( levels(as.factor( data1[,xlev] )) )
           xlevels <- as.character( data1[1:nlev,xlev] )
           if( any(xlevels=="") ){
             xlevels <- xlevels[ -which(xlevels=="")]  
           }
-          data1[,idx_x1] <- factor( data1[,idx_x1], levels=xlevels )
-        } else if( ncon==1 & makeFactor==TRUE ){
-          data1[,idx_x1] <- factor( data1[,idx_x1] )
+          data1[,idx_x1] <- factor( data1[,idx_x1], levels=xlevels, ordered=TRUE )
+        } else if( !is.ordered(data1[,idx_x1]) ){
+          data1[,idx_x1] <- factor( data1[,idx_x1] , ordered=TRUE )
         }
         
         ## Build the formula
@@ -413,40 +420,73 @@ shinyServer_clme <- function(input, output) {
         
         if( !cov & !ran ){
           ## No extra terms
-          formula <- formula( paste( yn, "~", x1f ) )
+          tform <- paste( yn, "~", x1f )
         } else if( cov & !ran ){
           ## Yes covariates, no random effects
-          x2f     <- paste( x2n , collapse=" + ")
-          formula <- formula( paste( yn, "~", x1f, "+", x2f ) )
+          x2f   <- paste( x2n , collapse=" + ")
+          tform <- paste( yn, "~", x1f, "+", x2f )
         } else if( !cov & ran ){
           ## No covariates, yes random effects
-          uf      <-  paste( "(1|", uun , ")", collapse=" + " )
-          formula <- formula( paste( yn, "~", x1f, "+", uf ) )
+          uf    <- paste( "(1|", uun , ")", collapse=" + " )
+          tform <- paste( yn, "~", x1f, "+", uf )
         } else if( cov & ran ){
           ## Covariates and random effects
-          x2f     <- paste( x2n , collapse=" + ")
-          uf      <-  paste( "(1|", uun , ")", collapse=" + " )
-          formula <- formula( paste( yn, "~", x1f, "+", x2f, "+", uf ) )
+          x2f   <- paste( x2n , collapse=" + ")
+          uf    <- paste( "(1|", uun , ")", collapse=" + " )
+          tform <- paste( yn, "~", x1f, "+", x2f, "+", uf )
         }
-                
+        frml <- formula( tform )
+        
         
         ## Input control arguments
-        tsf <- lrt.stat
+        
+        ## Select the test statistic
         if( input$tsfunc=="Williams" ){
           tsf <- w.stat
+        } else{
+          tsf <- lrt.stat
         }
         
-        constraints <- list()
-        constraints$order      <- tolower(input$order)
-        constraints$decreasing <- input$decreasing
         
-        rep.idx <- grep( "tree" , constraints$order )
-        constraints$order[rep.idx] <- "simple.tree"
+        ## Construct the constraints
+        constraints <- list()
+        if( input$order=="Unspecified" ){
+          constraints$order <- c("simple", "umbrella")
+        } else{
+          constraints$order <- paste0(tolower(input$order))
+          constraints$order <- gsub( "tree", "simple.tree", constraints$order )
+        }
+        
+        if( input$decreasing=="Increasing" ){
+          constraints$decreasing <- FALSE
+        } else if( input$order=="Decreasing" ){
+          constraints$decreasing <- TRUE
+        } else{
+          constraints$decreasing <- c(TRUE,FALSE)
+        }
+        
+        if( input$node=="None" ){
+          constraints$node <- 1:length(levels(data1[,idx_x1]))
+        } else{
+          constraints$node <- parse_idx( "1,2,3")
+        }
+        
+        
+        ## Create the code as text string to run model
+        gen_code <- paste0( "clme_out <- summary( clme( ", tform,  ", data=dFrame" )
         
         gfix <- NULL
         if( input$varssq ){
-          idx_grp <- parse_idx(input$gfix)
-          gfix <- data1[,idx_grp]
+          idx_grp  <- parse_idx(input$gfix)
+          gfix     <- data1[,idx_grp]
+          gen_code <- paste0( gen_code, ", gfix = dFrame[,", idx_grp,"]" )
+          
+        }
+        gen_code <- paste0( gen_code, ", constraints=constraints" )
+        if( input$tsfunc=="Williams" ){
+          gen_code <- paste0( gen_code, ", tsf=w.stat" )
+        } else{
+          gen_code <- paste0( gen_code, ", tsf=lrt.stat" )
         }
         
         emiter <- 500
@@ -463,29 +503,70 @@ shinyServer_clme <- function(input, output) {
           seedvl <- input$ranseed
         }
         
+        gen_code <- paste0( gen_code, ", mySolver= ", mySolver , ",",
+                            "em.eps=" , emeps, ",",
+                            "em.iter=", emiter, ",",
+                            "mq.eps=" , mqeps, ",",
+                            "mq.iter=", mqiter, "),",",",
+                            "alpha="  , alpha, ",",
+                            "seed="   , seedvl, ",",
+                            "nsim="   , nsim
+        )
+        gen_code <- paste0( gen_code, ")" )
+        
+        ## Build the code for the constraints
+        if( length(constraints$order)>1 ){
+          con_text <- paste0( "constraints <- list(order=c('", paste0(constraints$order, collapse="','"), "'), decreasing="  )
+        } else{
+          con_text <- paste0( "constraints <- list(order='", constraints$order, "', decreasing="  )
+        }
+        
+        if( length(constraints$decreasing)>1 ){
+          con_text <- paste0( con_text, "c(TRUE,FALSE), node="  )
+        } else{
+          con_text <- paste0( con_text, constraints$decreasing, ", node=" )
+        }
+        
+        if( length(constraints$node)>1 ){
+          con_text <- paste0( con_text, "c(", paste0(constraints$node, collapse=","), ") )"  )
+        } else{
+          con_text <- paste0( con_text, constraints$node, ") )" )
+        }
+        
+        ## Put all of the code together
+        full_code <- list( file_text = file_text, con_text  = con_text, gen_code  = gen_code )
+        
         ## Run the model
         data2 <- as.data.frame( data1 )
         
         withProgress(message = 'Status:', value = 1, {
           setProgress(1/2, detail = paste("Computing"))
           
-          if( ncon==1 & input$xlevel1 ){
-            clme.results <- summary( clme(
-              formula=formula, data=data2, gfix=gfix, constraints=constraints, 
-              verbose = c(FALSE, FALSE, FALSE), tsf=tsf, tsf.ind = w.stat.ind,
-              mySolver=mySolver, ncon=ncon, levels=list(idx_x1, xlevels), 
-              em.eps=emeps, em.iter=emiter, mq.eps=mqeps, mq.iter=mqiter
-            ), alpha=alpha, seed=seedvl, nsim=nsim )
-          } else{
-            clme.results <- summary( clme(
-              formula=formula, data=data2, gfix=gfix, constraints=constraints, 
-              verbose = c(FALSE, FALSE, FALSE), tsf=tsf, tsf.ind = w.stat.ind,
-              mySolver=mySolver, ncon=ncon,
-              em.eps=emeps, em.iter=emiter, mq.eps=mqeps, mq.iter=mqiter
-            ), alpha=alpha, seed=seedvl, nsim=nsim )
-          }
+          clme.results <- summary( clme(
+            formula=frml, data=data2, gfix=gfix, constraints=constraints, 
+            verbose = c(FALSE, FALSE, FALSE), tsf=tsf, tsf.ind = w.stat.ind,
+            mySolver=mySolver, em.eps=emeps, em.iter=emiter, mq.eps=mqeps, 
+            mq.iter=mqiter ), alpha=alpha, seed=seedvl, nsim=nsim )
+          
+          #if( ncon==1 & input$xlevel1 ){
+          #  clme.results <- summary( clme(
+          #    formula=frml, data=data2, gfix=gfix, constraints=constraints, 
+          #    verbose = c(FALSE, FALSE, FALSE), tsf=tsf, tsf.ind = w.stat.ind,
+          #    mySolver=mySolver, ncon=ncon, levels=list(idx_x1, xlevels), 
+          #    em.eps=emeps, em.iter=emiter, mq.eps=mqeps, mq.iter=mqiter
+          #  ), alpha=alpha, seed=seedvl, nsim=nsim )
+          #} else{
+          #  clme.results <- summary( clme(
+          #    formula=frml, data=data2, gfix=gfix, constraints=constraints, 
+          #    verbose = c(FALSE, FALSE, FALSE), tsf=tsf, tsf.ind = w.stat.ind,
+          #    mySolver=mySolver, ncon=ncon,
+          #    em.eps=emeps, em.iter=emiter, mq.eps=mqeps, mq.iter=mqiter
+          #  ), alpha=alpha, seed=seedvl, nsim=nsim )
+          # }
           
         })
+        
+        clme.results$full_code <- full_code
         
         clme.results
         
@@ -573,7 +654,7 @@ shinyServer_clme <- function(input, output) {
           }
           plot( clme_out , ci=ciwd , alpha=alpha)
         })
-      }      
+      }
     } else{
       plot( 1:5 , 1:5 , col="white", xaxt='n', yaxt='n', xlab="", ylab="", frame.plot=FALSE )
     }
@@ -594,6 +675,25 @@ shinyServer_clme <- function(input, output) {
       print( "Model has not yet been run."  )
     }
     
+  })
+  
+  output$fullCode <- renderPrint({
+    
+    clme_out  <- clme_out()
+    full_code <- clme_out$full_code
+    if( length(clme_out)>1 ){
+      compute3 <- input$compute3
+      if( compute3 > 0 ){
+        isolate({
+          
+          cat( paste0(full_code$file_text), "\n# NOTE: may need to add path to file\n\n",
+               paste0(full_code$con_text), "\n\n", paste0(full_code$gen_code) )
+          
+        })
+      }
+    } else{
+      print( "Model has not yet been run."  )
+    }
   })
   
 
