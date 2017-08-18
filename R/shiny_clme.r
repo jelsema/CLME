@@ -226,7 +226,7 @@ shinyUI_clme <- fluidPage(
         ),
         tabPanel("Model Summary", 
                  verbatimTextOutput(outputId = "summary"),
-                 h3("Code to run model:"),
+                 h5("Code to run model:"),
                  verbatimTextOutput(outputId = "fullCode")
                  
         ), 
@@ -281,16 +281,16 @@ shinyServer_clme <- function(input, output) {
         
         if( dlmt=="Comma-delimited"){
           data1   <- read.csv( file=paste(file1) )
-          file_text <- paste0( "dFrame <- data.frame(read.csv(file=", input$file1[1], "))" )
+          file_text <- paste0( "dFrame <- data.frame(read.csv(file='", input$file1[1], "'))" )
         }
         if( dlmt=="Tab-delimited" ){
           data1   <- read.csv( file=paste(file1) , sep="\t")
-          file_text <- paste0( "dFrame <- data.frame(read.csv(file=", input$file1[1], ", sep='\t'))" )
+          file_text <- paste0( "dFrame <- data.frame(read.csv(file='", input$file1[1], "', sep='\t'))" )
           
         }
         if( dlmt=="xlsx"){
           data1   <- read.xlsx( xlsxFile=paste(file1), colNames=TRUE )
-          file_text <- paste0( "dFrame <- data.frame(read.xlsx(xlsxFile=", input$file1[1], ", colNames=TRUE))" )
+          file_text <- paste0( "dFrame <- data.frame(read.xlsx(xlsxFile='", input$file1[1], "', colNames=TRUE))" )
         }
         
         yy      <- input$yy
@@ -459,7 +459,7 @@ shinyServer_clme <- function(input, output) {
         
         if( input$decreasing=="Increasing" ){
           constraints$decreasing <- FALSE
-        } else if( input$order=="Decreasing" ){
+        } else if( input$decreasing=="Decreasing" ){
           constraints$decreasing <- TRUE
         } else{
           constraints$decreasing <- c(TRUE,FALSE)
@@ -468,7 +468,7 @@ shinyServer_clme <- function(input, output) {
         if( input$node=="None" ){
           constraints$node <- 1:length(levels(data1[,idx_x1]))
         } else{
-          constraints$node <- parse_idx( "1,2,3")
+          constraints$node <- parse_idx( input$node )
         }
         
         
