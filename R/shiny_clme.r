@@ -52,7 +52,7 @@ shiny_clme <- function(){
 #' @export
 #' 
 
-shinyUI_clme <- fluidPage( 
+shinyUI_clme <- fluidPage(
   titlePanel("Constrained Linear Mixed Effects"),
   sidebarLayout(
     sidebarPanel(
@@ -60,7 +60,7 @@ shinyUI_clme <- fluidPage(
       ##
       ## Data input
       ##
-      fileInput('file1', 'Data (choose CSV file)',
+      fileInput('file1', 'Data (choose file)',
                 accept=c('text/csv', 'text/comma-separated-values,text/plain', '.csv', '.xlsx')
       ),
       selectInput(inputId = "dlmt",
@@ -503,13 +503,13 @@ shinyServer_clme <- function(input, output) {
           seedvl <- input$ranseed
         }
         
-        gen_code <- paste0( gen_code, ", mySolver= ", mySolver , ",",
-                            "em.eps=" , emeps, ",",
-                            "em.iter=", emiter, ",",
-                            "mq.eps=" , mqeps, ",",
-                            "mq.iter=", mqiter, "),",",",
-                            "alpha="  , alpha, ",",
-                            "seed="   , seedvl, ",",
+        gen_code <- paste0( gen_code, ", mySolver= ", mySolver , ", ",
+                            "em.eps=" , emeps, ", ",
+                            "em.iter=", emiter, ", ",
+                            "mq.eps=" , mqeps, ", ",
+                            "mq.iter=", mqiter, "), ",
+                            "alpha="  , alpha, ", ",
+                            "seed="   , seedvl, ", ",
                             "nsim="   , nsim
         )
         gen_code <- paste0( gen_code, ")" )
@@ -530,7 +530,7 @@ shinyServer_clme <- function(input, output) {
         if( length(constraints$node)>1 ){
           con_text <- paste0( con_text, "c(", paste0(constraints$node, collapse=","), ") )"  )
         } else{
-          con_text <- paste0( con_text, constraints$node, ") )" )
+          con_text <- paste0( con_text, constraints$node, ")" )
         }
         
         ## Put all of the code together
