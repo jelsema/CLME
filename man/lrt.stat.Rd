@@ -46,4 +46,3 @@ lrt.stat(clme.out$theta, clme.out$theta.null, clme.out$cov.theta )
 \code{\link{clme_em}},
 \code{\link{w.stat}}
 }
-

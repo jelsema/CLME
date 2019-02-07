@@ -4,7 +4,7 @@
 \name{fibroid}
 \alias{fibroid}
 \title{Fibroid Growth Study}
-\format{A frame containing 240 observations on 9 variables.}
+\format{A data frame containing 240 observations on 9 variables.}
 \usage{
 data(fibroid)
 }
@@ -35,4 +35,3 @@ Peddada, Laughlin, Miner, Guyon, Haneke, Vahdat, Semelka, Kowalik, Armao, Davis,
    19887-19892. URL \url{http://www.pnas.org/content/105/50/19887.full.pdf}.
 }
 \keyword{datasets}
-

@@ -2,8 +2,8 @@
 % Please edit documentation in R/utilities.r
 \name{VarCorr}
 \alias{VarCorr}
-\alias{VarCorr.clme}
 \alias{VarCorr.summary.clme}
+\alias{VarCorr.clme}
 \title{Variance components}
 \usage{
 VarCorr(x, sigma, rdig)
@@ -45,4 +45,3 @@ VarCorr( clme.out )
 \code{\link{CLME-package}}
 \code{\link{clme}}
 }
-

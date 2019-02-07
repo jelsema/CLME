@@ -15,7 +15,6 @@
 #' @param seed set the seed for the RNG.
 #' @param nsim number of bootstrap samples to use for significance testing. 
 #' @param mySolver solver to use, passed to \code{activeSet}.
-#' @param ncon the number of variables in \code{formula} that are constrained.
 #' @param ... space for additional arguments.
 #' 
 #' @details 

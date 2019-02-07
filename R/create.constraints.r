@@ -80,6 +80,8 @@ create.constraints <- function( P1, constraints ){
     node <- 1
   }
   
+  if( order =="tree" ){ order <- "simple.tree" }
+    
   if( (order %in% c("simple", "simple.tree", "umbrella"))==FALSE ){
     stop("'order' must be one or more of: simple, simple.tree, umbrella")
   }

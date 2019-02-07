@@ -71,4 +71,3 @@ This matrix defines what \pkg{CLME} describes as a decreasing umbrella order. Th
 \code{\link{clme}},
 \code{\link{w.stat}}
 }
-

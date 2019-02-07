@@ -68,7 +68,10 @@ model_terms_clme <- function( formula, data ){
     mt <- attr(mf, "terms")
     
     if( !is.ordered( mf[,2] ) ){
-      stop( "Constrained effect is not an ordered factor")
+      ## If this is stable, can remove the double xlev call and remove the else portion (same as below)
+      warning( "Constrained effect is not an ordered factor, attempting to force ordering\n Assumed order: ", paste0( levels(mf[,2]), collapse=" < "), "\n See help(ordered) for more information")
+      mf[,2] <- factor( mf[,2], ordered=TRUE )
+      xlev <- levels( mf[,2] )
     } else{
       xlev <- levels( mf[,2] )
     }
@@ -99,7 +102,10 @@ model_terms_clme <- function( formula, data ){
     )
     
     if( !is.ordered( clme_terms$fr[,2] ) ){
-      stop( "Constrained effect is not an ordered factor")
+      # stop( "Constrained effect is not an ordered factor")
+      warning( "Constrained effect is not an ordered factor, attempting to force ordering\n Assumed order: ", paste0( levels(clme_terms$fr[,2]), collapse=" < "), "\n See help(ordered) for more information")
+      clme_terms$fr[,2] <- factor( clme_terms$fr[,2], ordered=TRUE )
+      xlev <- levels( clme_terms$fr[,2] )
     } else{
       xlev <- levels( clme_terms$fr[,2] )
     }
@@ -118,7 +124,7 @@ model_terms_clme <- function( formula, data ){
     U  <- t( as.matrix(clme_terms$reTrms$Zt) )
     
     dframe  <- clme_terms$fr
-    REnames <- colnames(clme_terms$reTrms$flist)
+    REnames <- names(clme_terms$reTrms$flist)
     REidx   <- clme_terms$reTrms$Lind
     
   }
@@ -202,9 +208,9 @@ as.clme <- function( x , ... ){
     }
     
     if( !is.matrix(x$cov.theta) || !is.numeric(x$cov.theta) ||
-          nrow(x$cov.theta) != ncol(x$cov.theta) ||
-          nrow(x$cov.theta) != length(x$theta)   ||
-          sum(sum(abs(x$cov.theta - t(x$cov.theta)))) > sqrt(.Machine$double.eps) ){
+        nrow(x$cov.theta) != ncol(x$cov.theta) ||
+        nrow(x$cov.theta) != length(x$theta)   ||
+        sum(sum(abs(x$cov.theta - t(x$cov.theta)))) > sqrt(.Machine$double.eps) ){
       err.flag    <- 1
       flagCov     <- " cov.theta must be square, symmetric, numeric matrix with dimensions equal to length of theta\n"
       x$cov.theta <- matrix( numeric(0) , nrow=length(x$theta) , ncol=length(x$theta) )
@@ -743,51 +749,6 @@ logLik.summary.clme <- function( object, ...){
   logLik(object, ...)
 }
 
-#' Extracts the model frame
-#'
-#' @description
-#' Extracts the model frame from objects of class \code{clme}. 
-#' 
-#' @param formula a formula expression.
-#' @param ... space for additional arguments
-#' 
-#' 
-#' @return
-#' Returns a data frame with the variables in the model.
-#' 
-#' 
-#' @seealso
-#' \code{\link{CLME-package}}
-#' \code{\link{clme}}
-#' 
-#' @examples
-#' \dontrun{
-#' data( rat.blood )
-#' model.frame.clme( mcv ~ time + temp + sex + (1|id), data = rat.blood )
-#' }
-#' @method model.frame clme
-#' @export
-#' 
-model.frame.clme <- function( formula , ...){
-  ## Return the data frame
-  mmat     <- model_terms_clme( formula, ... )  
-  return( mmat$dframe )
-}
-
-#' Extracts the model frame
-#' 
-#' @rdname model.frame.clme
-#' 
-#' @seealso
-#' \code{\link{model.frame.clme}} 
-#' 
-#' @method model.frame summary.clme
-#' @export
-#' 
-model.frame.summary.clme <- function( formula, ...){
-  class(object) <- "clme"
-  model.frame(formula, ...)
-}
 
 
 
@@ -1145,10 +1106,12 @@ residuals.summary.clme <- function( object, type="FM", ... ){
 #'          
 #' sigma( clme.out )
 #' 
-#' @importFrom lme4 sigma
+#' 
+#' @importFrom stats sigma
 #' @method sigma clme
 #' @export
 #' 
+# WAS IMPORTING sigma FROM lme4
 sigma.clme <- function( object, ...){
   return( object$ssq )
 }
@@ -1248,6 +1211,9 @@ VarCorr.clme <- function(x, sigma, rdig ){
     stop("'x' is not of class clme")
   } else{
     varcomps <- matrix( sqrt(c(x$tsq, x$ssq )), ncol=1 )
+    if( !is.null(x$tsq) & is.null(names(x$tsq)) ){
+      names(x$tsq) <- paste0( "tau_", 1:length(x$tsq) )
+    }
     rnames   <- c( "Source", names(x$tsq), names(x$ssq) )
     rownames(varcomps) <- rnames[-1]
     colnames(varcomps) <- "Std. Error"
@@ -1292,7 +1258,7 @@ print.varcorr_clme <- function(object, rdig=5, ...){
   rnames   <- c( "Source", rownames( object ) )
   rnames   <- str_pad(rnames, width=max(nchar(rnames)), side = "right", pad = " ")
   vars     <- format( object , digits=rdig )
-
+  
   cat( rnames[1], "\t" , "Variance" )
   for( ii in 1:length(vars) ){
     cat( "\n", rnames[ii+1], "\t" , vars[ii] )

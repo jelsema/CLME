@@ -52,4 +52,3 @@ w.stat( theta , th.cov , const$B , const$A )
 w.stat.ind( theta , th.cov , const$B , const$A )
 
 }
-

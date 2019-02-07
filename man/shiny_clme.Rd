@@ -2,9 +2,9 @@
 % Please edit documentation in R/shiny_clme.r
 \docType{data}
 \name{shiny_clme}
-\alias{shinyServer_clme}
-\alias{shinyUI_clme}
 \alias{shiny_clme}
+\alias{shinyUI_clme}
+\alias{shinyServer_clme}
 \title{Shiny GUI for CLME}
 \format{An object of class \code{shiny.tag.list} (inherits from \code{list}) of length 3.}
 \usage{
@@ -32,13 +32,10 @@ The data should be a CSV or table-delimited file with the first row being a head
 If group levels for the constrained effect are character, they may not be read in the proper order. An extra column may contain the ordered group levels (it may therefore have different length than the rest of the dataset).
 }
 \note{
-This function is primarily designed to be called by \code{\link{clme}}. 
-
-By default, homogeneous variances are assumed for the residuals and (if included) random effects. Heterogeneity can be induced using the arguments \code{Nks} and \code{Qs}, which refer to the vectors \eqn{ (n_{1}, n_{2}, \ldots, n_{k}) }{(n1, n2 ,... , nk)} and \eqn{ (c_{1}, c_{2}, \ldots, c_{q}) }{(c1, c2 ,... , cq)}, respectively. See \code{\link{clme_em}} for further explanation of these values.
+This function is primarily designed to call \code{\link{clme}}.
 }
 \examples{
 \dontrun{ shiny_clme() }
 
 }
 \keyword{datasets}
-

@@ -45,4 +45,3 @@ residuals( clme.out, type='PA' )
 \code{\link{CLME-package}}
 \code{\link{clme}}
 }
-

@@ -2,6 +2,7 @@
 % Please edit documentation in R/00Package.r
 \docType{package}
 \name{CLME-package}
+\alias{CLME}
 \alias{CLME-package}
 \title{Constrained inference for linear mixed models.}
 \description{
@@ -16,16 +17,10 @@ The work was produced in part with funding from the Intramural Research Program 
 National Institute of Environmental Health Sciences (Z01 ES101744).
 }
 \details{
-\tabular{ll}{
-Package: \tab CLME\cr
-Type:    \tab Package\cr
-Version: \tab 2.0-6\cr
-Date:    \tab 2016-11-07\cr
-License: \tab GLP-3  \cr
-}
+This package was introduced in Jelsema and Peddada (2016). The primary function is \code{\link{clme}}. 
+The other functions in this package may be run separately, but in general are designed for use by \code{\link{clme}}.
 
-This package was introduced in Jelsema and Peddada (2015, under review). The method which 
-is implemented is the constrained linear mixed effects model described in 
+The method which is implemented is the constrained linear mixed effects model described in 
 Farnan, Ivanova, and Peddada (2014). See that paper for more details regarding the method. 
 Here we give a brief overview of the assumed model:
 
@@ -63,17 +58,8 @@ For several default orders (simple, umbrella, simple tree) the \eqn{A}{A} matrix
 
 For computational reasons, the implementation is not identical to the model expressed. Particularly, the fixed-effects matrix (or matrices) and the random effects matrix are assumed to be columns in a data frame, not passed as matrices. The \eqn{A}{A} matrix is not \eqn{r\ times p}{r x p}, but \eqn{r\ times 2}{r x 2}, where each row gives the indices of the constrained coefficients. See \code{\link{create.constraints}} for further explanation.
 
-The primary function of \pkg{CLME} is \code{\link{clme}}. The other functions in this package may be run separately, but in general are designed for use by \code{\link{clme}}.
 
 The creation of this package \pkg{CLME}, this manual, and the vingette were all supported by the Intermural Research Program of the United States' National Institutes of Health (Z01 ES101744).
-}
-\note{
-Unless otherwise noted, Casey M. Jelsema wrote the functions in this package.
-}
-\author{
-Casey M. Jelsema <\email{casey.jelsema@gmail.com}>
-
-Shyamal D. Peddada
 }
 \references{
 Jelsema, C. M. and Peddada, S. D. (2016). 
@@ -84,4 +70,19 @@ Farnan, L., Ivanova, A., and Peddada, S. D. (2014).
 Linear Mixed Efects Models under Inequality Constraints with Applications.
 \emph{PLOS ONE}, 9(1). e84778. doi: 10.1371/journal.pone.0084778
 }
+\seealso{
+Useful links:
+\itemize{
+  \item Report bugs at \url{https://github.com/jelsema/CLME/issues}
+}
 
+}
+\author{
+\strong{Maintainer}: Casey M. Jelsema \email{jelsema.casey@gmail.com}
+
+Authors:
+\itemize{
+  \item Shyamal D. Peddada
+}
+
+}

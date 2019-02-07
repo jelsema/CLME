@@ -33,4 +33,3 @@ print( clme.out )
 \code{\link{CLME-package}}
 \code{\link{clme}}
 }
-

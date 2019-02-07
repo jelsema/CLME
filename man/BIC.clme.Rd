@@ -48,4 +48,3 @@ BIC( clme.out, k=log( nobs(clme.out)/(2*pi) ) )
 \code{\link{CLME-package}}
 \code{\link{clme}}
 }
-

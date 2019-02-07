@@ -31,7 +31,7 @@
 #'  \code{order}, \code{node}, \code{decreasing}, \code{A}, and \code{B}, though not all are necessary.
 #' The function can calculate the last two for default orders (simple, umbrella, or simple tree). For
 #'  default orders, \code{constraints} should be a list containing any subset of \code{order}, 
-#'  \code{node}, and \code{descending}. See the figure below for a depiction of these values; the 
+#'  \code{node}, and \code{descending}. See Figure 1 from Jelsema \& Peddada (2016); the 
 #'  pictured \code{node} of the simple tree orders (middle column) is 1, and the \code{node} for the
 #'  umbrella orders (right column) is 3. These may be vectors (e.g. order=('simple','umbrella') ).
 #' If any of these three are missing, the function will test for all possible values of the missing 
@@ -54,6 +54,7 @@
 #' Some values can be passed to \code{clme} that are not used in this function. For instance, 
 #'  \code{seed} and \code{nsim} can each be passed as an argument here, and \code{\link{summary.clme}} will
 #'  use these values.
+#'  
 #' 
 #' 
 #' @return
@@ -82,7 +83,7 @@
 #' }
 #' 
 #' 
-#' \figure{OrderPlot.jpg}{Plot of Orders.}
+#' 
 #' 
 #' @examples
 #' data( rat.blood )

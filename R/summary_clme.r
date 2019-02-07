@@ -37,7 +37,7 @@
 #' @method summary clme
 #' @export
 #' 
-summary.clme <- function( object, nsim=1000, seed=42, verbose=c(FALSE,FALSE), ... ){
+summary.clme <- function( object, nsim=1000, seed=NULL, verbose=c(FALSE,FALSE), ... ){
   
   if( !is.clme(object) ){ stop("'object' is not of class clme")}
   
@@ -139,7 +139,7 @@ summary.clme <- function( object, nsim=1000, seed=42, verbose=c(FALSE,FALSE), ..
         if( update.ind>0 ){
           ts.ind.boot <- clme.temp$ts.ind 
         }
-
+        
       }
       
       # Compute p-values
@@ -270,7 +270,7 @@ print.summary.clme <- function( x, alpha=0.05, digits=4, ...){
   tnames <- names(est)
   Amat   <- object$constraints$A
   Bmat   <- object$constraints$B
-
+  
   ## Global tests
   if( is.null(names(object$ts.glb)) ){
     glbn <- "Unknown"
@@ -280,49 +280,49 @@ print.summary.clme <- function( x, alpha=0.05, digits=4, ...){
   
   
   #if( object$order$order != "unconstrained" ){
-    if( length(object$ts.glb)>1 ){
-      glbs <- object$ts.glb
-      grow <- matrix( "NA" , nrow=length(glbs), ncol=3 )
-      
-      for( ii in 1:length(glbs) ){
-        grow[ii,] <- c( glbn[ii], round(object$ts.glb[ii],3) , sprintf("%.4f", object$p.value[ii]) )
-      }
-      
-      #colnames( grow ) <- c("Contrast", "Estimate", "Stat", "p-value")
-      #grow <- .align_table.clme( grow )
-      for( ii in 2:3){
-        val1 <- str_trim( decimal.align( grow[,ii]), side="right"  )
-        grow[,ii] <- str_pad(val1, width=max(nchar(val1)), side = "right", pad = "0")
-      }  
-      
-      colnames( grow ) <- c("Contrast", "Statistic", "p-value")
-      grow1 <- c(colnames(grow)[1], grow[,1])
-      grow1 <- str_pad( grow1, width=max(nchar(grow1)), side = "right", pad = " ")    
-      grow2 <- .align_table.clme( grow[,2:3,drop=FALSE] )
-      grow <- cbind( grow1[2:length(grow1)] , grow2)
-      colnames(grow)[1] <- grow1[1]
-      
-      cat( "\n\nGlobal tests: ")
-      cat( "\n", paste(colnames(grow) , collapse="  ") )
-      for( ii in 1:length(glbs) ){
-        cat( "\n", paste(grow[ii,] , collapse="  ")     )
-      }
-      
-    } else{
-      
-      grow <- cbind( glbn, round(object$ts.glb,3) , sprintf("%.4f", object$p.value) )
-      
-      colnames( grow ) <- c("Contrast", "Statistic", "p-value")
-      grow1 <- c(colnames(grow)[1], grow[,1])
-      grow1 <- str_pad( grow1, width=max(nchar(grow1)), side = "right", pad = " ")    
-      grow2 <- .align_table.clme( grow[,2:3,drop=FALSE] )
-      grow <- cbind( grow1[2:length(grow1)] , grow2)
-      colnames(grow)[1] <- grow1[1]
-      
-      cat( "\n\nGlobal test: ")
-      cat( "\n", paste0(colnames(grow) , collapse="  ") )   
-      cat( "\n", paste0(grow , collapse="  ")     )
+  if( length(object$ts.glb)>1 ){
+    glbs <- object$ts.glb
+    grow <- matrix( "NA" , nrow=length(glbs), ncol=3 )
+    
+    for( ii in 1:length(glbs) ){
+      grow[ii,] <- c( glbn[ii], round(object$ts.glb[ii],3) , sprintf("%.4f", object$p.value[ii]) )
     }
+    
+    #colnames( grow ) <- c("Contrast", "Estimate", "Stat", "p-value")
+    #grow <- .align_table.clme( grow )
+    for( ii in 2:3){
+      val1 <- str_trim( decimal.align( grow[,ii]), side="right"  )
+      grow[,ii] <- str_pad(val1, width=max(nchar(val1)), side = "right", pad = "0")
+    }  
+    
+    colnames( grow ) <- c("Contrast", "Statistic", "p-value")
+    grow1 <- c(colnames(grow)[1], grow[,1])
+    grow1 <- str_pad( grow1, width=max(nchar(grow1)), side = "right", pad = " ")    
+    grow2 <- .align_table.clme( grow[,2:3,drop=FALSE] )
+    grow <- cbind( grow1[2:length(grow1)] , grow2)
+    colnames(grow)[1] <- grow1[1]
+    
+    cat( "\n\nGlobal tests: ")
+    cat( "\n", paste(colnames(grow) , collapse="  ") )
+    for( ii in 1:length(glbs) ){
+      cat( "\n", paste(grow[ii,] , collapse="  ")     )
+    }
+    
+  } else{
+    
+    grow <- cbind( glbn, round(object$ts.glb,3) , sprintf("%.4f", object$p.value) )
+    
+    colnames( grow ) <- c("Contrast", "Statistic", "p-value")
+    grow1 <- c(colnames(grow)[1], grow[,1])
+    grow1 <- str_pad( grow1, width=max(nchar(grow1)), side = "right", pad = " ")    
+    grow2 <- .align_table.clme( grow[,2:3,drop=FALSE] )
+    grow <- cbind( grow1[2:length(grow1)] , grow2)
+    colnames(grow)[1] <- grow1[1]
+    
+    cat( "\n\nGlobal test: ")
+    cat( "\n", paste0(colnames(grow) , collapse="  ") )   
+    cat( "\n", paste0(grow , collapse="  ")     )
+  }
   #}
   
   ## Individual tests
@@ -334,7 +334,7 @@ print.summary.clme <- function( x, alpha=0.05, digits=4, ...){
     glbe <- round( est[Amat[ii,2]] - est[Amat[ii,1]], digits=3 )
     grow[ii,] <- c( glbn, glbe, round(object$ts.ind[ii],3) , sprintf("%.4f", object$p.value.ind[ii]) )
   }
-
+  
   for( ii in 2:4){
     if( !any(grow[,ii]==rep("NA",nrow(grow))) ){
       val1 <- str_trim( decimal.align( grow[,ii]), side="right"  )
@@ -348,13 +348,13 @@ print.summary.clme <- function( x, alpha=0.05, digits=4, ...){
   grow2 <- .align_table.clme( grow[,2:4,drop=FALSE] )
   grow <- cbind( grow1[2:length(grow1)] , grow2)
   colnames(grow)[1] <- grow1[1]
-    
+  
   cat( "\n\nIndividual Tests (Williams' type tests): ")
   cat( "\n", paste(colnames(grow) , collapse="  ") )
   for( ii in 1:length(glbs) ){
     cat( "\n", paste(grow[ii,] , collapse="  ")     )
   }
-
+  
   
   ## Random effects
   cat( "\n\nVariance components: \n")
@@ -368,7 +368,7 @@ print.summary.clme <- function( x, alpha=0.05, digits=4, ...){
                  cvars  = format(sqrt(vars), digits=4),
                  clcl   = format(CIs[,1]   , digits=4),
                  cucl   = format(CIs[,2]   , digits=4))
-    
+  
   
   cipct <- round(100*(1-alpha),2)
   colnames(tvals) <- c(" ", "Estimate", "Std. Err",

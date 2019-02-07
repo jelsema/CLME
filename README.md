@@ -25,4 +25,4 @@ Some basic examples may be added here. Alternatively, see the vignette.
 
 ## License
 
-This package is provided under the GPL (>= 2).
+This package is provided under the GPL-3 license.

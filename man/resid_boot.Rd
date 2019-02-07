@@ -36,8 +36,6 @@ resid_boot(formula, data, gfix = NULL, eps = NULL, xi = NULL,
 \item{mySolver}{solver to use, passed to \code{activeSet}.}
 
 \item{...}{space for additional arguments.}
-
-\item{ncon}{the number of variables in \code{formula} that are constrained.}
 }
 \value{
 Output is \eqn{N \ times nsim}{N x nsim} matrix, where each column is a bootstrap sample of the response data \code{Y}.
@@ -62,4 +60,3 @@ boot_sample <- resid_boot(mcv ~ time + temp + sex + (1|id), nsim = 10,
 \seealso{
 \code{\link{clme}}
 }
-

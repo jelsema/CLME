@@ -74,4 +74,3 @@ Confidence intervals for the coefficients may be plotted. They are individual co
 \code{\link{CLME-package}}
 \code{\link{clme}}
 }
-

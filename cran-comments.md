@@ -1,4 +1,4 @@
-This update contains a fix to the names of random effect variance components that was causing an error in R-devel.
+This update contains small bugfixes.
 
 ## Test environments
 * Mac OSX, R 3.4.3

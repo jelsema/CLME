@@ -38,4 +38,3 @@ nobs( clme.out )
 
 \code{\link{nobs.clme}}
 }
-

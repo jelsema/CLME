@@ -47,4 +47,3 @@ model_terms_clme( mcv ~ time + temp + sex + (1|id) , data = rat.blood )
 \code{\link{CLME-package}}
 \code{\link{clme}}
 }
-

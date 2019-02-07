@@ -19,23 +19,13 @@
 #' The work was produced in part with funding from the Intramural Research Program of the NIH, 
 #' National Institute of Environmental Health Sciences (Z01 ES101744).
 #' 
-#' @author Casey M. Jelsema <\email{casey.jelsema@@gmail.com}>
-#' @author Shyamal D. Peddada
-#' 
-#' @note
-#' Unless otherwise noted, Casey M. Jelsema wrote the functions in this package.
 #' 
 #' @details
-#' \tabular{ll}{
-#' Package: \tab CLME\cr
-#' Type:    \tab Package\cr
-#' Version: \tab 2.0-6\cr
-#' Date:    \tab 2016-11-07\cr
-#' License: \tab GLP-3  \cr
-#' }
 #' 
-#' This package was introduced in Jelsema and Peddada (2015, under review). The method which 
-#' is implemented is the constrained linear mixed effects model described in 
+#' This package was introduced in Jelsema and Peddada (2016). The primary function is \code{\link{clme}}. 
+#' The other functions in this package may be run separately, but in general are designed for use by \code{\link{clme}}.
+#' 
+#' The method which is implemented is the constrained linear mixed effects model described in 
 #' Farnan, Ivanova, and Peddada (2014). See that paper for more details regarding the method. 
 #' Here we give a brief overview of the assumed model:
 #' 
@@ -73,7 +63,6 @@
 #' 
 #' For computational reasons, the implementation is not identical to the model expressed. Particularly, the fixed-effects matrix (or matrices) and the random effects matrix are assumed to be columns in a data frame, not passed as matrices. The \eqn{A}{A} matrix is not \eqn{r\ times p}{r x p}, but \eqn{r\ times 2}{r x 2}, where each row gives the indices of the constrained coefficients. See \code{\link{create.constraints}} for further explanation.
 #' 
-#' The primary function of \pkg{CLME} is \code{\link{clme}}. The other functions in this package may be run separately, but in general are designed for use by \code{\link{clme}}.
 #' 
 #' The creation of this package \pkg{CLME}, this manual, and the vingette were all supported by the Intermural Research Program of the United States' National Institutes of Health (Z01 ES101744).
 #' 
@@ -92,7 +81,7 @@
 #'
 #' 
 #' 
-NULL
+"_PACKAGE"
 
 
 
@@ -130,8 +119,8 @@ NULL
 #' @keywords datasets
 #' @name fibroid
 #' @usage data(fibroid)
-#' @format A frame containing 240 observations on 9 variables.
-NULL
+#' @format A data frame containing 240 observations on 9 variables.
+"fibroid"
 
 
 
@@ -173,8 +162,8 @@ NULL
 #' @keywords datasets
 #' @name rat.blood
 #' @usage data(rat.blood)
-#' @format A frame containing 241 observations on 13 variables.
-NULL
+#' @format A data frame containing 241 observations on 13 variables.
+"rat.blood"
 
 
 

@@ -35,4 +35,3 @@ will change the class so that plot.summary.clme will be called properly.
 \code{\link{clme}}
 \code{\link{plot.summary.clme}}
 }
-

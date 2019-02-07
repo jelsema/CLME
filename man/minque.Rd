@@ -59,4 +59,3 @@ minque(Y = Y, X1 = X1 )
 minque(Y = Y, X1 = X1, X2 = X2, U = U )
 
 }
-

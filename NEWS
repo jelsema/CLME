@@ -1,21 +1,43 @@
-===========================
+=============================
 PROJECTED DEVELOPMENT:
-- Better handling of environments (currently nonexistent)
-- Better formula parsing (hopefully to remove dependence on lme4::lFormula 
-  so that I don't have to add/drop a trivial random effect).
+- Better handling of environments
+- Better formula parsing (hopefully to remove dependence on lme4::lFormula)
+- Write automated tests
 - Improvements to GUI in shiny_clme(), particularly:
-  - Plots/summary for data when main independent variable is not a factor
-    or when there are multiple variables instead of a single factor
+  - Allow for custom constraints to be specified.
 - Implement unconstrained model testing all pairwise comparisons.
 - Add argument to not bootstrap the random effect residuals. See Morris (2002) doi:10.1016/S0167-7152(02)00041-X
-  - How does lme4 handle this, just use the exact random effects?
+  - How does lme4 handle this, just use the observed random effects?
 - Enable parallel processing for the bootstrap samples (foreach, dopar).
-
-===========================
+- Generalized LME models
+=============================
 VERSION HISTORY:
+
+
+Version 2.0-11, 2018-05-18
+- Removed a default value for seed in summary.clme
+
+
+Version 2.0-10, 2018-05-18
+- Fixed out-of-sync metadata.
+- Model now assumes ordred factor for constrained effect. If not, issues warning and attempts to force ordered=TRUE .
+
+
+Version 2.0-9, 2018-02-01
+- Fixed error in naming to prevent error with R 3.4.3
+
+
+Version 2.0-8, 2017-11-16
+- Streamlined of formula parsing (less messy).
+- Fixes to plot.clme() for tree orders.
+- Fixed error in removing duplicate patterns from auto-generated contraints.
+- Added option to specify node in shiny_clme.
+- shiny_clme will produce code used to run the specified model.
+
 
 Version 2.0-5, 2016-11-07
 - Added reference to JSS manuscript: Jelsema and Peddada (2016)
+
 
 Version 2.0-4, 2015-07-01
 - Fixed error in logLik.clme.
@@ -66,6 +88,6 @@ Version 1.0-0, 2014-09-09
 Author / Maintainer:
 Casey M. Jelsema
 Assistant Professor
-Department of Statistics
+Department of Biostatistics
 West Virginia University
 <jelsema.casey@gmail.com>

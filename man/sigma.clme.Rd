@@ -26,9 +26,9 @@ clme.out <- clme(mcv ~ time + temp + sex + (1|id), data = rat.blood ,
          
 sigma( clme.out )
 
+
 }
 \seealso{
 \code{\link{CLME-package}}
 \code{\link{clme}}
 }
-

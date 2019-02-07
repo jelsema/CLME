@@ -40,4 +40,3 @@ model.matrix( clme.out )
 
 \code{\link{model.matrix.clme}}
 }
-

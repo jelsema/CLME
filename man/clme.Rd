@@ -55,9 +55,6 @@ The output of \code{clme} is an object of the class \code{clme}, which is list w
 \item{\code{P1}}{ the number of constrained parameters.}
 \item{\code{nsim}}{ the number of bootstrap simulations used for inference.}
 }
-
-
-\figure{OrderPlot.jpg}{Plot of Orders.}
 }
 \description{
 Constrained inference for linear fixed or mixed
@@ -75,7 +72,7 @@ The argument \code{constraints} is a list containing the order restrictions. The
  \code{order}, \code{node}, \code{decreasing}, \code{A}, and \code{B}, though not all are necessary.
 The function can calculate the last two for default orders (simple, umbrella, or simple tree). For
  default orders, \code{constraints} should be a list containing any subset of \code{order}, 
- \code{node}, and \code{descending}. See the figure below for a depiction of these values; the 
+ \code{node}, and \code{descending}. See Figure 1 from Jelsema \& Peddada (2016); the 
  pictured \code{node} of the simple tree orders (middle column) is 1, and the \code{node} for the
  umbrella orders (right column) is 3. These may be vectors (e.g. order=('simple','umbrella') ).
 If any of these three are missing, the function will test for all possible values of the missing 
@@ -104,7 +101,7 @@ data( rat.blood )
 cons <- list(order="simple", decreasing=FALSE, node=1 )
 
 clme.out <- clme(mcv ~ time + temp + sex + (1|id), data=rat.blood , 
-                 constraints=cons, seed=42, nsim=10, ncon=1)
+                 constraints=cons, seed=42, nsim=10 )
 
 }
 \references{
@@ -112,4 +109,3 @@ Jelsema, C. M. and Peddada, S. D. (2016).
 CLME: An R Package for Linear Mixed Effects Models under Inequality Constraints. 
 \emph{Journal of Statistical Software}, 75(1), 1-32. doi:10.18637/jss.v075.i01
 }
-

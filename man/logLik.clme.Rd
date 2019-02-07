@@ -43,4 +43,3 @@ logLik( clme.out )
 
 \code{\link{logLik.clme}}
 }
-

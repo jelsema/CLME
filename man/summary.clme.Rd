@@ -45,4 +45,3 @@ Summarizes the output of objects of class \code{clme}, such as those produced by
 \code{\link{CLME-package}}
 \code{\link{clme}}
 }
-

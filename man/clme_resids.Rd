@@ -53,4 +53,3 @@ clme.out <- clme_resids(mcv ~ time + temp + sex + (1|id), data = rat.blood )
 \code{\link{CLME-package}}
 \code{\link{clme}}
 }
-

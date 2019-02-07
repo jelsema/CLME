@@ -40,4 +40,3 @@ The individual tests are performed on the specified order. If no specific order 
 \code{\link{CLME-package}}
 \code{\link{clme}}
 }
-
