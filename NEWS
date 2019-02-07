@@ -17,13 +17,6 @@ VERSION HISTORY:
 <<<<<<< HEAD
 
 Version 2.0-11, 2019-02-07
-=======
-Version 2.0-12, 2019-02-07
-- Fixed error from setting names to NULL
-
-
-Version 2.0-11, 2018-05-18
->>>>>>> 886885951c7bdbba2ba6656aeaf520257d158133
 - Removed a default value for seed in summary.clme
 - Fixed error from setting names to NULL
 
