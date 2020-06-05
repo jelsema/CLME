@@ -4,9 +4,9 @@ Version: 2.0-12
 Depends:
     R (>= 3.3.0),
     shiny,
-    lme4
+    lme4,
+    MASS
 Imports:
-    MASS,
     nlme,
     methods,
     isotone,
@@ -23,10 +23,11 @@ Description: Estimation and inference for linear models where some or all of the
     fixed-effects coefficients are subject to order restrictions. This package uses
     the robust residual bootstrap methodology for inference, and can handle some
     structure in the residual variance matrix.
-Authors@R: c(person("Casey M."  , "Jelsema", email="jelsema.casey@gmail.com", role=c("aut", "cre") ), 
+Authors@R: c(person("Casey M."  , "Jelsema", email="jelsema.casey@gmail.com", role=c("aut", "cre") ),
              person("Shyamal D.", "Peddada", role="aut" ))
 Maintainer: Casey M. Jelsema <jelsema.casey@gmail.com>
 BugReports: https://github.com/jelsema/CLME/issues
 LazyLoad: no
 License: GPL-3
+Encoding: UTF-8
 RoxygenNote: 7.1.0

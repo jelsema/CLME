@@ -64,7 +64,7 @@
 #' For computational reasons, the implementation is not identical to the model expressed. Particularly, the fixed-effects matrix (or matrices) and the random effects matrix are assumed to be columns in a data frame, not passed as matrices. The \eqn{A}{A} matrix is not \eqn{r\ times p}{r x p}, but \eqn{r\ times 2}{r x 2}, where each row gives the indices of the constrained coefficients. See \code{\link{create.constraints}} for further explanation.
 #' 
 #' 
-#' The creation of this package \pkg{CLME}, this manual, and the vingette were all supported by the Intermural Research Program of the United States' National Institutes of Health (Z01 ES101744).
+#' The creation of this package \pkg{CLME}, this manual, and the vignette were all supported by the Intramural Research Program of the United States' National Institutes of Health (Z01 ES101744).
 #' 
 #' @references
 #' Jelsema, C. M. and Peddada, S. D. (2016). 
@@ -164,6 +164,21 @@
 #' @usage data(rat.blood)
 #' @format A data frame containing 241 observations on 13 variables.
 "rat.blood"
+
+
+# library("shiny")
+# library("lme4")
+# library("isotone")
+# library("stringr")
+# library("prettyR")
+# library("openxlsx")
+
+
+
+# devtools::check( devtools::as.package("../CLME_2.0-12.tar.gz") )
+# devtools::check( devtools::as.package("C:/Users/statman/Documents/00-Packages/CLME_2.0-12.tar.gz") )
+
+
 
 
 
