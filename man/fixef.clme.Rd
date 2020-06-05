@@ -3,7 +3,6 @@
 \name{fixef.clme}
 \alias{fixef.clme}
 \alias{fixef.summary.clme}
-\alias{fixef.clme}
 \alias{fixed.effects}
 \alias{fixed.effects.summary.clme}
 \alias{fixed.effects.clme}
@@ -42,25 +41,7 @@ fixed.effects(object, ...)
 Returns a numeric vector.
 }
 \description{
-Extract fixed effects
-
-Extract fixed effects
-
 Extracts the fixed effects estimates from objects of class \code{clme}.
-
-Extract fixed effects
-
-Extract fixed effects
-
-Extract fixed effects
-
-Extract fixed effects
-
-Extract fixed effects
-
-Extract fixed effects
-
-Extract fixed effects
 }
 \examples{
 

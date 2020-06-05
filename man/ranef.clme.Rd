@@ -3,7 +3,6 @@
 \name{ranef.clme}
 \alias{ranef.clme}
 \alias{ranef.summary.clme}
-\alias{ranef.clme}
 \alias{random.effects.clme}
 \title{Extract random effects}
 \usage{
@@ -24,13 +23,7 @@
 Returns a numeric vector.
 }
 \description{
-Extract random effects
-
-Extract random effects
-
 Extracts the random effects estimates from objects of class \code{clme}.
-
-Extract random effects
 }
 \examples{
 

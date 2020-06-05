@@ -21,8 +21,6 @@ Returns a matrix.
 }
 \description{
 Extracts the fixed-effects design matrix from objects of class \code{clme}.
-
-Extract the model design matrix.
 }
 \examples{
 \dontrun{

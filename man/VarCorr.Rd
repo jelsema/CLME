@@ -23,10 +23,6 @@ VarCorr(x, sigma, rdig)
 Numeric.
 }
 \description{
-Variance components
-
-Variance components
-
 Extracts variance components for objects of class \code{clme}.
 }
 \examples{

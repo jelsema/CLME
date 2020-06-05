@@ -4,9 +4,18 @@
 \alias{clme}
 \title{Constrained Inference for Linear Mixed Effects Models}
 \usage{
-clme(formula, data = NULL, gfix = NULL, constraints = list(),
-  tsf = lrt.stat, tsf.ind = w.stat.ind, mySolver = "LS",
-  all_pair = FALSE, verbose = c(FALSE, FALSE, FALSE), ...)
+clme(
+  formula,
+  data = NULL,
+  gfix = NULL,
+  constraints = list(),
+  tsf = lrt.stat,
+  tsf.ind = w.stat.ind,
+  mySolver = "LS",
+  all_pair = FALSE,
+  verbose = c(FALSE, FALSE, FALSE),
+  ...
+)
 }
 \arguments{
 \item{formula}{a formula expression. The constrained effect must come before any unconstrained 

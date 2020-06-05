@@ -4,8 +4,18 @@
 \alias{minque}
 \title{MINQUE Algorithm}
 \usage{
-minque(Y, X1, X2 = NULL, U = NULL, Nks = dim(X1)[1], Qs = dim(U)[2],
-  mq.eps = 1e-04, mq.iter = 500, verbose = FALSE, ...)
+minque(
+  Y,
+  X1,
+  X2 = NULL,
+  U = NULL,
+  Nks = dim(X1)[1],
+  Qs = dim(U)[2],
+  mq.eps = 1e-04,
+  mq.iter = 500,
+  verbose = FALSE,
+  ...
+)
 }
 \arguments{
 \item{Y}{\eqn{N \times 1}{Nx1} vector of response data.}

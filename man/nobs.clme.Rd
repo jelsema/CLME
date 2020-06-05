@@ -19,8 +19,6 @@ Numeric.
 }
 \description{
 Obtains the number of observations used to fit an model for objects of class \code{clme}.
-
-Number of observations
 }
 \examples{
 

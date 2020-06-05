@@ -4,8 +4,7 @@
 \alias{summary.clme}
 \title{Produce summary values for objects of class \code{clme}}
 \usage{
-\method{summary}{clme}(object, nsim = 1000, seed = 42, verbose = c(FALSE,
-  FALSE), ...)
+\method{summary}{clme}(object, nsim = 1000, seed = NULL, verbose = c(FALSE, FALSE), ...)
 }
 \arguments{
 \item{object}{an object of class \code{clme}.}

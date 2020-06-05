@@ -1,8 +1,8 @@
-This update contains small bugfixes.
+This update contains small update to adjust for update to R 4.0.0
 
 ## Test environments
-* Mac OSX, R 3.4.3
-* Mac OSX, R-devel
+* Windows 10, R 4.0.0
+* Windows 10, R-devel
 
 
 ## Results of: R CMD check --as-cran

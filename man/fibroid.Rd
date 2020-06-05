@@ -4,7 +4,9 @@
 \name{fibroid}
 \alias{fibroid}
 \title{Fibroid Growth Study}
-\format{A data frame containing 240 observations on 9 variables.}
+\format{
+A data frame containing 240 observations on 9 variables.
+}
 \usage{
 data(fibroid)
 }

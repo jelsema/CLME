@@ -21,8 +21,6 @@ Returns a numeric matrix.
 }
 \description{
 Computes several types of residuals for objects of class \code{clme}.
-
-Various types of residuals
 }
 \details{
 For fixed-effects models \eqn{Y = X\beta + \epsilon}{Y = X*b + e}, residuals are given as \deqn{\hat{e} = Y - X\hat{\beta}}{ ehat = Y - X*betahat}.

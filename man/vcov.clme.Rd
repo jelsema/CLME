@@ -19,8 +19,6 @@ Numeric matrix.
 }
 \description{
 Extracts variance-covariance matrix for objects of class \code{clme}.
-
-Variance-covariance matrix
 }
 \examples{
 

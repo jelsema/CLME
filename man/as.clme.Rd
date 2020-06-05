@@ -18,8 +18,6 @@ as.clme(x, ...)
 Returns an object of the class \code{clme}.
 }
 \description{
-Constructor method for objects S3 class clme
-
 Test if an object is of class \code{clme} or coerce an object to be such.
 }
 \examples{

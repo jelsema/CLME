@@ -19,8 +19,6 @@ Numeric.
 }
 \description{
 Computes the log-likelihood of the fitted model for objects of class \code{clme}.
-
-Log-likelihood
 }
 \details{
 The log-likelihood is computed using the Normal distribution. The model uses residual bootstrap 

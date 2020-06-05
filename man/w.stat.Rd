@@ -25,8 +25,6 @@ Output is a numeric value.
 }
 \description{
 Calculates a Williams' type test statistic for a constrained linear mixed effects model.
-
-Williams' type statistic (individual)
 }
 \details{
 See \code{\link{create.constraints}} for an example of \code{A}. Argument \code{B} is similar, but defines the global contrast for a Williams' type test statistic. This is the largest hypothesized difference in the constrained coefficients. So for an increasing simple order, the test statistic is the difference between the two extreme coefficients, \eqn{\theta_1}{theta_1} and \eqn{\theta_{p_1}}{theta_p1}, divided by the standard error (unconstrained). For an umbrella order order, two contrasts are considered, \eqn{\theta_1}{theta_1} to \eqn{\theta_{s}}{theta_s}, and \eqn{\theta_{p_1}}{theta_p1} to \eqn{\theta_{s}}{theta_s}, each divided by the appropriate unconstrained standard error. A general way to express this statistic is:

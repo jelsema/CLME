@@ -4,9 +4,22 @@
 \alias{resid_boot}
 \title{Obtain Residual Bootstrap}
 \usage{
-resid_boot(formula, data, gfix = NULL, eps = NULL, xi = NULL,
-  null.resids = TRUE, theta = NULL, ssq = NULL, tsq = NULL,
-  cov.theta = NULL, seed = NULL, nsim = 1000, mySolver = "LS", ...)
+resid_boot(
+  formula,
+  data,
+  gfix = NULL,
+  eps = NULL,
+  xi = NULL,
+  null.resids = TRUE,
+  theta = NULL,
+  ssq = NULL,
+  tsq = NULL,
+  cov.theta = NULL,
+  seed = NULL,
+  nsim = 1000,
+  mySolver = "LS",
+  ...
+)
 }
 \arguments{
 \item{formula}{a formula expression. The constrained effect(s) must come before any unconstrained covariates on the right-hand side of the expression. The first \code{ncon} terms will be assumed to be constrained.}

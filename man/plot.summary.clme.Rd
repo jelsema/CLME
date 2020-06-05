@@ -4,11 +4,21 @@
 \alias{plot.summary.clme}
 \title{S3 method to plot objects of class \code{clme}}
 \usage{
-\method{plot}{summary.clme}(x, alpha = 0.05, legendx = "below",
-  inset = 0.01, ci = FALSE, ylim = NULL, cex = 1.75, pch = 21,
-  bg = "white", xlab = expression(paste("Component of ", theta[1])),
-  ylab = expression(paste("Estimated Value of ", theta[1])), tree = NULL,
-  ...)
+\method{plot}{summary.clme}(
+  x,
+  alpha = 0.05,
+  legendx = "below",
+  inset = 0.01,
+  ci = FALSE,
+  ylim = NULL,
+  cex = 1.75,
+  pch = 21,
+  bg = "white",
+  xlab = expression(paste("Component of ", theta[1])),
+  ylab = expression(paste("Estimated Value of ", theta[1])),
+  tree = NULL,
+  ...
+)
 }
 \arguments{
 \item{x}{object of class 'clme' to be plotted.}
