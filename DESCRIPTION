@@ -2,7 +2,7 @@ Package: CLME
 Title: Constrained Inference for Linear Mixed Effects Models
 Version: 2.0-12
 Depends:
-    R (>= 3.3.0),
+    R (>= 4.0.0),
     shiny,
     lme4,
     MASS
