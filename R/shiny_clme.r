@@ -27,7 +27,7 @@ shiny_clme <- function(){
   library("CLME")
   runApp(
     list(
-      ui     = shinyUI_clme,
+      ui     = shinyUI_clme(),
       server = shinyServer_clme
     )
   )
@@ -52,193 +52,196 @@ shiny_clme <- function(){
 #' @export
 #' 
 
-shinyUI_clme <- fluidPage(
-  titlePanel("Constrained Linear Mixed Effects"),
-  sidebarLayout(
-    sidebarPanel(
-      
-      ##
-      ## Data input
-      ##
-      fileInput('file1', 'Data (choose file)',
-                accept=c('text/csv', 'text/comma-separated-values,text/plain', '.csv', '.xlsx')
-      ),
-      selectInput(inputId = "dlmt",
-                  label = "Delimiter:",
-                  choices=c("Comma-delimited", "Tab-delimited", "xlsx") 
-      ), 
-      ##
-      ## Main controls
-      ##
-      hr(),
-      selectInput(inputId = "solver",
-                  label = "Type of Solver / fitting norm:",
-                  choices=c("Least Squares (LS)", "Least Absolute Value (L1)",
-                            "General LS (GLS)", "Asymmetrix LS" , 
-                            "L1 approx", "Huber", "SILF", "Chebyshev",
-                            "L-p Power Norm", "Quantile", "Poisson" ) 
-      ),      
-      selectInput(inputId = "tsfunc",
-                  label = "Test Statistic:",
-                  choices=c("LRT", "Williams") 
-      ),
-      selectInput(inputId = "order",
-                         label = "Order:",
-                         choices=c("Unspecified", "Simple", "Umbrella", "Tree")
-      ),
-      selectInput(inputId = "decreasing",
-                    label = "Direction:",
-                  choices=c("Unspecified (both)", "Increasing", "Decreasing")
-      ),
-      textInput(inputId = "node",
-                  label = "Node:",
-                  value = "None"
-      ),
-      helpText("Identify columns of data"),
-      helpText("Use column letters or numbers"),
-      helpText("e.g., 1-3 or A-C or a list: 1,4,6"),
-      textInput(inputId = "yy",
-                   label = "Column of response:"),
-      textInput(inputId = "p1",
-                   label = "Column of constrained effect:"),
-      textInput(inputId = "p2",
-                   label = "Column(s) of Covariates:", value="None"),
-      textInput(inputId = "q",
-                   label = "Column(s) of random effects:", value="None"),
-
-      numericInput(inputId = "nsim",
-                   label = "Number of Bootstraps:",
-                   min=0 , max=50000 , value=1000
-      ),
-      
-      ##
-      ## Action buttons
-      ##
-      hr(),
-      helpText("Click to run model or update output."),
-      actionButton(inputId = "compute1",
-                   label = "Run model"
-      ),
-      actionButton(inputId = "compute2",
-                   label = "Update plot"
-      ),
-      actionButton(inputId = "compute3",
-                   label = "Update summary"
-      ),
-      
-      
-      ##
-      ## Output controls
-      ##
-      hr(),
-      checkboxInput(inputId = "outcheck",
-                    label = "Format Output:",
-                    value=FALSE
-      ),
-      conditionalPanel(condition = "input.outcheck",
-                       checkboxInput(inputId = "plotci",
-                                     label = "CI on Plot:",
-                                     value=FALSE
-                       )
-      ),
-      conditionalPanel(condition = "input.outcheck",
-                       sliderInput(inputId = "alpha",
-                                   label = "Alpha level:",
-                                   min=0 , max=0.15 , value=0.05 , step=0.01
-                       )
-      ),
-      conditionalPanel(condition = "input.outcheck",
-                       checkboxInput(inputId = "makeFactor",
-                                   label = "Force constrained effect to be factor",
-                                   value=FALSE
-                       )
-      ),
-      #br(),
-      #conditionalPanel(condition = "input.outcheck",
-      #                 helpText("Number of decimal places for:")
-      #),
-      #conditionalPanel(condition = "input.outcheck",
-      #                 sliderInput(inputId = "digits",
-      #                             label = "p-values:",
-      #                             min=0 , max=8 , value=4 , step=1
-      #                 )
-      #),
-
-      ##
-      ## Extra parameters
-      ##
-      hr(),
-      checkboxInput(inputId = "varssq",
-                    label = "Heteroscedasticity:",
-                    value=FALSE
-      ),
-      conditionalPanel(condition = "input.varssq",
-                       textInput(inputId = "gfix",
-                                    label = "Column of variance groups:")
-      ),
-      checkboxInput(inputId = "xlevel1",
-                    label = "Define order of constrained groups:",
-                    value=FALSE
-      ),
-      conditionalPanel(condition = "input.xlevel1",
-                       textInput(inputId = "xlevels",
-                                 label = "Column of ordered group levels:")
-      ),
-      ##
-      ## Technical controls
-      ##
-      checkboxInput(inputId = "technical",
-                    label = "Select Control Parameters:",
-                    value=FALSE
-      ),
-      conditionalPanel(condition = "input.technical",
-                       numericInput(inputId = "emiter",
-                                    label = "Max EM Iterations:",
-                                    min=10 , max=50000 , value=500
-                       )
-      ),
-      conditionalPanel(condition = "input.technical",
-                       numericInput(inputId = "mqiter",
-                                    label = "Max MINQUE Iterations:",
-                                    min=10 , max=50000 , value=500)
-      ),
-      conditionalPanel(condition = "input.technical",
-                       numericInput(inputId = "emeps",
-                                    label = "EM Convergence Criteria:",
-                                    min=0 , max=50000 , value=0.0001)
-      ),
-      conditionalPanel(condition = "input.technical",
-                       numericInput(inputId = "mqeps",
-                                    label = "MINQUE Convergence Criteria:",
-                                    min=0 , max=50000 , value=0.0001)
-      ),
-      conditionalPanel(condition = "input.technical",
-                       numericInput(inputId = "ranseed",
-                                    label = "Set RNG Seed:",
-                                    min=0 , max=Inf , value=42)
-      )
-    ),
-    mainPanel(
-      tabsetPanel(
-        tabPanel("Data Summary" , 
-                 plotOutput(outputId = "fig0", height = "650px"),
-                 tableOutput(outputId = "sum_table")
+shinyUI_clme <- function() {
+    fluidPage(
+    titlePanel("Constrained Linear Mixed Effects"),
+    sidebarLayout(
+      sidebarPanel(
+        
+        ##
+        ## Data input
+        ##
+        fileInput('file1', 'Data (choose file)',
+                  accept=c('text/csv', 'text/comma-separated-values,text/plain', '.csv', '.xlsx')
         ),
-        tabPanel("Model Summary", 
-                 verbatimTextOutput(outputId = "summary"),
-                 h5("Code to run model:"),
-                 verbatimTextOutput(outputId = "fullCode")
-                 
+        selectInput(inputId = "dlmt",
+                    label = "Delimiter:",
+                    choices=c("Comma-delimited", "Tab-delimited", "xlsx") 
         ), 
-        tabPanel("Model Plot"   ,
-                 plotOutput(outputId = "fig1", height = "650px")
+        ##
+        ## Main controls
+        ##
+        hr(),
+        selectInput(inputId = "solver",
+                    label = "Type of Solver / fitting norm:",
+                    choices=c("Least Squares (LS)", "Least Absolute Value (L1)",
+                              "General LS (GLS)", "Asymmetrix LS" , 
+                              "L1 approx", "Huber", "SILF", "Chebyshev",
+                              "L-p Power Norm", "Quantile", "Poisson" ) 
+        ),      
+        selectInput(inputId = "tsfunc",
+                    label = "Test Statistic:",
+                    choices=c("LRT", "Williams") 
         ),
-        tabPanel("Model Data"   ,
-                 dataTableOutput(outputId = "datatbl")
+        selectInput(inputId = "order",
+                          label = "Order:",
+                          choices=c("Unspecified", "Simple", "Umbrella", "Tree")
+        ),
+        selectInput(inputId = "decreasing",
+                      label = "Direction:",
+                    choices=c("Unspecified (both)", "Increasing", "Decreasing")
+        ),
+        textInput(inputId = "node",
+                    label = "Node:",
+                    value = "None"
+        ),
+        helpText("Identify columns of data"),
+        helpText("Use column letters or numbers"),
+        helpText("e.g., 1-3 or A-C or a list: 1,4,6"),
+        textInput(inputId = "yy",
+                    label = "Column of response:"),
+        textInput(inputId = "p1",
+                    label = "Column of constrained effect:"),
+        textInput(inputId = "p2",
+                    label = "Column(s) of Covariates:", value="None"),
+        textInput(inputId = "q",
+                    label = "Column(s) of random effects:", value="None"),
+
+        numericInput(inputId = "nsim",
+                    label = "Number of Bootstraps:",
+                    min=0 , max=50000 , value=1000
+        ),
+        
+        ##
+        ## Action buttons
+        ##
+        hr(),
+        helpText("Click to run model or update output."),
+        actionButton(inputId = "compute1",
+                    label = "Run model"
+        ),
+        actionButton(inputId = "compute2",
+                    label = "Update plot"
+        ),
+        actionButton(inputId = "compute3",
+                    label = "Update summary"
+        ),
+        
+        
+        ##
+        ## Output controls
+        ##
+        hr(),
+        checkboxInput(inputId = "outcheck",
+                      label = "Format Output:",
+                      value=FALSE
+        ),
+        conditionalPanel(condition = "input.outcheck",
+                        checkboxInput(inputId = "plotci",
+                                      label = "CI on Plot:",
+                                      value=FALSE
+                        )
+        ),
+        conditionalPanel(condition = "input.outcheck",
+                        sliderInput(inputId = "alpha",
+                                    label = "Alpha level:",
+                                    min=0 , max=0.15 , value=0.05 , step=0.01
+                        )
+        ),
+        conditionalPanel(condition = "input.outcheck",
+                        checkboxInput(inputId = "makeFactor",
+                                    label = "Force constrained effect to be factor",
+                                    value=FALSE
+                        )
+        ),
+        #br(),
+        #conditionalPanel(condition = "input.outcheck",
+        #                 helpText("Number of decimal places for:")
+        #),
+        #conditionalPanel(condition = "input.outcheck",
+        #                 sliderInput(inputId = "digits",
+        #                             label = "p-values:",
+        #                             min=0 , max=8 , value=4 , step=1
+        #                 )
+        #),
+
+        ##
+        ## Extra parameters
+        ##
+        hr(),
+        checkboxInput(inputId = "varssq",
+                      label = "Heteroscedasticity:",
+                      value=FALSE
+        ),
+        conditionalPanel(condition = "input.varssq",
+                        textInput(inputId = "gfix",
+                                      label = "Column of variance groups:")
+        ),
+        checkboxInput(inputId = "xlevel1",
+                      label = "Define order of constrained groups:",
+                      value=FALSE
+        ),
+        conditionalPanel(condition = "input.xlevel1",
+                        textInput(inputId = "xlevels",
+                                  label = "Column of ordered group levels:")
+        ),
+        ##
+        ## Technical controls
+        ##
+        checkboxInput(inputId = "technical",
+                      label = "Select Control Parameters:",
+                      value=FALSE
+        ),
+        conditionalPanel(condition = "input.technical",
+                        numericInput(inputId = "emiter",
+                                      label = "Max EM Iterations:",
+                                      min=10 , max=50000 , value=500
+                        )
+        ),
+        conditionalPanel(condition = "input.technical",
+                        numericInput(inputId = "mqiter",
+                                      label = "Max MINQUE Iterations:",
+                                      min=10 , max=50000 , value=500)
+        ),
+        conditionalPanel(condition = "input.technical",
+                        numericInput(inputId = "emeps",
+                                      label = "EM Convergence Criteria:",
+                                      min=0 , max=50000 , value=0.0001)
+        ),
+        conditionalPanel(condition = "input.technical",
+                        numericInput(inputId = "mqeps",
+                                      label = "MINQUE Convergence Criteria:",
+                                      min=0 , max=50000 , value=0.0001)
+        ),
+        conditionalPanel(condition = "input.technical",
+                        numericInput(inputId = "ranseed",
+                                      label = "Set RNG Seed:",
+                                      min=0 , max=Inf , value=42)
+        )
+      ),
+      mainPanel(
+        tabsetPanel(
+          tabPanel("Data Summary" , 
+                  plotOutput(outputId = "fig0", height = "650px"),
+                  tableOutput(outputId = "sum_table")
+          ),
+          tabPanel("Model Summary", 
+                  verbatimTextOutput(outputId = "summary"),
+                  h5("Code to run model:"),
+                  verbatimTextOutput(outputId = "fullCode")
+                  
+          ), 
+          tabPanel("Model Plot"   ,
+                  plotOutput(outputId = "fig1", height = "650px")
+          ),
+          tabPanel("Model Data"   ,
+                  dataTableOutput(outputId = "datatbl")
+          )
         )
       )
     )
-  ))
+  )
+}
 
 
 
