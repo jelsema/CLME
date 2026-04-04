@@ -7,7 +7,7 @@
 \alias{shinyServer_clme}
 \title{Shiny GUI for CLME}
 \format{
-An object of class \code{shiny.tag.list} (inherits from \code{list}) of length 3.
+An object of class \code{shiny.tag.list} (inherits from \code{list}) of length 4.
 }
 \usage{
 shiny_clme()
