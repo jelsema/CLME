@@ -170,7 +170,6 @@
 # library("lme4")
 # library("isotone")
 # library("stringr")
-# library("prettyR")
 # library("openxlsx")
 
 
