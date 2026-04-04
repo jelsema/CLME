@@ -38,6 +38,6 @@ divided by the length of time between measurements. The growth rates were averag
 Cora M, King D, Betz L, Wilson R, and Travlos G (2012). 
 Artifactual changes in Sprauge-Dawley rat hematologic parameters after storage of samples at 3 C and 21 C.
  Journal of the American Association for Laboratory Animal Science, 51(5), 616-621. 
- URL \url{http://www.ncbi.nlm.nih.gov/pmc/articles/PMC3447451/}.
+ URL \url{https://pmc.ncbi.nlm.nih.gov/articles/PMC3447451/}.
 }
 \keyword{datasets}

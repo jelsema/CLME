@@ -9,6 +9,7 @@ Depends:
 Imports:
     nlme,
     methods,
+    DT,
     isotone,
     stringr,
     stats,
@@ -17,7 +18,7 @@ Imports:
 Suggests:
 	testthat,
 	nnet
-Date: 2020-06-04
+Date: 2026-04-04
 Description: Estimation and inference for linear models where some or all of the
     fixed-effects coefficients are subject to order restrictions. This package uses
     the robust residual bootstrap methodology for inference, and can handle some

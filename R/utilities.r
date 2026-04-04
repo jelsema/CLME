@@ -1252,6 +1252,8 @@ VarCorr.clme <- function(x, sigma, rdig ){
 #' }
 #' @importFrom stringr str_pad
 #' 
+#' @method print varcorr_clme
+#' @export
 #' 
 print.varcorr_clme <- function(object, rdig=5, ...){
   

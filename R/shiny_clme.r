@@ -49,6 +49,7 @@ shiny_clme <- function(){
 #' 
 #' @rdname shiny_clme
 #' 
+#' @importFrom DT DTOutput
 #' @export
 #' 
 
