@@ -42,9 +42,10 @@ be an ordered factor.}
 }
 \value{
 The output of \code{clme} is an object of the class \code{clme}, which is list with elements:
-\itemize{    
+
+\describe{
 \item{\code{theta}}{ estimates of \eqn{\theta}{theta} coefficients}
-\item{\code{theta}}{ estimates of \eqn{\theta_0}{theta_0} coefficients under the null hypothesis}
+\item{\code{theta0}}{ estimates of \eqn{\theta_0}{theta_0} coefficients under the null hypothesis}
 \item{\code{ssq}}{ estimate of residual variance(s), \eqn{\sigma^{2}_{i}}{sigma.i^2}.}
 \item{\code{tsq}}{ estimate of random effects variance component(s), \eqn{\tau^{2}_{i}}{tau.i^2}.}
 \item{\code{cov.theta}}{ the unconstrained covariance matrix of \eqn{\theta}{theta}}
@@ -81,7 +82,7 @@ The argument \code{constraints} is a list containing the order restrictions. The
  \code{order}, \code{node}, \code{decreasing}, \code{A}, and \code{B}, though not all are necessary.
 The function can calculate the last two for default orders (simple, umbrella, or simple tree). For
  default orders, \code{constraints} should be a list containing any subset of \code{order}, 
- \code{node}, and \code{descending}. See Figure 1 from Jelsema \& Peddada (2016); the 
+ \code{node}, and \code{descending}. See Figure 1 from Jelsema and Peddada (2016); the 
  pictured \code{node} of the simple tree orders (middle column) is 1, and the \code{node} for the
  umbrella orders (right column) is 3. These may be vectors (e.g. order=('simple','umbrella') ).
 If any of these three are missing, the function will test for all possible values of the missing 

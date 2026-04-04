@@ -218,7 +218,8 @@ print.summary.clme <- function( x, alpha=0.05, digits=4, ...){
   object   <- x
   all_pair <- object$all_pair
   
-  if( class(object)=="summary.clme" ){
+  # if( class(object)=="summary.clme" ){
+  if( inherits(object, "summary.clme") ){
     class(object) <- "clme"  
   }
   

@@ -8,17 +8,19 @@
 #'
 #' @details 
 #' The elements of \code{constraints} are:
-#' \itemize{
-#' \item \code{order}: string. Currently \dQuote{simple}, \dQuote{simple.tree} and \dQuote{umbrella} are supported.
-#' \item \code{node}: numeric, the node of the coefficients (unnecessary for simple orders).
-#' \item \code{decreasing}: logical. For simple orders, is the trend decreasing? For umbrella and simple tree, does the nodal parameter have the greatest value (e.g., the peak, instead of the valley)?
+#' 
+#' \describe{
+#' \item{ \code{order}: }{string. Currently \dQuote{simple}, \dQuote{simple.tree} and \dQuote{umbrella} are supported.}
+#' \item{ \code{node}: }{numeric, the node of the coefficients (unnecessary for simple orders).}
+#' \item{ \code{decreasing}: }{logical. For simple orders, is the trend decreasing? For umbrella and simple tree, does the nodal parameter have the greatest value (e.g., the peak, instead of the valley)?}
 #' }
 #' 
 #' See \code{\link{clme}} for more information and a depiction of these three elements.
 #' 
 #' @return
 #' The function returns a list containing the elements of input argument \code{constraints} as well as
-#' \itemize{
+#' 
+#' \describe{
 #' \item{ \code{A} }{matrix of dimension \eqn{r \times 2}{r x 2} containing the order constraints, where r is the number of linear constraints.}
 #' \item{ \code{B} }{matrix containing the contrasts necessary for computation of the Williams' type test statistic (may be identical to \code{A}).}
 #' \item{ \code{Anull} }{matrix similar to \code{A} which defines all possible constraints. Used to obtain parameter estimates under the null hypothesis.}
@@ -26,6 +28,7 @@
 #' \item{ \code{node} }{the input argument for \code{constraints\$node}.}
 #' \item{ \code{decreasing} }{ the input argument for \code{constraints\$decreasing}}
 #' }
+#' 
 #' See \code{\link{w.stat}} for more information on \code{B}
 #' 
 #' 
