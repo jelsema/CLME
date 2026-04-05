@@ -1,6 +1,6 @@
 Package: CLME
 Title: Constrained Inference for Linear Mixed Effects Models
-Version: 2.0-12
+Version: 2.0-13
 Depends:
     R (>= 4.0.0),
     shiny,
@@ -9,16 +9,16 @@ Depends:
 Imports:
     nlme,
     methods,
+    DT,
     isotone,
     stringr,
-    prettyR,
     stats,
     openxlsx,
     graphics
 Suggests:
 	testthat,
 	nnet
-Date: 2020-06-04
+Date: 2026-04-04
 Description: Estimation and inference for linear models where some or all of the
     fixed-effects coefficients are subject to order restrictions. This package uses
     the robust residual bootstrap methodology for inference, and can handle some
@@ -30,4 +30,4 @@ BugReports: https://github.com/jelsema/CLME/issues
 LazyLoad: no
 License: GPL-3
 Encoding: UTF-8
-RoxygenNote: 7.1.0
+RoxygenNote: 7.3.3

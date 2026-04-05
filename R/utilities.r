@@ -1230,7 +1230,7 @@ VarCorr.clme <- function(x, sigma, rdig ){
 #' @description
 #' Prints variance components of an objects of \code{clme}. 
 #' 
-#' @param object object of class \code{\link{clme}}.
+#' @param x object of class \code{\link{clme}}.
 #' @param rdig number of digits to round to.
 #' @param ... space for additional arguments.
 #' 
@@ -1252,12 +1252,14 @@ VarCorr.clme <- function(x, sigma, rdig ){
 #' }
 #' @importFrom stringr str_pad
 #' 
+#' @method print varcorr_clme
+#' @export
 #' 
-print.varcorr_clme <- function(object, rdig=5, ...){
+print.varcorr_clme <- function(x, rdig=5, ...){
   
-  rnames   <- c( "Source", rownames( object ) )
+  rnames   <- c( "Source", rownames( x ) )
   rnames   <- str_pad(rnames, width=max(nchar(rnames)), side = "right", pad = " ")
-  vars     <- format( object , digits=rdig )
+  vars     <- format( x , digits=rdig )
   
   cat( rnames[1], "\t" , "Variance" )
   for( ii in 1:length(vars) ){

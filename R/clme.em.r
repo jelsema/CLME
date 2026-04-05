@@ -29,7 +29,8 @@
 #'
 #' @return
 #' The function returns a list with the elements:
-#' \itemize{
+#' 
+#' \describe{
 #' \item{\code{theta}}{ coefficient estimates.}
 #' \item{\code{theta.null}}{ vector of coefficient estimates under the null hypothesis.}
 #' \item{\code{ssq}}{ estimate of residual variance term(s).}

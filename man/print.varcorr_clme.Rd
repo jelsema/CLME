@@ -4,10 +4,10 @@
 \alias{print.varcorr_clme}
 \title{Printout for variance components}
 \usage{
-\method{print}{varcorr_clme}(object, rdig = 5, ...)
+\method{print}{varcorr_clme}(x, rdig = 5, ...)
 }
 \arguments{
-\item{object}{object of class \code{\link{clme}}.}
+\item{x}{object of class \code{\link{clme}}.}
 
 \item{rdig}{number of digits to round to.}
 

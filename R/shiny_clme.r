@@ -49,6 +49,7 @@ shiny_clme <- function(){
 #' 
 #' @rdname shiny_clme
 #' 
+#' @importFrom DT DTOutput
 #' @export
 #' 
 
@@ -234,7 +235,7 @@ shinyUI_clme <- fluidPage(
                  plotOutput(outputId = "fig1", height = "650px")
         ),
         tabPanel("Model Data"   ,
-                 dataTableOutput(outputId = "datatbl")
+                 DT::DTOutput(outputId = "datatbl")
         )
       )
     )

@@ -208,21 +208,22 @@ summary.clme <- function( object, nsim=1000, seed=NULL, verbose=c(FALSE,FALSE), 
 #' 
 #' @importFrom stringr str_pad
 #' @importFrom stringr str_trim
-#' @importFrom prettyR decimal.align
 #' 
 #' @method print summary.clme
 #' @export
 #' 
 print.summary.clme <- function( x, alpha=0.05, digits=4, ...){
   
+  
   object   <- x
   all_pair <- object$all_pair
   
-  if( class(object)=="summary.clme" ){
+  # if( class(object)=="summary.clme" ){
+  if( inherits(object, "summary.clme") ){
     class(object) <- "clme"  
   }
   
-  ## Title and formula
+  ## Title and formula  ---------------------------------------------
   cat( "Linear mixed model subject to order restrictions\n" )
   cat( "Formula: ")
   print( object$formula )
@@ -255,7 +256,7 @@ print.summary.clme <- function( x, alpha=0.05, digits=4, ...){
   }
   
   
-  ## Diagnostic criterion
+  ## Diagnostic criterion  ---------------------------------------------
   crit <- c(logLik(object),
             AIC(object),
             BIC(object) )
@@ -271,76 +272,76 @@ print.summary.clme <- function( x, alpha=0.05, digits=4, ...){
   Amat   <- object$constraints$A
   Bmat   <- object$constraints$B
   
-  ## Global tests
+  
+  digits_stats <- do.call(rbind, strsplit(paste0(object$ts.ind), split="\\." ))
+  digits_stats <- digits + max(nchar( digits_stats[,1] ))
+  digits_ests <- do.call(rbind, strsplit( paste0(est[Amat[,2]] - est[Amat[,1]]), split="\\." ))
+  digits_ests <- digits + max(nchar( digits_ests[,1] ))
+  
+  
+  
+  ## Global tests  ---------------------------------------------
+  glbs <- object$ts.glb
+  
   if( is.null(names(object$ts.glb)) ){
     glbn <- "Unknown"
   } else{
     glbn <- names( object$ts.glb )
   }
   
+  ### Format the Statistics
+  str_stats <- str_trim( format( object$ts.glb , align="right", digits=digits_stats), side="right"  )
+  str_stats <- str_pad(str_stats, width=max(nchar(str_stats)), side = "right", pad = "0")
   
-  #if( object$order$order != "unconstrained" ){
-  if( length(object$ts.glb)>1 ){
-    glbs <- object$ts.glb
-    grow <- matrix( "NA" , nrow=length(glbs), ncol=3 )
-    
-    for( ii in 1:length(glbs) ){
-      grow[ii,] <- c( glbn[ii], round(object$ts.glb[ii],3) , sprintf("%.4f", object$p.value[ii]) )
-    }
-    
-    #colnames( grow ) <- c("Contrast", "Estimate", "Stat", "p-value")
-    #grow <- .align_table.clme( grow )
-    for( ii in 2:3){
-      val1 <- str_trim( decimal.align( grow[,ii]), side="right"  )
-      grow[,ii] <- str_pad(val1, width=max(nchar(val1)), side = "right", pad = "0")
-    }  
-    
-    colnames( grow ) <- c("Contrast", "Statistic", "p-value")
-    grow1 <- c(colnames(grow)[1], grow[,1])
-    grow1 <- str_pad( grow1, width=max(nchar(grow1)), side = "right", pad = " ")    
-    grow2 <- .align_table.clme( grow[,2:3,drop=FALSE] )
-    grow <- cbind( grow1[2:length(grow1)] , grow2)
-    colnames(grow)[1] <- grow1[1]
-    
-    cat( "\n\nGlobal tests: ")
-    cat( "\n", paste(colnames(grow) , collapse="  ") )
-    for( ii in 1:length(glbs) ){
-      cat( "\n", paste(grow[ii,] , collapse="  ")     )
-    }
-    
-  } else{
-    
-    grow <- cbind( glbn, round(object$ts.glb,3) , sprintf("%.4f", object$p.value) )
-    
-    colnames( grow ) <- c("Contrast", "Statistic", "p-value")
-    grow1 <- c(colnames(grow)[1], grow[,1])
-    grow1 <- str_pad( grow1, width=max(nchar(grow1)), side = "right", pad = " ")    
-    grow2 <- .align_table.clme( grow[,2:3,drop=FALSE] )
-    grow <- cbind( grow1[2:length(grow1)] , grow2)
-    colnames(grow)[1] <- grow1[1]
-    
-    cat( "\n\nGlobal test: ")
-    cat( "\n", paste0(colnames(grow) , collapse="  ") )   
-    cat( "\n", paste0(grow , collapse="  ")     )
-  }
-  #}
+  ### Format the p-values
+  str_pvals <- str_trim( format(object$p.value, align="right", digits=digits, nsmall=floor(log10(x$nsim))+1), side="right"  )
+  str_pvals <- str_pad(str_pvals, width=max(nchar(str_pvals)), side = "right", pad = "0")
   
-  ## Individual tests
-  glbs <- object$ts.ind
-  grow <- matrix( "NA" , nrow=length(glbs), ncol=4 )
+  ### Make the table
+  grow <- data.frame(
+    Contrast  = glbn,
+    Statistic = str_stats,
+    pvalue   = str_pvals
+  )
   
+  ### Some formatting on the table
+  colnames( grow ) <- c("Contrast", "Statistic", "p-value")
+  grow1 <- c(colnames(grow)[1], grow[,1])
+  grow1 <- str_pad( grow1, width=max(nchar(grow1)), side = "right", pad = " ")    
+  grow2 <- .align_table.clme( grow[,2:3,drop=FALSE] )
+  grow <- cbind( grow1[2:length(grow1)] , grow2)
+  colnames(grow)[1] <- grow1[1]
+  
+  cat( "\n\nGlobal tests: ")
+  cat( "\n", paste(colnames(grow) , collapse="  ") )
   for( ii in 1:length(glbs) ){
-    glbn <- paste( tnames[Amat[ii,2]] , "-", tnames[Amat[ii,1]] )
-    glbe <- round( est[Amat[ii,2]] - est[Amat[ii,1]], digits=3 )
-    grow[ii,] <- c( glbn, glbe, round(object$ts.ind[ii],3) , sprintf("%.4f", object$p.value.ind[ii]) )
+    cat( "\n", paste(grow[ii,] , collapse="  ")     )
   }
   
-  for( ii in 2:4){
-    if( !any(grow[,ii]==rep("NA",nrow(grow))) ){
-      val1 <- str_trim( decimal.align( grow[,ii]), side="right"  )
-      grow[,ii] <- str_pad(val1, width=max(nchar(val1)), side = "right", pad = "0")   
-    }
-  }  
+  
+  ## Individual tests ---------------------------------------------
+  glbs <- object$ts.ind
+  
+  ### Format the estimates
+  str_ests <- str_trim( format( est[Amat[,2]] - est[Amat[,1]] ,  align="right", digits=digits_ests), side="right"  )
+  str_ests <- str_pad(str_ests, width=max(nchar(str_ests)), side = "right", pad = "0")
+  
+  ### Format the statistics
+  str_stats <- str_trim( format( object$ts.ind ,  align="right", digits=digits_stats), side="right"  )
+  str_stats <- str_pad(str_stats, width=max(nchar(str_stats)), side = "right", pad = "0")
+  
+  ### Format the p-values
+  str_pvals <- str_trim( format(object$p.value, align="right", digits=digits, nsmall=floor(log10(x$nsim))+1), side="right"  )
+  str_pvals <- str_pad(str_pvals, width=max(nchar(str_pvals)), side = "right", pad = "0")
+  
+  ### Make the table
+  grow <- data.frame(
+    Contrast = paste( tnames[Amat[,2]] , "-", tnames[Amat[,1]] ),
+    Estimate = str_ests,
+    Statistic = str_stats,
+    pvalue = str_pvals
+  )
+  
   
   colnames( grow ) <- c("Contrast", "Estimate", "Statistic", "p-value")
   grow1 <- c(colnames(grow)[1], grow[,1])
@@ -356,7 +357,7 @@ print.summary.clme <- function( x, alpha=0.05, digits=4, ...){
   }
   
   
-  ## Random effects
+  ## Random effects ---------------------------------------------
   cat( "\n\nVariance components: \n")
   print( VarCorr.clme(object) )
   
@@ -386,8 +387,7 @@ print.summary.clme <- function( x, alpha=0.05, digits=4, ...){
     cat( "\n\nParameters are ordered according to the following factor levels:\n" )
     cat( paste(  names(fixef(object))[1:object$P1], collapse=", ") )  
   }
-  cat( "\n\nModel based on", paste0(object$nsim), "bootstrap samples" )
-  
+  cat( "\n\nModel based on", paste0(object$nsim), "bootstrap samples" )  
 }
 
 
