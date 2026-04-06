@@ -7,7 +7,7 @@ The R package CLME implements a linear mixed effects model where the regression 
 ## Installation
 
 
-To install the stable version on [CRAN](http://cran.r-project.org/package=CLME):
+To install the stable version on [CRAN](https://cran.r-project.org/web/packages/CLME/index.html):
 
 ```s
 install.packages("CLME")
