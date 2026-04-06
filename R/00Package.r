@@ -175,12 +175,7 @@
 # R CMD check --as-cran CLME_
 
 # devtools::check( devtools::as.package("../CLME_2.0-13.tar.gz") )
-# devtools::check( devtools::as.package("C:/Users/statman/Documents/00-Packages/CLME_2.0-12.tar.gz") )
-
-
-
-
-
+# devtools::check( devtools::as.package("C:/Users/jelse/Documents/GitProjects/CLME_2.0-13.tar.gz") )
 
 
 
