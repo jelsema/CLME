@@ -34,6 +34,6 @@ divided by the length of time between measurements. The growth rates were averag
 Peddada, Laughlin, Miner, Guyon, Haneke, Vahdat, Semelka, Kowalik, Armao, Davis, and Baird(2008).
  Growth of Uterine Leiomyomata Among Premenopausal Black and White Women.
   Proceedings of the National Academy of Sciences of the United States of America, 105(50),
-   19887-19892. URL \url{https://www.pnas.org/doi/pdf/10.1073/pnas.0808188105}.
+   19887-19892. URL \url{https://pubmed.ncbi.nlm.nih.gov/19047643/}.
 }
 \keyword{datasets}
