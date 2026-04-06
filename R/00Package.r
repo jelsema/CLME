@@ -172,15 +172,13 @@
 # library("stringr")
 # library("openxlsx")
 
-# R CMD check --as-cran CLME_
 
 # devtools::check( devtools::as.package("../CLME_2.0-13.tar.gz") )
 # devtools::check( devtools::as.package("C:/Users/jelse/Documents/GitProjects/CLME_2.0-13.tar.gz") )
 
 
-
-
-
+# Powershell command
+# cmd /c "R CMD check --as-cran CLME_2.0-13.tar.gz"
 
 
 

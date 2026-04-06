@@ -16,6 +16,10 @@ VERSION HISTORY:
 
 <<<<<<< HEAD
 
+Version 2.0-13, 02026-04-05
+- Removed dependency on prettyR from summary_clme
+
+
 Version 2.0-11, 2019-02-07
 - Removed a default value for seed in summary.clme
 - Fixed error from setting names to NULL
